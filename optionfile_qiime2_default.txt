@@ -1,0 +1,91 @@
+################################
+#  Common Analysis Parameters  #
+################################
+
+ANALYSIS_NAME=BASIC_TEST
+NB_THREADS=8
+
+# Leave empty if you don't use singularity image to launch Qiime2
+SINGULARITY_COMMAND=
+
+METADATA_FILE_PATH=
+
+# Leave empty to use system's default  (/tmp)
+TEMPORARY_DIRECTORY=
+
+########################## 
+#  Step 1 : Data Import  #
+##########################
+
+# Notice : you can use create_manifest command to generate your manifest file
+
+DATA_TYPE=paired
+MANIFEST_FILE_PATH=/mnt/pagagne/Miseq_NovaSeq_compare_qcheck/scripting/0.fastq_files/manifest.csv
+
+##############################
+#  Step 2 : Dada2 Denoising  #
+##############################
+
+# if your data is single-end, only p_trim_left_f, p_trunc_len_f and p_max_ee_f will be used in trimming
+
+# Use 0 to bypass evaluation (will just denoise all samples)
+DENOISE_EVALUATION_SAMPLE_SIZE=5
+TESTFILE_LOCATION=/mnt/pagagne/Miseq_NovaSeq_compare_qcheck/scripting/testlist.txt
+
+
+p_trim_left_f=20 
+p_trim_left_r=22
+
+p_trunc_len_f=237
+p_trunc_len_r=209
+
+p_max_ee_f=1
+p_max_ee_r=1 
+p_n_reads_learn=2610000 
+
+p_chimera_method=consensus
+p_min_fold_parent_over_abundance=1.0
+
+####################################
+# Step3  Feature Table generation  #
+####################################
+
+# No parameters for now
+
+########################################
+# Step4  Denovo Clustering (optional)  #
+########################################
+
+p_perc_identity=0.97
+ 
+###########################
+#   Classifier Training   #
+###########################
+
+fasta_database_path=
+taxo_database_path=
+
+########################
+# Taxonomy Assignment  #
+########################
+
+
+########################
+#    Taxa Filtering    #
+########################
+
+
+####################################
+#    Alpha rarefaction plotting    #
+####################################
+
+p_max_depth=30000
+p_steps=20
+
+
+###############################
+#    Alpha & Beta diversity   #
+###############################
+
+rarefy_p_sampling_depth=10000
+ 

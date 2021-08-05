@@ -1,0 +1,11 @@
+mjb_param:--p-trim-left-f 19 --p-trim-left-r 20 --p-trunc-len-f 218 --p-trunc-len-r 212 --p-max-ee-f 2 --p-max-ee-r 2 --p-n-reads-learn 99000
+mjb_param2:--p-trim-left-f 18 --p-trim-left-r 20 --p-trunc-len-f 218 --p-trunc-len-r 212 --p-max-ee-f 2 --p-max-ee-r 2 --p-n-reads-learn 99000
+mjb_param3:--p-trim-left-f 17 --p-trim-left-r 20 --p-trunc-len-f 218 --p-trunc-len-r 212 --p-max-ee-f 2 --p-max-ee-r 2 --p-n-reads-learn 99000
+mjb_param4:--p-trim-left-f 16 --p-trim-left-r 20 --p-trunc-len-f 218 --p-trunc-len-r 212 --p-max-ee-f 2 --p-max-ee-r 2 --p-n-reads-learn 99000
+#mjb_param5:--p-trim-left-f 15 --p-trim-left-r 20 --p-trunc-len-f 218 --p-trunc-len-r 212 --p-max-ee-f 2 --p-max-ee-r 2 --p-n-reads-learn 990000
+#mjb_param6:--p-trim-left-f 14 --p-trim-left-r 20 --p-trunc-len-f 218 --p-trunc-len-r 212 --p-max-ee-f 2 --p-max-ee-r 2 --p-n-reads-learn 990000
+#mjb_param7:--p-trim-left-f 13 --p-trim-left-r 20 --p-trunc-len-f 218 --p-trunc-len-r 212 --p-max-ee-f 2 --p-max-ee-r 2 --p-n-reads-learn 990000
+#mjb_param8:--p-trim-left-f 12 --p-trim-left-r 20 --p-trunc-len-f 218 --p-trunc-len-r 212 --p-max-ee-f 2 --p-max-ee-r 2 --p-n-reads-learn 990000
+#mjb_param9:--p-trim-left-f 20 --p-trim-left-r 20 --p-trunc-len-f 218 --p-trunc-len-r 212 --p-max-ee-f 2 --p-max-ee-r 2 --p-n-reads-learn 990000
+#mjb_param10:--p-trim-left-f 21 --p-trim-left-r 20 --p-trunc-len-f 218 --p-trunc-len-r 212 --p-max-ee-f 2 --p-max-ee-r 2 --p-n-reads-learn 990000
+#mjb_param11:--p-trim-left-f 22 --p-trim-left-r 20 --p-trunc-len-f 218 --p-trunc-len-r 212 --p-max-ee-f 2 --p-max-ee-r 2 --p-n-reads-learn 990000
