@@ -31,7 +31,8 @@ MANIFEST_FILE_PATH=/mnt/pagagne/Miseq_NovaSeq_compare_qcheck/scripting/0.fastq_f
 # Use 0 to bypass evaluation (will just denoise all samples)
 DENOISE_EVALUATION_SAMPLE_SIZE=5
 TESTFILE_LOCATION=/mnt/pagagne/Miseq_NovaSeq_compare_qcheck/scripting/testlist.txt
-
+# if true, will generate a new random manifest. even if one already exists
+FORCE_RESAMPLING=false
 
 p_trim_left_f=20 
 p_trim_left_r=22

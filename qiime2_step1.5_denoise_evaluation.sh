@@ -19,25 +19,31 @@ then
     exit 1
 fi
 
-# Make temporary manifest file using defined user sample size
-echo "Random Sampling of the manifest file"
-head -n 1 $MANIFEST_FILE_PATH > $ANALYSIS_NAME.eval_manifest.temp
 
-
-if [ "$DATA_TYPE" == "paired" ]
+if [ "$FORCE_RESAMPLING" == "true" ] || [ ! -e $ANALYSIS_NAME.eval_manifest.temp ]
 then
-    sublist=$( awk 'NR>1' $MANIFEST_FILE_PATH | grep ",forward" | shuf -n $DENOISE_EVALUATION_SAMPLE_SIZE  )
-    for i in $sublist
-    do
-        sample_name=$( echo $i | awk -F ',' '{ print $1 }' )
-        echo $sample_name
-        grep $sample_name $MANIFEST_FILE_PATH  >> $ANALYSIS_NAME.eval_manifest.temp
-    done
+    # Make temporary manifest file using defined user sample size
+    echo "Random Sampling of the manifest file"
+    head -n 1 $MANIFEST_FILE_PATH > $ANALYSIS_NAME.eval_manifest.temp
+
+
+    if [ "$DATA_TYPE" == "paired" ]
+    then
+        sublist=$( awk 'NR>1' $MANIFEST_FILE_PATH | grep ",forward" | shuf -n $DENOISE_EVALUATION_SAMPLE_SIZE  )
+        for i in $sublist
+        do
+            sample_name=$( echo $i | awk -F ',' '{ print $1 }' )
+            echo $sample_name
+            grep $sample_name $MANIFEST_FILE_PATH  >> $ANALYSIS_NAME.eval_manifest.temp
+        done
+    else
+        awk 'NR>1' $MANIFEST_FILE_PATH | shuf -n $DENOISE_EVALUATION_SAMPLE_SIZE >> $ANALYSIS_NAME.eval_manifest.temp
+    fi
 else
-    awk 'NR>1' $MANIFEST_FILE_PATH | shuf -n $DENOISE_EVALUATION_SAMPLE_SIZE >> $ANALYSIS_NAME.eval_manifest.temp
+    echo "Random manifest already present, skipping sampling"
 fi
 
-
+exit
 
 echo "Importing subsample into qiime2 artifact file"
 $SINGULARITY_COMMAND qiime tools import \
@@ -52,6 +58,7 @@ $SINGULARITY_COMMAND qiime demux summarize \
 --o-visualization $ANALYSIS_NAME.denoise_eval_import.qzv
 
 
+
 echo "Preparing to launch tests"
 while read line
 do
@@ -64,8 +71,10 @@ do
     echo "Launching $jobn parameters set"
     $SINGULARITY_COMMAND qiime dada2 denoise-paired --i-demultiplexed-seqs $ANALYSIS_NAME.denoise_eval_import.qza $params --p-n-threads $NB_THREADS --o-table feature-table.$jobn.qza --o-representative-sequences rep-seqs.$jobn.qza --o-denoising-stats stats.$jobn.qza --verbose
     $SINGULARITY_COMMAND qiime metadata tabulate --m-input-file stats.$jobn.qza --o-visualization stats.$jobn.qzv 
+    # Export results in TSV format (easier for downstream analysis)
     $SINGULARITY_COMMAND qiime tools export --input-path stats.$jobn.qza --output-path stats.$jobn
     mv stats.$jobn/stats.tsv ./stats.$jobn.tsv
+    rm -rf stats.$jobn
 
 done<$TESTFILE_LOCATION
 
