@@ -30,9 +30,12 @@ MANIFEST_FILE_PATH=/mnt/pagagne/Miseq_NovaSeq_compare_qcheck/scripting/0.fastq_f
 
 # Use 0 to bypass evaluation (will just denoise all samples)
 DENOISE_EVALUATION_SAMPLE_SIZE=5
-TESTFILE_LOCATION=/mnt/pagagne/Miseq_NovaSeq_compare_qcheck/scripting/testlist.txt
+TESTFILE_PATH=/mnt/pagagne/Miseq_NovaSeq_compare_qcheck/scripting/testlist.txt
 # if true, will generate a new random manifest. even if one already exists
 FORCE_RESAMPLING=false
+
+# The next options are NOT for the evaluation step 1.5, use the testfile 
+# for this step
 
 p_trim_left_f=20 
 p_trim_left_r=22
@@ -48,14 +51,18 @@ p_chimera_method=consensus
 p_min_fold_parent_over_abundance=1.0
 
 ####################################
-# Step3  Feature Table generation  #
+# Step3  Feature Table filtering   #
 ####################################
 
-# No parameters for now
+# Use 0 to disable
+p_min_frequency=16
 
-########################################
-# Step4  Denovo Clustering (optional)  #
-########################################
+# Use 0 to disable
+p_min_samples=0
+
+##############################
+# Step4  Denovo Clustering   #
+##############################
 
 p_perc_identity=0.97
  
@@ -63,8 +70,18 @@ p_perc_identity=0.97
 #   Classifier Training   #
 ###########################
 
-fasta_database_path=
-taxo_database_path=
+# Only Specify these if you want to train the classifier with your database
+# It's recommended to use the same name (different extension) for the fasta and the tax file
+# The classifier output name must have the .qza extension
+FASTA_DATABASE_PATH=
+TAXO_DATABASE_PATH=
+CLASSIFIER_OUTPUT_NAME=
+#
+
+
+# Only specify this if you already have trained the classifier
+# with your database
+CLASSIFIER_DATABASE_PATH=
 
 ########################
 # Taxonomy Assignment  #

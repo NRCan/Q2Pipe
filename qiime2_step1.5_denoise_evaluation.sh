@@ -43,8 +43,6 @@ else
     echo "Random manifest already present, skipping sampling"
 fi
 
-exit
-
 echo "Importing subsample into qiime2 artifact file"
 $SINGULARITY_COMMAND qiime tools import \
 --type 'SampleData[PairedEndSequencesWithQuality]' \
@@ -56,8 +54,6 @@ echo "Summarizing data import into visualisation file"
 $SINGULARITY_COMMAND qiime demux summarize \
 --i-data $ANALYSIS_NAME.denoise_eval_import.qza \
 --o-visualization $ANALYSIS_NAME.denoise_eval_import.qzv
-
-
 
 echo "Preparing to launch tests"
 while read line
@@ -76,7 +72,6 @@ do
     mv stats.$jobn/stats.tsv ./stats.$jobn.tsv
     rm -rf stats.$jobn
 
-done<$TESTFILE_LOCATION
+done<$TESTFILE_PATH
 
-# Manifest file must be done 
 

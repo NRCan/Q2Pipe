@@ -28,8 +28,9 @@ $SINGULARITY_COMMAND qiime dada2 denoise-paired \
 --p-min-fold-parent-over-abundance $p_min_fold_parent_over_abundance
 
 $SINGULARITY_COMMAND qiime feature-table summarize \
---i-table table-dada2_16SNovaSeq21F218R212ee2.qza \
---o-visualization table-dada2_16SNovaSeq21F218R212ee2.qzv
+--i-table $ANALYSIS_NAME.table-dada2.qza \
+--o-visualization $ANALYSIS_NAME.table-dada2.qzv
+
 
 
 # Manifest file must be done 
