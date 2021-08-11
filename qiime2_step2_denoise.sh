@@ -10,9 +10,33 @@ fi
 
 source $optionfile
 
+ca_flag=""
+if [ "$SKIP_CUTADAPT" == "false" ]
+then
+    ca_flag="_CA"
+    untrimmed_flag=""
+    if [ "$p_discard_untrimmed" == "true" ]
+    then
+        untrimmed_flag="--p-discard-untrimmed"
+    fi
+    echo "Removing Adapters/Primers from reads with CutAdapt"
+    $SINGULARITY_COMMAND qiime cutadapt trim-paired \
+    --i-demultiplexed-sequences $ANALYSIS_NAME.import.qza  \
+    --o-trimmed-sequences $ANALYSIS_NAME.import$ca_flag.qza  \
+    $forward_trim_param $forward_primer \
+    $reverse_trim_param $reverse_primer \
+    $untrimmed_flag --p-cores $NB_THREADS
+
+    echo "Summarizing Cutadapt trimming into visualisation file"
+    $SINGULARITY_COMMAND qiime demux summarize \
+    --i-data $ANALYSIS_NAME.import$ca_flag.qza \
+    --o-visualization $ANALYSIS_NAME.import$ca_flag.qzv
+fi
+
+
 
 $SINGULARITY_COMMAND qiime dada2 denoise-paired \
---i-demultiplexed-seqs $ANALYSIS_NAME.import.qza \
+--i-demultiplexed-seqs $ANALYSIS_NAME.import$ca_flag.qza \
 --o-table $ANALYSIS_NAME.table-dada2.qza \
 --o-representative-sequences $ANALYSIS_NAME.rep-seqs-dada2.qza \
 --o-denoising-stats $ANALYSIS_NAME.denoising-stats-dada2.qza \

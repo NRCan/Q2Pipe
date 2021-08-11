@@ -22,6 +22,21 @@ TEMPORARY_DIRECTORY=
 DATA_TYPE=paired
 MANIFEST_FILE_PATH=/mnt/pagagne/Miseq_NovaSeq_compare_qcheck/scripting/0.fastq_files/manifest.csv
 
+#########################
+#  Cutadapt (Optional)  #
+#########################
+# This step is done during step 1.5 and step 2
+
+
+SKIP_CUTADAPT=true
+forward_trim_param=--p-front-f
+reverse_trim_param=--p-front-r
+
+forward_primer=GTGYCAGCMGCCGCGGTAA
+reverse_primer=CCGYCAATTYMTTTRAGTTT
+
+p_discard_untrimmed=false
+
 ##############################
 #  Step 2 : Dada2 Denoising  #
 ##############################
