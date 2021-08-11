@@ -92,14 +92,26 @@ CLASSIFIER_DATABASE_PATH=
 #    Taxa Filtering    #
 ########################
 
+# If true, launching the step will only output a correctly named output for next step
+SKIP_FILTERING=false
+
+# Never use space in the list, only comma
+p_exclude=mitochondria,chloroplast,unassigned
 
 ####################################
 #    Alpha rarefaction plotting    #
 ####################################
 
-p_max_depth=30000
-p_steps=20
+p_max_depth=8000
+p_steps=10
+p_iterations=10
+p_metrics=observed_features,shannon
 
+####################
+#   Rarefaction    #
+####################
+
+p_sampling_depth=10000
 
 ###############################
 #    Alpha & Beta diversity   #
