@@ -41,7 +41,7 @@ $SINGULARITY_COMMAND qiime feature-table filter-features \
 $SINGULARITY_COMMAND qiime feature-table summarize \
 --i-table $ANALYSIS_NAME.table-dada2_minfreq"$p_min_frequency"_minsamp"$p_min_samples".qza \
 --o-visualization $ANALYSIS_NAME.table-dada2_minfreq"$p_min_frequency"_minsamp"$p_min_samples".qzv \
---m-sample-metadata-file $METADATA_FILE_PATH --verbose
+--m-sample-metadata-file $METADATA_FILE_PATH --verbose || exit_on_error
 
 $SINGULARITY_COMMAND qiime feature-table filter-seqs \
 --i-data $ANALYSIS_NAME.rep-seqs-dada2.qza \
