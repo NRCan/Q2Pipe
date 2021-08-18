@@ -41,7 +41,7 @@ $SINGULARITY_COMMAND qiime tools import \
 echo "Summarizing Importation into visualisation file"
 $SINGULARITY_COMMAND qiime demux summarize \
 --i-data $ANALYSIS_NAME.import.qza \
---o-visualization $ANALYSIS_NAME.import.qzv || exit_on_error
+--o-visualization $ANALYSIS_NAME.import.qzv --verbose || exit_on_error
 
 
 #qiime cutadapt trim-paired \

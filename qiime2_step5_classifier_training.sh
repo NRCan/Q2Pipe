@@ -61,6 +61,6 @@ fi
 $SINGULARITY_COMMAND qiime feature-classifier fit-classifier-naive-bayes \
  --i-reference-reads $SEQS_QZA_PATH \
  --i-reference-taxonomy $TAXO_QZA_PATH \
- --o-classifier $CLASSIFIER_OUTPUT_NAME || exit_on_error
+ --o-classifier $CLASSIFIER_OUTPUT_NAME --verbose || exit_on_error
 
 

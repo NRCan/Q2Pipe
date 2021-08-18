@@ -30,20 +30,20 @@ then
     export TMPDIR="$TEMPORARY_DIRECTORY"
 fi
 
-$SINGULARITY_COMMAND feature-table rarefy \
+$SINGULARITY_COMMAND qiime feature-table rarefy \
 --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
 --p-sampling-depth $p_sampling_depth \
---o-rarefied-table $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza || exit_on_error
+--o-rarefied-table $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza --verbose || exit_on_error
 
 $SINGULARITY_COMMAND qiime feature-table summarize \
 --i-table $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
---o-visualization $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qzv 
+--o-visualization $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qzv --verbose
 
 $SINGULARITY_COMMAND qiime taxa barplot \
 --i-table $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
 --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
 --m-metadata-file $METADATA_FILE_PATH \
---o-visualization $ANALYSIS_NAME.barplots_rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qzv || exit_on_error
+--o-visualization $ANALYSIS_NAME.barplots_rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qzv --verbose || exit_on_error
 
 
 

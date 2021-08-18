@@ -37,11 +37,11 @@ $SINGULARITY_COMMAND qiime vsearch cluster-features-de-novo \
 --i-sequences $ANALYSIS_NAME.rep-seqs-dada2_minfreq"$p_min_frequency"_minsamp"$p_min_samples".qza \
 --p-perc-identity $p_perc_identity \
 --o-clustered-table $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza \
---o-clustered-sequences $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza || exit_on_error
+--o-clustered-sequences $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza --verbose || exit_on_error
 
 $SINGULARITY_COMMAND qiime feature-table summarize \
 --i-table $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza \
---o-visualization $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza
+--o-visualization $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza --verbose
 
 
 

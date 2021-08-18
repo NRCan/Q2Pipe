@@ -46,17 +46,17 @@ fi
 $SINGULARITY_COMMAND qiime feature-classifier classify-sklearn \
 --i-classifier $classifier_path \
 --i-reads $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza \
---o-classification $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza || exit_on_error
+--o-classification $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza --verbose || exit_on_error
 
 $SINGULARITY_COMMAND qiime metadata tabulate \
 --m-input-file $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
---o-visualization $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qzv
+--o-visualization $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qzv --verbose
 
 $SINGULARITY_COMMAND qiime taxa barplot \
 --i-table   $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza \
 --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
 --m-metadata-file $METADATA_FILE_PATH \
---o-visualization $ANALYSIS_NAME.barplots_taxo_dn"$p_perc_identity".qzv || exit_on_error
+--o-visualization $ANALYSIS_NAME.barplots_taxo_dn"$p_perc_identity".qzv --verbose || exit_on_error
 
 
 

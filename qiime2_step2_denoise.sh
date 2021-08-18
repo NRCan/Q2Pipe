@@ -46,12 +46,12 @@ then
     --o-trimmed-sequences $ANALYSIS_NAME.import$ca_flag.qza  \
     $forward_trim_param $forward_primer \
     $reverse_trim_param $reverse_primer \
-    $untrimmed_flag --p-cores $NB_THREADS || exit_on_error
+    $untrimmed_flag --p-cores $NB_THREADS --verbose || exit_on_error
 
     echo "Summarizing Cutadapt trimming into visualisation file"
     $SINGULARITY_COMMAND qiime demux summarize \
     --i-data $ANALYSIS_NAME.import$ca_flag.qza \
-    --o-visualization $ANALYSIS_NAME.import$ca_flag.qzv
+    --o-visualization $ANALYSIS_NAME.import$ca_flag.qzv --verbose
 fi
 
 
@@ -70,11 +70,11 @@ $SINGULARITY_COMMAND qiime dada2 denoise-paired \
 --p-n-threads $NB_THREADS \
 --p-n-reads-learn $p_n_reads_learn \
 --p-chimera-method $p_chimera_method \
---p-min-fold-parent-over-abundance $p_min_fold_parent_over_abundance || exit_on_error
+--p-min-fold-parent-over-abundance $p_min_fold_parent_over_abundance --verbose || exit_on_error
 
 $SINGULARITY_COMMAND qiime feature-table summarize \
 --i-table $ANALYSIS_NAME.table-dada2.qza \
---o-visualization $ANALYSIS_NAME.table-dada2.qzv
+--o-visualization $ANALYSIS_NAME.table-dada2.qzv --verbose
 
 
 

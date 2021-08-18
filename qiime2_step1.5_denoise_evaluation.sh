@@ -75,7 +75,7 @@ $SINGULARITY_COMMAND qiime tools import \
 echo "Summarizing data import into visualisation file"
 $SINGULARITY_COMMAND qiime demux summarize \
 --i-data $ANALYSIS_NAME.denoise_eval_import.qza \
---o-visualization $ANALYSIS_NAME.denoise_eval_import.qzv 
+--o-visualization $ANALYSIS_NAME.denoise_eval_import.qzv --verbose
 
 ca_flag=""
 if [ "$SKIP_CUTADAPT" == "false" ]
@@ -92,12 +92,12 @@ then
     --o-trimmed-sequences $ANALYSIS_NAME.denoise_eval_import$ca_flag.qza \
     $forward_trim_param $forward_primer \
     $reverse_trim_param $reverse_primer \
-    $untrimmed_flag --p-cores $NB_THREADS || exit_on_error
+    $untrimmed_flag --p-cores $NB_THREADS --verbose || exit_on_error
 
     echo "Summarizing Cutadapt trimming into visualisation file"
     $SINGULARITY_COMMAND qiime demux summarize \
     --i-data $ANALYSIS_NAME.denoise_eval_import$ca_flag.qza \
-    --o-visualization $ANALYSIS_NAME.denoise_eval_import$ca_flag.qzv 
+    --o-visualization $ANALYSIS_NAME.denoise_eval_import$ca_flag.qzv --verbose
 
 fi
 
@@ -113,7 +113,7 @@ do
     params=$( echo $line | awk -F ':' '{ print $2 }' | sed 's/\r$//' )
     echo "Launching $jobn parameters set"
     $SINGULARITY_COMMAND qiime dada2 denoise-paired --i-demultiplexed-seqs $ANALYSIS_NAME.denoise_eval_import$ca_flag.qza $params --p-n-threads $NB_THREADS --o-table $ANALYSIS_NAME.feature-table.$jobn.qza --o-representative-sequences $ANALYSIS_NAME.rep-seqs.$jobn.qza --o-denoising-stats $ANALYSIS_NAME.stats.$jobn.qza --verbose
-    $SINGULARITY_COMMAND qiime metadata tabulate --m-input-file $ANALYSIS_NAME.stats.$jobn.qza --o-visualization $ANALYSIS_NAME.stats.$jobn.qzv 
+    $SINGULARITY_COMMAND qiime metadata tabulate --m-input-file $ANALYSIS_NAME.stats.$jobn.qza --o-visualization $ANALYSIS_NAME.stats.$jobn.qzv --verbose
     # Export results in TSV format (easier for downstream analysis)
     $SINGULARITY_COMMAND qiime tools export --input-path $ANALYSIS_NAME.stats.$jobn.qza --output-path $ANALYSIS_NAME.stats.$jobn
     mv $ANALYSIS_NAME.stats.$jobn/stats.tsv ./$ANALYSIS_NAME.stats.$jobn.tsv
