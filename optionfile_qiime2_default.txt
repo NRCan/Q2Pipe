@@ -88,8 +88,11 @@ p_perc_identity=0.97
 # Only Specify these if you want to train the classifier with your database
 # It's recommended to use the same name (different extension) for the fasta and the tax file
 # The classifier output name must have the .qza extension
-FASTA_DATABASE_PATH=
-TAXO_DATABASE_PATH=
+
+#FASTA_DATABASE_PATH=
+#TAXO_DATABASE_PATH=
+SEQS_QZA_PATH=
+TAXO_QZA_PATH=
 CLASSIFIER_OUTPUT_NAME=
 #
 
