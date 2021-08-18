@@ -135,5 +135,4 @@ p_sampling_depth=10000
 #    Alpha & Beta diversity   #
 ###############################
 
-rarefy_p_sampling_depth=10000
  
