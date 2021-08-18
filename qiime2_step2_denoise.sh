@@ -1,5 +1,20 @@
 #!/bin/bash
 
+################################
+#                              #
+#      Qiime 2 Pipeline        #
+#     Step 2 - Denoising       #
+#       August 18, 2021        #
+#                              #
+################################
+
+exit_on_error(){
+   echo "Qiime2 command error detected"
+   echo "Exiting program"
+   exit 1
+}
+
+
 optionfile=$1
 
 if [ ! $optionfile ]
@@ -9,6 +24,12 @@ then
 fi
 
 source $optionfile
+if [ -d $TEMPORARY_DIRECTORY ]
+then
+    echo "Overriding default temporary directory to $TEMPORARY_DIRECTORY"
+    export TMPDIR="$TEMPORARY_DIRECTORY"
+fi
+
 
 ca_flag=""
 if [ "$SKIP_CUTADAPT" == "false" ]
@@ -25,7 +46,7 @@ then
     --o-trimmed-sequences $ANALYSIS_NAME.import$ca_flag.qza  \
     $forward_trim_param $forward_primer \
     $reverse_trim_param $reverse_primer \
-    $untrimmed_flag --p-cores $NB_THREADS
+    $untrimmed_flag --p-cores $NB_THREADS || exit_on_error
 
     echo "Summarizing Cutadapt trimming into visualisation file"
     $SINGULARITY_COMMAND qiime demux summarize \
@@ -49,7 +70,7 @@ $SINGULARITY_COMMAND qiime dada2 denoise-paired \
 --p-n-threads $NB_THREADS \
 --p-n-reads-learn $p_n_reads_learn \
 --p-chimera-method $p_chimera_method \
---p-min-fold-parent-over-abundance $p_min_fold_parent_over_abundance
+--p-min-fold-parent-over-abundance $p_min_fold_parent_over_abundance || exit_on_error
 
 $SINGULARITY_COMMAND qiime feature-table summarize \
 --i-table $ANALYSIS_NAME.table-dada2.qza \
@@ -57,5 +78,4 @@ $SINGULARITY_COMMAND qiime feature-table summarize \
 
 
 
-# Manifest file must be done 
 

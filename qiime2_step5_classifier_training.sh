@@ -1,5 +1,19 @@
 #!/bin/bash
 
+################################
+#                              #
+#      Qiime 2 Pipeline        #
+# Step 5 - Classifier Training #
+#       August 18, 2021        #
+#                              #
+################################
+
+exit_on_error(){
+   echo "Qiime2 command error detected"
+   echo "Exiting program"
+   exit 1
+}
+
 optionfile=$1
 
 if [ ! $optionfile ]
@@ -9,6 +23,13 @@ then
 fi
 
 source $optionfile
+
+if [ -d $TEMPORARY_DIRECTORY ]
+then
+    echo "Overriding default temporary directory to $TEMPORARY_DIRECTORY"
+    export TMPDIR="$TEMPORARY_DIRECTORY"
+fi
+
 
 if [ $CLASSIFIER_DATABASE_PATH ]
 then
@@ -40,8 +61,6 @@ fi
 $SINGULARITY_COMMAND qiime feature-classifier fit-classifier-naive-bayes \
  --i-reference-reads $SEQS_QZA_PATH \
  --i-reference-taxonomy $TAXO_QZA_PATH \
- --o-classifier $CLASSIFIER_OUTPUT_NAME
+ --o-classifier $CLASSIFIER_OUTPUT_NAME || exit_on_error
 
-
-# Manifest file must be done 
 

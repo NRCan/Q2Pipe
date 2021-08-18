@@ -1,5 +1,21 @@
 #!/bin/bash
 
+#################################
+#                               #
+#       Qiime 2 Pipeline        #
+# Step 1.5 - Denoise Evaluation #
+#        August 18, 2021        #
+#                               #
+#################################
+
+exit_on_error(){
+   echo "Qiime2 command error detected"
+   echo "Exiting program"
+   exit 1
+}
+
+
+
 # This Qiime2 step will help to evaluate optimals parameters for the denoising step
 # It will generate a serie of denoising on a random subsample (size defined by the user) extracted from the original manifest file
 
@@ -12,6 +28,12 @@ then
 fi
 
 source $optionfile
+if [ -d $TEMPORARY_DIRECTORY ]
+then
+    echo "Overriding default temporary directory to $TEMPORARY_DIRECTORY"
+    export TMPDIR="$TEMPORARY_DIRECTORY"
+fi
+
 
 if [ $DENOISE_EVALUATION_SAMPLE_SIZE -eq 0 ]
 then
@@ -48,12 +70,12 @@ $SINGULARITY_COMMAND qiime tools import \
 --type 'SampleData[PairedEndSequencesWithQuality]' \
 --input-path $ANALYSIS_NAME.eval_manifest.temp \
 --output-path $ANALYSIS_NAME.denoise_eval_import.qza \
---input-format PairedEndFastqManifestPhred33
+--input-format PairedEndFastqManifestPhred33 || exit_on_error
 
 echo "Summarizing data import into visualisation file"
 $SINGULARITY_COMMAND qiime demux summarize \
 --i-data $ANALYSIS_NAME.denoise_eval_import.qza \
---o-visualization $ANALYSIS_NAME.denoise_eval_import.qzv
+--o-visualization $ANALYSIS_NAME.denoise_eval_import.qzv 
 
 ca_flag=""
 if [ "$SKIP_CUTADAPT" == "false" ]
@@ -70,12 +92,12 @@ then
     --o-trimmed-sequences $ANALYSIS_NAME.denoise_eval_import$ca_flag.qza \
     $forward_trim_param $forward_primer \
     $reverse_trim_param $reverse_primer \
-    $untrimmed_flag --p-cores $NB_THREADS
+    $untrimmed_flag --p-cores $NB_THREADS || exit_on_error
 
     echo "Summarizing Cutadapt trimming into visualisation file"
     $SINGULARITY_COMMAND qiime demux summarize \
     --i-data $ANALYSIS_NAME.denoise_eval_import$ca_flag.qza \
-    --o-visualization $ANALYSIS_NAME.denoise_eval_import$ca_flag.qzv
+    --o-visualization $ANALYSIS_NAME.denoise_eval_import$ca_flag.qzv 
 
 fi
 

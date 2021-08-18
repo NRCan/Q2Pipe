@@ -1,5 +1,21 @@
 #!/bin/bash
 
+################################
+#                              #
+#      Qiime 2 Pipeline        #
+#   Step 6 - Classification    #
+#       August 18, 2021        #
+#                              #
+################################
+
+exit_on_error(){
+   echo "Qiime2 command error detected"
+   echo "Exiting program"
+   exit 1
+}
+
+
+
 optionfile=$1
 
 if [ ! $optionfile ]
@@ -9,6 +25,13 @@ then
 fi
 
 source $optionfile
+
+if [ -d $TEMPORARY_DIRECTORY ]
+then
+    echo "Overriding default temporary directory to $TEMPORARY_DIRECTORY"
+    export TMPDIR="$TEMPORARY_DIRECTORY"
+fi
+
 
 
 if [ ! $CLASSIFIER_DATABASE_PATH ]
@@ -23,7 +46,7 @@ fi
 $SINGULARITY_COMMAND qiime feature-classifier classify-sklearn \
 --i-classifier $classifier_path \
 --i-reads $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza \
---o-classification $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza
+--o-classification $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza || exit_on_error
 
 $SINGULARITY_COMMAND qiime metadata tabulate \
 --m-input-file $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
@@ -33,9 +56,8 @@ $SINGULARITY_COMMAND qiime taxa barplot \
 --i-table   $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza \
 --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
 --m-metadata-file $METADATA_FILE_PATH \
---o-visualization $ANALYSIS_NAME.barplots_taxo_dn"$p_perc_identity".qzv
+--o-visualization $ANALYSIS_NAME.barplots_taxo_dn"$p_perc_identity".qzv || exit_on_error
 
 
 
-# Manifest file must be done 
 
