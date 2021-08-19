@@ -32,7 +32,17 @@ then
     export TMPDIR="$TEMPORARY_DIRECTORY"
 fi
 
-
+if [ $CLASSIFIER_DATABASE_PATH ] && [ $CLASSIFIER_OUTPUT_NAME ]
+then
+    if [ "$(stat -L -c %d:%i $CLASSIFIER_DATABASE_PATH)" = "$(stat -L -c %d:%i $CLASSIFIER_OUTPUT_NAME)" ] 
+    then
+        classifier_path=$CLASSIFIER_DATABASE_PATH
+    else
+        echo "ERROR: Ambiguity detected in option file" 
+        echo "CLASSIFIER_DATABASE_PATH and CLASSIFIER_OUTPUT_NAME are both defined but are not the same file"
+        exit 1
+    fi
+fi
 
 if [ ! $CLASSIFIER_DATABASE_PATH ]
 then
@@ -42,10 +52,10 @@ else
 fi
 
 
-
 $SINGULARITY_COMMAND qiime feature-classifier classify-sklearn \
 --i-classifier $classifier_path \
 --i-reads $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza \
+--p-n-jobs $NB_THREADS \
 --o-classification $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza --verbose || exit_on_error
 
 $SINGULARITY_COMMAND qiime metadata tabulate \
