@@ -34,7 +34,7 @@ fi
 
 if [ "$SKIP_FILTERING" == "true" ]
 then
-    echo "Skipping option detected, important file will be copy of original files"
+    echo "Skipping option detected, important file will be copies of original files"
     cp -v $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza
     cp -v $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza $ANALYSIS_NAME.filtered_rep-seqs-dada2_dn"$p_perc_identity".qza
     exit 0
