@@ -31,6 +31,12 @@ then
     export TMPDIR="$TEMPORARY_DIRECTORY"
 fi
 
+if [ -d $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity" ]
+then
+    echo "ERROR: Folder \"$ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"\" already exist"
+    echo "Please delete this folder before proceeding"
+    exit 1
+fi
 
 $SINGULARITY_COMMAND qiime diversity core-metrics \
 --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
@@ -53,9 +59,8 @@ $SINGULARITY_COMMAND qiime diversity alpha-group-significance \
 --m-metadata-file $METADATA_FILE_PATH \
 --o-visualization $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/observed_features-group-significance_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".qzv --verbose || exit_on_error
 
-# NOT SURE ABOUT THIS ONE (I-TABLE NOT COPIED INSIDE THE FOLDER)
 $SINGULARITY_COMMAND qiime diversity alpha \
---i-table  $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/$ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
+--i-table  $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
 --p-metric simpson \
 --o-alpha-diversity $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/simpson_index_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".qza --verbose || exit_on_error
 
