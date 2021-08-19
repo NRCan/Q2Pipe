@@ -27,7 +27,6 @@ MANIFEST_FILE_PATH=/mnt/pagagne/Miseq_NovaSeq_compare_qcheck/scripting/0.fastq_f
 #########################
 # This step is done during step 1.5 and step 2
 
-
 SKIP_CUTADAPT=true
 forward_trim_param=--p-front-f
 reverse_trim_param=--p-front-r
@@ -37,9 +36,9 @@ reverse_primer=CCGYCAATTYMTTTRAGTTT
 
 p_discard_untrimmed=false
 
-##############################
-#  Step 2 : Dada2 Denoising  #
-##############################
+######################################################
+#  Step 1.5 : Dada2 Denoising Parameters Evaluation  #
+######################################################
 
 # if your data is single-end, only p_trim_left_f, p_trunc_len_f and p_max_ee_f will be used in trimming
 
@@ -49,8 +48,11 @@ TESTFILE_PATH=/mnt/pagagne/Miseq_NovaSeq_compare_qcheck/scripting/testlist.txt
 # if true, will generate a new random manifest. even if one already exists
 FORCE_RESAMPLING=false
 
-# The next options are NOT for the evaluation step 1.5, use the testfile 
-# for this step
+##################################
+#   Step 1.5 : Dada2 Denoising   #
+##################################
+
+# NOT FOR STEP 1.5 (YOU MUST USE TESTFILE FOR STEP 1.5)
 
 p_trim_left_f=20 
 p_trim_left_r=22
@@ -123,6 +125,8 @@ p_exclude=mitochondria,chloroplast,unassigned
 p_max_depth=8000
 p_steps=10
 p_iterations=10
+# Leave blank for default value (observed_features,shannon)
+# Use this format: observed_features,shannon
 p_metrics=observed_features,shannon
 
 ####################
@@ -135,4 +139,4 @@ p_sampling_depth=10000
 #    Alpha & Beta diversity   #
 ###############################
 
- 
+
