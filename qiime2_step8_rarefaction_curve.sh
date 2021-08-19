@@ -25,18 +25,34 @@ fi
 
 source $optionfile
 
-if [ -d $TEMPORARY_DIRECTORY ]
+echo "WARNING, default system temp directory will be used for this command (unresolved issue with user defined folders)"
+# Temporary fix, because user defined temporary folder cause an Permission Denied error in Python
+# Must post this on Qiime2 github
+#if [ -d $TEMPORARY_DIRECTORY ]
+#then
+#    echo "Overriding default temporary directory to $TEMPORARY_DIRECTORY"
+#    export TMPDIR="$TEMPORARY_DIRECTORY"
+#fi
+
+
+metric_str=''
+
+if [ $p_metrics ]
 then
-    echo "Overriding default temporary directory to $TEMPORARY_DIRECTORY"
-    export TMPDIR="$TEMPORARY_DIRECTORY"
+    metric_str=""
+    for i in $( echo $p_metrics | sed 's/,/ /g' ) 
+    do  
+        metric_str="$metric_str --p-metrics $i"
+    done
+    #metric_str="$metric_str \\"
 fi
+
 
 $SINGULARITY_COMMAND qiime diversity alpha-rarefaction \
 --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
 --p-max-depth $p_max_depth \
 --p-steps $p_steps \
---p-iterations $p_iterations \
---p-metrics $p_metrics \
+--p-iterations $p_iterations $metric_str \
 --m-metadata-file $METADATA_FILE_PATH \
 --o-visualization $ANALYSIS_NAME.rarefaction_curves_filtered.qzv --verbose || exit_on_error
 
