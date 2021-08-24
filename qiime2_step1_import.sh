@@ -28,7 +28,7 @@ source $optionfile
 if [ -d $TEMPORARY_DIRECTORY ]
 then
     echo "Overriding default temporary directory to $TEMPORARY_DIRECTORY"
-    export TMPDIR="$TEMPORARY_DIRECTORY"
+    export TMPDIR=$TEMPORARY_DIRECTORY
 fi
 
 echo "Importing Data into artifact file"
