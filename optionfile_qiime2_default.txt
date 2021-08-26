@@ -6,11 +6,13 @@ ANALYSIS_NAME=BASIC_TEST
 NB_THREADS=8
 
 # Leave empty if you don't use singularity image to launch Qiime2
+# To define a different temporary folder, add -B /path/to/your/folder:/tmp
 SINGULARITY_COMMAND=
 
 METADATA_FILE_PATH=
 
 # Leave empty to use system's default  (/tmp)
+# DO NOT SPECIFY IF YOU ARE USING SINGULARITY COMMAND
 TEMPORARY_DIRECTORY=
 
 ########################## 
