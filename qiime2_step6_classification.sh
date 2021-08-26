@@ -26,12 +26,16 @@ fi
 
 source $optionfile
 
-if [ -d $TEMPORARY_DIRECTORY ]
+if [ $TEMPORARY_DIRECTORY ]
 then
     echo "Overriding default temporary directory to $TEMPORARY_DIRECTORY"
-    export TMPDIR="$TEMPORARY_DIRECTORY"
+    if [ ! -d $TEMPORARY_DIRECTORY ] || [ ! -w $TEMPORARY_DIRECTORY ]
+    then
+        echo "ERROR: $TEMPORARY_DIRECTORY does not exist or is read only"
+        exit 2
+    fi
+    export TMPDIR=$TEMPORARY_DIRECTORY
 fi
-
 if [ $CLASSIFIER_DATABASE_PATH ] && [ $CLASSIFIER_OUTPUT_NAME ]
 then
     if [ "$(stat -L -c %d:%i $CLASSIFIER_DATABASE_PATH)" = "$(stat -L -c %d:%i $CLASSIFIER_OUTPUT_NAME)" ] 

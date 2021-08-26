@@ -25,12 +25,16 @@ fi
 
 source $optionfile
 
-if [ -d $TEMPORARY_DIRECTORY ]
+if [ $TEMPORARY_DIRECTORY ]
 then
     echo "Overriding default temporary directory to $TEMPORARY_DIRECTORY"
-    export TMPDIR="$TEMPORARY_DIRECTORY"
+    if [ ! -d $TEMPORARY_DIRECTORY ] || [ ! -w $TEMPORARY_DIRECTORY ]
+    then
+        echo "ERROR: $TEMPORARY_DIRECTORY does not exist or is read only"
+        exit 2
+    fi
+    export TMPDIR=$TEMPORARY_DIRECTORY
 fi
-
 
 if [ "$SKIP_FILTERING" == "true" ]
 then

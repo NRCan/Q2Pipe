@@ -25,7 +25,18 @@ fi
 
 source $optionfile
 
-echo "WARNING, default system temp directory will be used for this command (unresolved issue with user defined folders)"
+if [ $TEMPORARY_DIRECTORY ]
+then
+    echo "Overriding default temporary directory to $TEMPORARY_DIRECTORY"
+    if [ ! -d $TEMPORARY_DIRECTORY ] || [ ! -w $TEMPORARY_DIRECTORY ]
+    then
+        echo "ERROR: $TEMPORARY_DIRECTORY does not exist or is read only"
+        exit 2
+    fi
+    export TMPDIR=$TEMPORARY_DIRECTORY
+fi
+
+#echo "WARNING, default system temp directory will be used for this command (unresolved issue with user defined folders)"
 # Temporary fix, because user defined temporary folder cause an Permission Denied error in Python
 # Must post this on Qiime2 github
 #if [ -d $TEMPORARY_DIRECTORY ]
