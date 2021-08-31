@@ -83,7 +83,7 @@ p_min_samples=0
 # Step4  Denovo Clustering   #
 ##############################
 
-p_perc_identity=0.97
+p_perc_identity=1.0
  
 ###########################
 #   Classifier Training   #
