@@ -110,7 +110,7 @@ fi
 echo "Preparing to launch tests"
 while read line
 do
-    if [ "${line::1}" == "#" ]
+    if [ "${line::1}" == "#" ] || [ "$line" == "" ]
     then
         continue
     fi
