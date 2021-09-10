@@ -44,7 +44,7 @@ then
     exit 0
 fi
 
-if [ $p_include ] && [ $p_include ]
+if [ $p_exclude ] && [ $p_include ]
 then
     echo "ERROR: Both p_include and p_exclude are defined, please use only one"
     exit 1
