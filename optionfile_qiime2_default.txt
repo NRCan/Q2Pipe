@@ -73,10 +73,15 @@ p_min_fold_parent_over_abundance=1.0
 # Step3  Feature Table filtering   #
 ####################################
 
+# REPLACE OR ADD AUTO CALCULATION ACCORDING TO VISUALIZATION DATA
 # Use 0 to disable
+#freq_threshold=0.0005
 p_min_frequency=16
 
+
+# IDEM ^^^^
 # Use 0 to disable
+#sample_threshold=0
 p_min_samples=0
 
 ##############################
@@ -119,7 +124,13 @@ CLASSIFIER_DATABASE_PATH=
 SKIP_FILTERING=false
 
 # Never use space in the list, only comma
+# You should only one of these at the time (the other must be empty)
+# p_exclude remove unwanted taxe and p_include keep only specified taxa
 p_exclude=mitochondria,chloroplast,unassigned
+p_include=
+
+# Must be exact or contains (default)
+p_mode=contains
 
 ####################################
 #    Alpha rarefaction plotting    #

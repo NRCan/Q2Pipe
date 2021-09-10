@@ -43,10 +43,28 @@ then
     cp -v $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza $ANALYSIS_NAME.filtered_rep-seqs-dada2_dn"$p_perc_identity".qza
     exit 0
 fi
+
+if [ $p_include ] && [ $p_include ]
+then
+    echo "ERROR: Both p_include and p_exclude are defined, please use only one"
+    exit 1
+fi
+
+if [ $p_exclude ]
+then
+    excl_param="--p-exclude $p_exclude"
+fi
+
+if [ $p_include ]
+then
+    excl_param="--p-include $p_include"
+fi
+
 $SINGULARITY_COMMAND qiime taxa filter-table \
 --i-table $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza \
 --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
---p-exclude $p_exclude \
+$excl_param \
+--p-mode $p_mode \
 --o-filtered-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza --verbose || exit_on_error
 
 $SINGULARITY_COMMAND qiime feature-table summarize \
@@ -57,7 +75,8 @@ $SINGULARITY_COMMAND qiime feature-table summarize \
 $SINGULARITY_COMMAND qiime taxa filter-seqs \
 --i-sequences $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza \
 --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
---p-exclude $p_exclude \
+$excl_param \
+--p-mode $p_mode \
 --o-filtered-sequences $ANALYSIS_NAME.filtered_rep-seqs-dada2_dn"$p_perc_identity".qza --verbose || exit_on_error
 
 $SINGULARITY_COMMAND qiime feature-table tabulate-seqs \
