@@ -132,6 +132,14 @@ p_include=
 # Must be exact or contains (default)
 p_mode=contains
 
+# If you don't want to rarefy, you can ignore the next options, skip step 8,9 and use step10_metrics_norarefy
+#############################
+#    Rarefaction Override   #
+#############################
+
+# if you activate this option, you can ignore the next sections, skip step 8,9 and use step10_metrics_norarefy
+SKIP_RAREFACTION=false
+
 ####################################
 #    Alpha rarefaction plotting    #
 ####################################
@@ -143,14 +151,11 @@ p_iterations=10
 # Use this format: observed_features,shannon
 p_metrics=observed_features,shannon
 
-####################
-#   Rarefaction    #
-####################
+##############################################
+#   Metrics Generation (With Rarefaction)    #
+##############################################
 
 p_sampling_depth=10000
 
-###############################
-#    Alpha & Beta diversity   #
-###############################
 
 

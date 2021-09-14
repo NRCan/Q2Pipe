@@ -35,6 +35,12 @@ then
     export TMPDIR=$TEMPORARY_DIRECTORY
 fi
 
+if [ "$SKIP_RAREFACTION" == "true" ]
+then
+    echo "ERROR: Rarefaction override detected in option file, you must skip this step"
+    exit 1
+fi
+
 $SINGULARITY_COMMAND qiime feature-table rarefy \
 --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
 --p-sampling-depth $p_sampling_depth \

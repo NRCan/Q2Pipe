@@ -45,6 +45,11 @@ fi
 #    export TMPDIR="$TEMPORARY_DIRECTORY"
 #fi
 
+if [ "$SKIP_RAREFACTION" == "true" ]
+then
+    echo "ERROR: Rarefaction override detected in option file, you must skip this step"
+    exit 1
+fi
 
 metric_str=''
 

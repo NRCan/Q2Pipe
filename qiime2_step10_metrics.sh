@@ -36,6 +36,12 @@ then
     export TMPDIR=$TEMPORARY_DIRECTORY
 fi
 
+if [ "$SKIP_RAREFACTION" == "true" ]
+then
+    echo "ERROR: Rarefaction override detected in option file, you must use qiime2_step10_metrics_norarefy"
+    exit 1
+fi
+
 if [ -d $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity" ]
 then
     echo "ERROR: Folder \"$ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"\" already exist"
