@@ -74,12 +74,12 @@ $SINGULARITY_COMMAND qiime tools export \
 
 $SINGULARITY_COMMAND qiime diversity alpha \
 --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
---p-metric observed_otus \
---o-alpha-diversity $output_f/alpha_OTUs.qza
+--p-metric observed_features \
+--o-alpha-diversity $output_f/alpha_observedFeatures.qza
 
 $SINGULARITY_COMMAND qiime tools export \
---input-path $output_f/alpha_OTUs.qza \
---output-path $output_f/alpha_OTUs.txt
+--input-path $output_f/alpha_observedFeatures.qza \
+--output-path $output_f/alpha_observedFeatures.txt
 
 # Beta Diversity
 $SINGULARITY_COMMAND qiime diversity beta \
