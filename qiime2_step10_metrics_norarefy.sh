@@ -80,6 +80,7 @@ done
 
 for i in $beta_metrics
 do
+    echo "Calculating beta diversity metric $i"
     $SINGULARITY_COMMAND qiime diversity beta \
     --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
     --p-metric $i \
