@@ -60,49 +60,89 @@ fi
 output_f="$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity"
 mkdir $output_f
 
-# Alpha Diversity
-$SINGULARITY_COMMAND qiime diversity alpha \
---i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
---p-metric shannon \
---o-alpha-diversity $output_f/alpha_shannon.qza
+# Could be added as an option
+alpha_metrics="shannon simpson observed_features chao1 pielou_e"
+beta_metrics="braycurtis jaccard"
 
-$SINGULARITY_COMMAND qiime tools export \
---input-path  $output_f/alpha_shannon.qza \
---output-path $output_f/alpha_shannon.txt
+for i in $alpha_metrics
+do
+    echo "Calculating alpha diversity metric $i"
+    $SINGULARITY_COMMAND qiime diversity alpha \
+    --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
+    --p-metric $i \
+    --o-alpha-diversity $output_f/alpha_$i.qza
 
-$SINGULARITY_COMMAND qiime diversity alpha \
---i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
---p-metric pielou_e \
---o-alpha-diversity $output_f/alpha_pielou.qza
+    $SINGULARITY_COMMAND qiime diversity alpha-group-significance \
+    --i-alpha-diversity $output_f/alpha_$i.qza \
+    --m-metadata-file $METADATA_FILE_PATH \
+    --o-visualization $output_f/alpha_$i.qzv
+done
 
-$SINGULARITY_COMMAND qiime tools export \
---input-path $output_f/alpha_pielou.qza \
---output-path $output_f/alpha_pielou.txt
+for i in $beta_metrics
+do
+    $SINGULARITY_COMMAND qiime diversity beta \
+    --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
+    --p-metric $i \
+    --p-n-jobs $NB_THREADS \
+    --o-distance-matrix $output_f/beta_"$i"_distance_matrix.qza
 
-$SINGULARITY_COMMAND qiime diversity alpha \
---i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
---p-metric observed_features \
---o-alpha-diversity $output_f/alpha_observedFeatures.qza
+    $SINGULARITY_COMMAND qiime diversity pcoa \
+    --i-distance-matrix $output_f/beta_"$i"_distance_matrix.qza \
+    --o-pcoa $output_f/beta_"$i"_pcoa.qza
 
-$SINGULARITY_COMMAND qiime tools export \
---input-path $output_f/alpha_observedFeatures.qza \
---output-path $output_f/alpha_observedFeatures.txt
+    $SINGULARITY_COMMAND qiime emperor plot \
+    --i-pcoa $output_f/beta_"$i"_pcoa.qza \
+    --m-metadata-file $METADATA_FILE_PATH \
+    --o-visualization $output_f/beta_"$i"_emperor.qzv
+
+done
+
+# Alpha Diversity $SINGULARITY_COMMAND qiime diversity alpha \ --i-table 
+#$ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \ --p-metric shannon \ --o-alpha-diversity 
+#$output_f/alpha_shannon.qza
+
+#qiime diversity alpha-group-significance \
+#--i-alpha-diversity $output_f/alpha_shannon.qza \
+#--m-metadata-file $METADATA_FILE_PATH \
+#--o-visualization $output_f/alpha_shannon.qzv
+
+#$SINGULARITY_COMMAND qiime tools export \
+#--input-path  $output_f/alpha_shannon.qza \
+#--output-path $output_f/alpha_shannon.txt
+
+#$SINGULARITY_COMMAND qiime diversity alpha \
+#--i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
+#--p-metric pielou_e \
+#--o-alpha-diversity $output_f/alpha_pielou.qza
+
+#$SINGULARITY_COMMAND qiime tools export \
+#--input-path $output_f/alpha_pielou.qza \
+#--output-path $output_f/alpha_pielou.txt
+
+#$SINGULARITY_COMMAND qiime diversity alpha \
+#--i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
+#--p-metric observed_features \
+#--o-alpha-diversity $output_f/alpha_observedFeatures.qza
+
+#$SINGULARITY_COMMAND qiime tools export \
+#--input-path $output_f/alpha_observedFeatures.qza \
+#--output-path $output_f/alpha_observedFeatures.txt
 
 # Beta Diversity
-$SINGULARITY_COMMAND qiime diversity beta \
---i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
---p-metric jaccard \
---p-n-jobs $NB_THREADS \
---o-distance-matrix $output_f/distance-matrix_jaccard.qza
+#$SINGULARITY_COMMAND qiime diversity beta \
+#--i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
+#--p-metric jaccard \
+#--p-n-jobs $NB_THREADS \
+#--o-distance-matrix $output_f/distance-matrix_jaccard.qza
 
-$SINGULARITY_COMMAND qiime diversity pcoa \
---i-distance-matrix $output_f/distance-matrix_jaccard.qza \
---o-pcoa $output_f/pcoa_jaccard.qza
+#$SINGULARITY_COMMAND qiime diversity pcoa \
+#--i-distance-matrix $output_f/distance-matrix_jaccard.qza \
+#--o-pcoa $output_f/pcoa_jaccard.qza
 
-$SINGULARITY_COMMAND qiime emperor plot \
---i-pcoa $output_f/pcoa_jaccard.qza \
---m-metadata-file $METADATA_FILE_PATH \
---o-visualization $output_f/pcoa_jaccard.qzv
+#$SINGULARITY_COMMAND qiime emperor plot \
+#--i-pcoa $output_f/pcoa_jaccard.qza \
+#--m-metadata-file $METADATA_FILE_PATH \
+#--o-visualization $output_f/pcoa_jaccard.qzv
 
 #$SINGULARITY_COMMAND qiime diversity core-metrics \
 #--i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
