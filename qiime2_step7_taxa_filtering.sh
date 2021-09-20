@@ -44,11 +44,11 @@ then
     exit 0
 fi
 
-if [ $p_exclude ] && [ $p_include ]
-then
-    echo "ERROR: Both p_include and p_exclude are defined, please use only one"
-    exit 1
-fi
+#if [ $p_exclude ] && [ $p_include ]
+#then
+#    echo "ERROR: Both p_include and p_exclude are defined, please use only one"
+#    exit 1
+#fi
 
 if [ $p_exclude ]
 then
@@ -59,6 +59,12 @@ if [ $p_include ]
 then
     excl_param="--p-include $p_include"
 fi
+
+if [ $p_exclude ] && [ $p_include ]
+then
+    excl_param="--p-include $p_include --p-exclude $p_exclude"
+fi
+
 
 $SINGULARITY_COMMAND qiime taxa filter-table \
 --i-table $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza \
