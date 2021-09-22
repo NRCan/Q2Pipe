@@ -45,7 +45,7 @@ $SINGULARITY_COMMAND qiime vsearch cluster-features-de-novo \
 
 $SINGULARITY_COMMAND qiime feature-table summarize \
 --i-table $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza \
---o-visualization $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza --verbose
+--o-visualization $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qzv --verbose
 
 
 

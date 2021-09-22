@@ -38,7 +38,15 @@ fi
 
 if [ "$SKIP_RAREFACTION" == "true" ]
 then
-    echo "SOON"
+    $SINGULARITY_COMMAND qiime tools export \
+    --input-path $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
+    --output-path $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity"
+
+    $SINGULARITY_COMMAND biom convert -i $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity"/feature-table.biom -o $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".tsv --to-tsv
+
+    $SINGULARITY_COMMAND qiime tools export \
+    --input-path $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
+    --output-path $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"
 else
     $SINGULARITY_COMMAND qiime tools export \
     --input-path $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
