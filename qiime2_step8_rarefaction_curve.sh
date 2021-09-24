@@ -36,15 +36,6 @@ then
     export TMPDIR=$TEMPORARY_DIRECTORY
 fi
 
-#echo "WARNING, default system temp directory will be used for this command (unresolved issue with user defined folders)"
-# Temporary fix, because user defined temporary folder cause an Permission Denied error in Python
-# Must post this on Qiime2 github
-#if [ -d $TEMPORARY_DIRECTORY ]
-#then
-#    echo "Overriding default temporary directory to $TEMPORARY_DIRECTORY"
-#    export TMPDIR="$TEMPORARY_DIRECTORY"
-#fi
-
 if [ "$SKIP_RAREFACTION" == "true" ]
 then
     echo "ERROR: Rarefaction override detected in option file, you must skip this step"
