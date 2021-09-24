@@ -37,6 +37,21 @@ then
     export TMPDIR=$TEMPORARY_DIRECTORY
 fi
 
+if [ $p_min_frequency -eq 0 ] && [ $p_min_samples -eq 0 ]
+then
+    echo "WARNING: both min_frequency and min_samples are equal 0"
+    echo "All important files will be copies of original files"
+    cp -v $ANALYSIS_NAME.table-dada2.qza $ANALYSIS_NAME.table-dada2_minfreq"$p_min_frequency"_minsamp"$p_min_samples".qza
+    cp -v $ANALYSIS_NAME.rep-seqs-dada2.qza $ANALYSIS_NAME.rep-seqs-dada2_minfreq"$p_min_frequency"_minsamp"$p_min_samples".qza
+
+    $SINGULARITY_COMMAND qiime feature-table summarize \
+    --i-table $ANALYSIS_NAME.table-dada2_minfreq"$p_min_frequency"_minsamp"$p_min_samples".qza \
+    --o-visualization $ANALYSIS_NAME.table-dada2_minfreq"$p_min_frequency"_minsamp"$p_min_samples".qzv \
+    --m-sample-metadata-file $METADATA_FILE_PATH --verbose || exit_on_error
+    exit 0
+fi
+    
+
 $SINGULARITY_COMMAND qiime feature-table filter-features \
 --i-table $ANALYSIS_NAME.table-dada2.qza \
 --p-min-frequency $p_min_frequency \
