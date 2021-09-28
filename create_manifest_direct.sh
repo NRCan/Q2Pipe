@@ -8,9 +8,20 @@
 
 echo -e "sample-id,absolute-filepath,direction" > manifest.csv
 
-file_format=".fastq.gz"
-forward_suffix="_L001_R1_001.fastq.gz"
-reverse_suffix="_L001_R2_001.fastq.gz"
+file_format=$1
+forward_suffix=$2
+reverse_suffix=$3
+
+if [ ! $1 ] || [ ! $2 ] || [ ! $3 ]
+then
+    echo "ERROR: missing argument"
+    echo "USAGE: $0 file_format forward_suffix reverse_suffix"
+    exit 1
+fi
+
+#file_format=".fastq.gz"
+#forward_suffix="_L001_R1_001.fastq.gz"
+#reverse_suffix="_L001_R2_001.fastq.gz"
 
 echo "PROCEEDING..."
 samples=$( ls *$file_format | awk -F "$forward_suffix" '{ print $1 }' | awk -F "$reverse_suffix" '{ print $1 }' | sort | uniq )
@@ -38,6 +49,6 @@ done<.manifest_check.temp
 
 rm .manifest_check.temp
 
-sed 's/,/\t/g' manifest.csv > manifest.tsv
+#sed 's/,/\t/g' manifest.csv > manifest.tsv
 
 
