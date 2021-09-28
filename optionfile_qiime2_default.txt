@@ -10,6 +10,7 @@ NB_THREADS=8
 SINGULARITY_COMMAND=
 
 METADATA_FILE_PATH=
+MANIFEST_FILE_PATH=
 
 # Leave empty to use system's default  (/tmp)
 # DO NOT SPECIFY IF YOU ARE USING SINGULARITY COMMAND
@@ -19,10 +20,8 @@ TEMPORARY_DIRECTORY=
 #  Step 1 : Data Import  #
 ##########################
 
-# Notice : you can use create_manifest command to generate your manifest file
-
+# PLACEHOLDER for single end support DO NOT CHANGE THIS, ONLY PAIRED IS SUPPORTED
 DATA_TYPE=paired
-MANIFEST_FILE_PATH=/mnt/pagagne/Miseq_NovaSeq_compare_qcheck/scripting/0.fastq_files/manifest.csv
 
 #########################
 #  Cutadapt (Optional)  #
@@ -48,6 +47,7 @@ p_discard_untrimmed=false
 DENOISE_EVALUATION_SAMPLE_SIZE=5
 TESTFILE_PATH=/mnt/pagagne/Miseq_NovaSeq_compare_qcheck/scripting/testlist.txt
 # if true, will generate a new random manifest. even if one already exists
+# if false, will use the $ANALYSIS_NAME.eval_manifest.temp as subset
 FORCE_RESAMPLING=false
 
 ##################################
