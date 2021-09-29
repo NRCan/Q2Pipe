@@ -50,9 +50,9 @@ TESTFILE_PATH=/mnt/pagagne/Miseq_NovaSeq_compare_qcheck/scripting/testlist.txt
 # if false, will use the $ANALYSIS_NAME.eval_manifest.temp as subset
 FORCE_RESAMPLING=false
 
-##################################
-#   Step 1.5 : Dada2 Denoising   #
-##################################
+################################
+#   Step 2 : Dada2 Denoising   #
+################################
 
 # NOT FOR STEP 1.5 (YOU MUST USE TESTFILE FOR STEP 1.5)
 
@@ -73,7 +73,7 @@ p_min_fold_parent_over_abundance=1.0
 # Step3  Feature Table filtering   #
 ####################################
 
-# REPLACE OR ADD AUTO CALCULATION ACCORDING TO VISUALIZATION DATA
+# FUTURE DEV: REPLACE OR ADD AUTO CALCULATION ACCORDING TO VISUALIZATION DATA
 # Use 0 to disable
 #freq_threshold=0.0005
 p_min_frequency=16
