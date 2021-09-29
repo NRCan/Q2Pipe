@@ -49,12 +49,3 @@ $SINGULARITY_COMMAND qiime demux summarize \
 --o-visualization $ANALYSIS_NAME.import.qzv --verbose || exit_on_error
 
 
-#qiime cutadapt trim-paired \
-#--i-demultiplexed-sequences base_import.qza \
-#--o-trimmed-sequences cutadapt.qza \
-#--p-front-f GTGYCAGCMGCCGCGGTAA \
-#--p-front-r CCGYCAATTYMTTTRAGTTT \
-#--p-cores 6
-
-# Manifest file must be done 
-
