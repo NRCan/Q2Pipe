@@ -43,12 +43,12 @@ then
 fi
 
 
-if [ -d $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity" ]
-then
-    echo "ERROR: Folder \"$ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"\" already exist"
-    echo "Please delete this folder before proceeding"
-    exit 1
-fi
+#if [ -d $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity" ]
+#then
+#    echo "ERROR: Folder \"$ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"\" already exist"
+#    echo "Please delete this folder before proceeding"
+#    exit 1
+#fi
 
 if [ "$SKIP_RAREFACTION" == "true" ] && [ -d "$ANALYSIS_NAME".metrics_norarefaction_dn"$p_perc_identity" ]
 then
