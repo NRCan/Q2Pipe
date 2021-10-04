@@ -82,5 +82,17 @@ $SINGULARITY_COMMAND qiime feature-table summarize \
 --o-visualization $ANALYSIS_NAME.table-dada2.qzv --verbose
 
 
+echo "Extracting Mean sample frequency"
+$SINGULARITY_COMMAND qiime tools export --input-path $ANALYSIS_NAME.table-dada2.qzv --output-path $ANALYSIS_NAME.temporary_export_dada2table
+
+
+mean_line=$( grep -n "Mean frequency" $ANALYSIS_NAME.temporary_export_dada2table/index.html | head -n 1 | cut -f1 -d: )
+let $[ mean_line += 1 ]
+
+freq=$( head -n $mean_line $ANALYSIS_NAME.temporary_export_dada2table/index.html | tail -n 1 | sed 's/ //g' | sed 's/<td>//g' | sed 's;</td>;;g' )
+
+echo ""
+echo "Mean frequency: $freq"
+rm -rf $ANALYSIS_NAME.temporary_export_dada2table
 
 
