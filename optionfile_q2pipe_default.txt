@@ -84,16 +84,16 @@ p_min_frequency=16
 #sample_threshold=0
 p_min_samples=0
 
-##############################
-# Step4  Denovo Clustering   #
-##############################
+###############################
+# Step 4  Denovo Clustering   #
+###############################
 
 # Must be between 0 and 1.0
 p_perc_identity=1.0
  
-###########################
-#   Classifier Training   #
-###########################
+#################################
+# Step 5  Classifier Training   #
+#################################
 
 # Only Specify these if you want to train the classifier with your database
 # It's recommended to use the same name (different extension) for the fasta and the tax file
@@ -104,42 +104,34 @@ p_perc_identity=1.0
 SEQS_QZA_PATH=
 TAXO_QZA_PATH=
 CLASSIFIER_OUTPUT_NAME=
-#
 
+###############################
+# Step 6 Taxonomy Assignment  #
+###############################
 
-# Only specify this if you already have trained the classifier
-# with your database
+# Only specify this if you skipped step 5
 CLASSIFIER_DATABASE_PATH=
 
-########################
-# Taxonomy Assignment  #
-########################
 
-
-########################
-#    Taxa Filtering    #
-########################
-
-# If true, launching the step will only output a correctly named output for next step
+# TAXA FILTERING OVERRIDE
+# If true, Taxa filtering will be skipped (filename will still contain the filtered tag for compatibility purpose)
 SKIP_FILTERING=false
+############################
+# Step 7 Taxa Filtering    #
+############################
 
 # Never use space in the list, only comma
-# You should only one of these at the time (the other must be empty)
 # p_exclude remove unwanted taxe and p_include keep only specified taxa
+# You can use both option to exclude parts of the inclusion
 p_exclude=mitochondria,chloroplast,unassigned
 p_include=
 
 # Must be exact or contains (default)
 p_mode=contains
 
-# If you don't want to rarefy, you can ignore the next options, skip step 8,9 and use step10_metrics_norarefy
-#############################
-#    Rarefaction Override   #
-#############################
-
+# RAREFACTION OVERRIDE
 # if you activate this option, you can ignore the next sections, skip step 8,9 and use step10_metrics_norarefy
 SKIP_RAREFACTION=false
-
 ####################################
 #    Alpha rarefaction plotting    #
 ####################################
