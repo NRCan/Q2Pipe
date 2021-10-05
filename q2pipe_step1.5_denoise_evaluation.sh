@@ -3,6 +3,7 @@
 #################################
 #                               #
 #       Qiime 2 Pipeline        #
+#   By: Patrick Gagne (NRCan)   #
 # Step 1.5 - Denoise Evaluation #
 #        October 5, 2021        #
 #                               #

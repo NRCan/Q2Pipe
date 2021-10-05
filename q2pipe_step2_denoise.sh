@@ -3,6 +3,7 @@
 ################################
 #                              #
 #      Qiime 2 Pipeline        #
+#   By: Patrick Gagne (NRCan)  #
 #     Step 2 - Denoising       #
 #       October 5, 2021        #
 #                              #

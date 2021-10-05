@@ -3,6 +3,7 @@
 ################################
 #                              #
 #      Qiime 2 Pipeline        #
+#   By: Patrick Gagne (NRCan)  #
 # Step 5 - Classifier Training #
 #       October 5, 2021        #
 #                              #

@@ -3,7 +3,8 @@
 ################################
 #                              #
 #      Qiime 2 Pipeline        #
-# Step 8 - Rarefaction Curve   #
+#   By: Patrick Gagne (NRCan)  #
+#  Step 8 - Rarefaction Curve  #
 #       October 5, 2021        #
 #                              #
 ################################

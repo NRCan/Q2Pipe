@@ -3,7 +3,8 @@
 ################################
 #                              #
 #      Qiime 2 Pipeline        #
-# Step 3 - Feature Filtering   #
+#   By: Patrick Gagne (NRCan)  #
+#  Step 3 - Feature Filtering  #
 #       October 5, 2021        #
 #                              #
 ################################

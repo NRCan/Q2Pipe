@@ -2,6 +2,7 @@
 ################################
 #                              #
 #      Qiime 2 Pipeline        #
+#   By: Patrick Gagne (NRCan)  #
 #      Step 9 - Rarefy         #
 #      October 5, 2021         #
 #                              #

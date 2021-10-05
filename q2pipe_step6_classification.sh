@@ -3,6 +3,7 @@
 ################################
 #                              #
 #      Qiime 2 Pipeline        #
+#   By: Patrick Gagne (NRCan)  #
 #   Step 6 - Classification    #
 #       October 5, 2021        #
 #                              #

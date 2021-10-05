@@ -3,6 +3,7 @@
 ################################
 #                              #
 #      Qiime 2 Pipeline        #
+#   By: Patrick Gagne (NRCan)  #
 # Step 10 - Metrics Generation #
 #    No rarefaction version    #
 #       October 5, 2021        #

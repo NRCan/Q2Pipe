@@ -3,7 +3,8 @@
 ################################
 #                              #
 #      Qiime 2 Pipeline        #
-# Step 4 - Denovo_Clustering   #
+#   By: Patrick Gagne (NRCan)  #
+#  Step 4 - Denovo_Clustering  #
 #       October 5, 2021        #
 #                              #
 ################################
