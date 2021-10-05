@@ -132,20 +132,20 @@ p_mode=contains
 # RAREFACTION OVERRIDE
 # if you activate this option, you can ignore the next sections, skip step 8,9 and use step10_metrics_norarefy
 SKIP_RAREFACTION=false
-####################################
-#    Alpha rarefaction plotting    #
-####################################
+##########################################
+#   Step 8 Alpha rarefaction plotting    #
+##########################################
 
 p_max_depth=8000
 p_steps=10
 p_iterations=10
-# Leave blank for default value (observed_features,shannon)
 # Use this format: observed_features,shannon
+# You can also leave this blank to use Qiime2 default metrics (observed_features,shannon)
 p_metrics=observed_features,shannon
 
-##############################################
-#   Metrics Generation (With Rarefaction)    #
-##############################################
+##############################################################################
+# Step 9 Data Rarefaction + Step 10 Metrics Generation (With Rarefaction)    #
+##############################################################################
 
 p_sampling_depth=10000
 
