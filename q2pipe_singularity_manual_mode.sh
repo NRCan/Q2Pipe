@@ -1,19 +1,19 @@
 #!/bin/bash
 
-################################
-#                              #
-#      Qiime 2 Pipeline        #
-#    Step 1 - Importation      #
-#       August 18, 2021        #
-#                              #
-################################
+##################################
+#                                #
+# Qiime 2 Singularity Simplifier #
+#       By: Patrick Gagne        #
+#        October 5, 2021         #
+#                                #
+##################################
 
 sourced=0
 [[ "${BASH_SOURCE[0]}" != "${0}" ]] && sourced=1
 
 if [ $sourced -eq 0 ]
 then
-    echo "ERROR: This script must be sourced, not executed (source qiime2_singularity_manual_mode optionfile)"
+    echo "ERROR: This script must be sourced, not executed (source q2pipe_singularity_manual_mode optionfile)"
     exit 1
 fi
 
