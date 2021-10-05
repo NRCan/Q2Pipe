@@ -3,8 +3,8 @@
 ################################
 #                              #
 #      Qiime 2 Pipeline        #
-#    Step 1 - Importation      #
-#       August 18, 2021        #
+#    Step 11 - Exportation     #
+#       October 5, 2021        #
 #                              #
 ################################
 

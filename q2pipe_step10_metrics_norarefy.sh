@@ -4,7 +4,8 @@
 #                              #
 #      Qiime 2 Pipeline        #
 # Step 10 - Metrics Generation #
-#       August 18, 2021        #
+#    No rarefaction version    #
+#       October 5, 2021        #
 #                              #
 ################################
 

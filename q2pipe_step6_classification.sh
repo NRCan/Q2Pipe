@@ -4,7 +4,7 @@
 #                              #
 #      Qiime 2 Pipeline        #
 #   Step 6 - Classification    #
-#       August 18, 2021        #
+#       October 5, 2021        #
 #                              #
 ################################
 
