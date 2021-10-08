@@ -88,8 +88,9 @@ p_min_samples=0
 # Step 4  Denovo Clustering   #
 ###############################
 
-# Must be between 0 and 1.0
-p_perc_identity=1.0
+# Must be between ]0 , 1.0]
+# Use NA to skip denovo clustering (you must still launch step 4)
+p_perc_identity=NA
  
 #################################
 # Step 5  Classifier Training   #

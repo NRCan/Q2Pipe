@@ -37,6 +37,14 @@ then
     export TMPDIR=$TEMPORARY_DIRECTORY
 fi
 
+if [ "$p_perc_identity" == "NA" ]
+then
+    echo "NA parameter detected, creating necessary files to skip clustering"
+    cp -v $ANALYSIS_NAME.table-dada2_minfreq"$p_min_frequency"_minsamp"$p_min_samples".qza $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza
+    cp -v $ANALYSIS_NAME.rep-seqs-dada2_minfreq"$p_min_frequency"_minsamp"$p_min_samples".qza $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza
+    exit 0
+fi
+
 $SINGULARITY_COMMAND qiime vsearch cluster-features-de-novo \
 --i-table $ANALYSIS_NAME.table-dada2_minfreq"$p_min_frequency"_minsamp"$p_min_samples".qza \
 --i-sequences $ANALYSIS_NAME.rep-seqs-dada2_minfreq"$p_min_frequency"_minsamp"$p_min_samples".qza \
@@ -47,6 +55,3 @@ $SINGULARITY_COMMAND qiime vsearch cluster-features-de-novo \
 $SINGULARITY_COMMAND qiime feature-table summarize \
 --i-table $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza \
 --o-visualization $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qzv --verbose
-
-
-
