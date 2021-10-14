@@ -144,11 +144,16 @@ p_iterations=10
 # You can also leave this blank to use Qiime2 default metrics (observed_features,shannon)
 p_metrics=observed_features,shannon
 
-##############################################################################
-# Step 9 Data Rarefaction + Step 10 Metrics Generation (With Rarefaction)    #
-##############################################################################
+###########################
+# Step 9 Data Rarefaction #
+###########################
 
 p_sampling_depth=10000
 
+#######################
+#   Step 10 Metrics   #
+#######################
 
+alpha_metrics=shannon,simpson,observed_features,chao1,pielou_e"
+beta_metrics=braycurtis,jaccard
 
