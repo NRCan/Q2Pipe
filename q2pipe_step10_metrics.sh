@@ -5,8 +5,8 @@
 #      Qiime 2 Pipeline        #
 #   By: Patrick Gagne (NRCan)  #
 # Step 10 - Metrics Generation #
-#    No rarefaction version    #
-#       October 5, 2021        #
+#       Complete Version       #
+#       October 14, 2021       #
 #                              #
 ################################
 
@@ -38,59 +38,38 @@ then
     export TMPDIR=$TEMPORARY_DIRECTORY
 fi
 
-#if [ "$SKIP_RAREFACTION" == "false" ]
-#then
-#    echo "ERROR: Rarefaction override not detected in option file, you must use qiime2_step10_metrics"
-#    exit 1
-#fi
-
-
-#if [ -d $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity" ]
-#then
-#    echo "ERROR: Folder \"$ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"\" already exist"
-#    echo "Please delete this folder before proceeding"
-#    exit 1
-#fi
-
-#if [ "$SKIP_RAREFACTION" == "true" ] && [ -d "$ANALYSIS_NAME".metrics_norarefaction_dn"$p_perc_identity" ]
-#then
-#    echo "ERROR: Folder $ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity already exist"
-#    echo "Please delete this folder before proceeding"
-#    exit 1
-#fi
-
-#output_f="$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity"
-#mkdir $output_f
-
-# Could be added as an option
-#alpha_metrics="shannon simpson observed_features chao1 pielou_e"
-#beta_metrics="braycurtis jaccard"
-
+# Preparing list to be for-loop compatible
 alpha_metrics=$( echo $alpha_metrics | sed 's/,/ /g' )
 beta_metrics=$( echo $beta_metrics | sed 's/,/ /g' )
 
 if [ "$SKIP_RAREFACTION" == "true" ]
 then
+    echo "Skip Rarefaction parameter detected"
+    echo "$ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza will be used"
     input_table="$ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza"
     output_f="$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity"
     if [ -d $output_f ]
     then
         echo "ERROR: Folder $output_f already exist"
         echo "Please delete this folder before proceeding"
+        exit 3
     fi
     mkdir $output_f
 else
+    echo "Rarefaction parameter detected"
+    echo "$ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza will be used"
     input_table="$ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza"
     output_f="$ANALYSIS_NAME.metrics_rarefied_"$p_sampling_depth"_dn"$p_perc_identity""
     if [ -d $output_f ]
     then
         echo "ERROR: Folder $output_f already exist"
         echo "Please delete this folder before proceeding"
+        exit 3
     fi
     mkdir $output_f
 fi
 
-echo "Input table : $input_table"
+#echo "Input table : $input_table"
 
 for i in $alpha_metrics
 do
