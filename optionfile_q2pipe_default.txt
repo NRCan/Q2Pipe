@@ -53,7 +53,7 @@ p_discard_untrimmed=false
 
 # Use 0 to bypass evaluation (will just denoise all samples)
 DENOISE_EVALUATION_SAMPLE_SIZE=5
-TESTFILE_PATH=/mnt/pagagne/Miseq_NovaSeq_compare_qcheck/scripting/testlist.txt
+TESTFILE_PATH=
 # if true, will generate a new random manifest. even if one already exists
 # if false, will use the $ANALYSIS_NAME.eval_manifest.temp as subset
 FORCE_RESAMPLING=false

@@ -1,15 +1,24 @@
+############################
+#                          #
+#    Q2Pipe Option file    #
+#                          #
+############################
+
 ################################
 #  Common Analysis Parameters  #
 ################################
 
-ANALYSIS_NAME=Singularity_Default
-NB_THREADS=4
+ANALYSIS_NAME=BASIC_TEST
+NB_THREADS=8
 
 # Leave empty if you don't use singularity image to launch Qiime2
 # To define a different temporary folder, add -B /path/to/your/folder:/tmp
 SINGULARITY_COMMAND="singularity exec --cleanenv --env MPLCONFIGDIR=/tmp,TMPDIR=/tmp  -B /mnt/pagagne/Miseq_NovaSeq_compare_qcheck/scripting/0.fastq_files:/input -B /mnt /home/ubuntu/qiime2_singularity/core_2021.4.sif"
 
+# Metadata must be in TSV format
+# Manifest must be in CSV format
 METADATA_FILE_PATH=
+MANIFEST_FILE_PATH=
 
 # Leave empty to use system's default  (/tmp)
 # DO NOT SPECIFY IF YOU ARE USING SINGULARITY COMMAND
@@ -19,10 +28,8 @@ TEMPORARY_DIRECTORY=
 #  Step 1 : Data Import  #
 ##########################
 
-# Notice : you can use create_manifest command to generate your manifest file
-
+# PLACEHOLDER for single end support DO NOT CHANGE THIS, ONLY PAIRED IS SUPPORTED
 DATA_TYPE=paired
-MANIFEST_FILE_PATH=
 
 #########################
 #  Cutadapt (Optional)  #
@@ -48,23 +55,24 @@ p_discard_untrimmed=false
 DENOISE_EVALUATION_SAMPLE_SIZE=5
 TESTFILE_PATH=
 # if true, will generate a new random manifest. even if one already exists
+# if false, will use the $ANALYSIS_NAME.eval_manifest.temp as subset
 FORCE_RESAMPLING=false
 
-##################################
-#   Step 1.5 : Dada2 Denoising   #
-##################################
+################################
+#   Step 2 : Dada2 Denoising   #
+################################
 
 # NOT FOR STEP 1.5 (YOU MUST USE TESTFILE FOR STEP 1.5)
 
-p_trim_left_f=19
-p_trim_left_r=20
+p_trim_left_f=20 
+p_trim_left_r=22
 
-p_trunc_len_f=218
-p_trunc_len_r=212
+p_trunc_len_f=237
+p_trunc_len_r=209
 
-p_max_ee_f=2
-p_max_ee_r=2 
-p_n_reads_learn=5000000 
+p_max_ee_f=1
+p_max_ee_r=1 
+p_n_reads_learn=2610000 
 
 p_chimera_method=consensus
 p_min_fold_parent_over_abundance=1.0
@@ -73,21 +81,28 @@ p_min_fold_parent_over_abundance=1.0
 # Step3  Feature Table filtering   #
 ####################################
 
+# FUTURE DEV: REPLACE OR ADD AUTO CALCULATION ACCORDING TO VISUALIZATION DATA
 # Use 0 to disable
+#freq_threshold=0.0005
 p_min_frequency=16
 
+
+# IDEM ^^^^
 # Use 0 to disable
+#sample_threshold=0
 p_min_samples=0
 
-##############################
-# Step4  Denovo Clustering   #
-##############################
+###############################
+# Step 4  Denovo Clustering   #
+###############################
 
-p_perc_identity=1.0
+# Must be between ]0 , 1.0]
+# Use NA to skip denovo clustering (you must still launch step 4)
+p_perc_identity=NA
  
-###########################
-#   Classifier Training   #
-###########################
+#################################
+# Step 5  Classifier Training   #
+#################################
 
 # Only Specify these if you want to train the classifier with your database
 # It's recommended to use the same name (different extension) for the fasta and the tax file
@@ -98,47 +113,56 @@ p_perc_identity=1.0
 SEQS_QZA_PATH=
 TAXO_QZA_PATH=
 CLASSIFIER_OUTPUT_NAME=
-#
 
+###############################
+# Step 6 Taxonomy Assignment  #
+###############################
 
-# Only specify this if you already have trained the classifier
-# with your database
+# Only specify this if you skipped step 5
 CLASSIFIER_DATABASE_PATH=
 
-########################
-# Taxonomy Assignment  #
-########################
 
-
-########################
-#    Taxa Filtering    #
-########################
-
-# If true, launching the step will only output a correctly named output for next step
+# TAXA FILTERING OVERRIDE
+# If true, Taxa filtering will be skipped (filename will still contain the filtered tag for compatibility purpose)
 SKIP_FILTERING=false
+############################
+# Step 7 Taxa Filtering    #
+############################
 
 # Never use space in the list, only comma
+# p_exclude remove unwanted taxe and p_include keep only specified taxa
+# You can use both option to exclude parts of the inclusion
+p_include=bacteria
 p_exclude=mitochondria,chloroplast,unassigned
 
-####################################
-#    Alpha rarefaction plotting    #
-####################################
+# Must be exact or contains (default)
+p_mode=contains
+
+# RAREFACTION OVERRIDE
+# if you activate this option, you can ignore the next sections, skip step 8 and 9
+SKIP_RAREFACTION=false
+##########################################
+#   Step 8 Alpha rarefaction plotting    #
+##########################################
 
 p_max_depth=8000
 p_steps=10
 p_iterations=10
-# Leave blank for default value (observed_features,shannon)
 # Use this format: observed_features,shannon
+# You can also leave this blank to use Qiime2 default metrics (observed_features,shannon)
+# IMPORTANT: This is NOT the metrics for step 10, this is only for the rarefaction curve
 p_metrics=observed_features,shannon
 
-####################
-#   Rarefaction    #
-####################
+###########################
+# Step 9 Data Rarefaction #
+###########################
 
 p_sampling_depth=10000
 
-###############################
-#    Alpha & Beta diversity   #
-###############################
+#######################
+#   Step 10 Metrics   #
+#######################
 
+alpha_metrics=shannon,simpson,observed_features,chao1,pielou_e
+beta_metrics=braycurtis,jaccard
 
