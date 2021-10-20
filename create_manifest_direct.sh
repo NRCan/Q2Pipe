@@ -19,6 +19,12 @@ then
     exit 1
 fi
 
+if [[ ${file_format:0:1} != "." ]]; 
+then 
+    echo "ERROR: file format must begin with a ."
+    exit 1
+fi
+
 #file_format=".fastq.gz"
 #forward_suffix="_L001_R1_001.fastq.gz"
 #reverse_suffix="_L001_R2_001.fastq.gz"
@@ -30,8 +36,8 @@ samples=$( ls *$file_format | awk -F "$forward_suffix" '{ print $1 }' | awk -F "
 for i in $samples
 do
    echo $i
-   file_path_f=$PWD/$i"$forward_suffix"
-   file_path_r=$PWD/$i"$reverse_suffix"
+   file_path_f=$PWD/$i"$forward_suffix""$file_format"
+   file_path_r=$PWD/$i"$reverse_suffix""$file_format"
    echo -e "$i,$file_path_f,forward" >> manifest.csv
    echo -e "$i,$file_path_r,reverse" >> manifest.csv
 done
