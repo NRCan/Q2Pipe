@@ -70,9 +70,9 @@ p_trim_left_r=22
 p_trunc_len_f=237
 p_trunc_len_r=209
 
-p_max_ee_f=1
-p_max_ee_r=1 
-p_n_reads_learn=2610000 
+p_max_ee_f=2
+p_max_ee_r=2 
+p_n_reads_learn=1000000 
 
 p_chimera_method=consensus
 p_min_fold_parent_over_abundance=1.0
