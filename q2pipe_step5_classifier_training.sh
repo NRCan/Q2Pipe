@@ -40,7 +40,7 @@ if [ $CLASSIFIER_DATABASE_PATH ]
 then
     echo "WARNING: CLASSIFIER_DATABASE_PATH specified in optionfile"
     echo "This step must be skipped if you already have a trained database"
-    exit 1
+    exit 0
 fi
 
 
