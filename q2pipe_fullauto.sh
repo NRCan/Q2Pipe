@@ -197,6 +197,17 @@ then
         echo "Invalid checkpoint detected. Deleting..."
         rm q2pipe_step10.DONE
     fi
+
+    if [ -d "$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity" ]
+    then
+        rm "$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity" -rf
+    fi
+
+    if [ -d "$ANALYSIS_NAME.metrics_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"" ]
+    then
+        rm "$ANALYSIS_NAME.metrics_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"" -rf
+    fi
+
     $Q2P/q2pipe_step10_metrics.sh $optionfile || exit_on_error
     touch q2pipe_step10.DONE
     invalid_next=1
