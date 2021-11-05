@@ -119,6 +119,7 @@ do
     params=$( echo $line | awk -F ':' '{ print $2 }' | sed 's/\r$//' )
     echo "Launching $jobn parameters set"
     $SINGULARITY_COMMAND qiime dada2 denoise-paired --i-demultiplexed-seqs $ANALYSIS_NAME.denoise_eval_import$ca_flag.qza $params --p-n-threads $NB_THREADS --o-table $ANALYSIS_NAME.feature-table.$jobn.qza --o-representative-sequences $ANALYSIS_NAME.rep-seqs.$jobn.qza --o-denoising-stats $ANALYSIS_NAME.stats.$jobn.qza --verbose
+    $SINGULARITY_COMMAND qiime feature-table summarize --i-table $ANALYSIS_NAME.feature-table.$jobn.qza  --o-visualization $ANALYSIS_NAME.feature-table.$jobn.qzv
     $SINGULARITY_COMMAND qiime metadata tabulate --m-input-file $ANALYSIS_NAME.stats.$jobn.qza --o-visualization $ANALYSIS_NAME.stats.$jobn.qzv --verbose
     # Export results in TSV format (easier for downstream analysis)
     $SINGULARITY_COMMAND qiime tools export --input-path $ANALYSIS_NAME.stats.$jobn.qza --output-path $ANALYSIS_NAME.stats.$jobn

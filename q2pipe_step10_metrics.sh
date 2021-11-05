@@ -105,6 +105,49 @@ do
 
 done
 
+if [ "$GENERATE_PHYLOGENY" == "true" ]
+then
+    alpha_metrics_phylo=$( echo $alpha_metrics_phylo | sed 's/,/ /g' )
+    beta_metrics_phylo=$( echo $beta_metrics_phylo | sed 's/,/ /g' )
+
+    for i in $alpha_metrics_phylo
+    do
+        echo "Calculating phylogenetic alpha diversity metric $i"
+        $SINGULARITY_COMMAND qiime diversity alpha-phylogenetic \
+        --i-table $input_table \
+        --i-phylogeny $ANALYSIS_NAME.rooted_tree.qza \
+        --p-metric $i \
+        --o-alpha-diversity $output_f/alpha_$i.phylo.qza || exit_on_error
+
+        $SINGULARITY_COMMAND qiime diversity alpha-group-significance \
+        --i-alpha-diversity $output_f/alpha_$i.phylo.qza \
+        --m-metadata-file $METADATA_FILE_PATH \
+        --o-visualization $output_f/alpha_$i.phylo.qzv || exit_on_error
+    done
+
+    for i in $beta_metrics_phylo
+    do
+        echo "Calculating phylogenetic beta diversity metric $i"
+        $SINGULARITY_COMMAND qiime diversity beta-phylogenetic \
+        --i-table $input_table \
+        --i-phylogeny $ANALYSIS_NAME.rooted_tree.qza \
+        --p-metric $i \
+        --p-threads $NB_THREADS \
+        --o-distance-matrix $output_f/beta_"$i"_distance_matrix.phylo.qza || exit_on_error
+
+        $SINGULARITY_COMMAND qiime diversity pcoa \
+        --i-distance-matrix $output_f/beta_"$i"_distance_matrix.phylo.qza \
+        --o-pcoa $output_f/beta_"$i"_pcoa.phylo.qza || exit_on_error
+
+        $SINGULARITY_COMMAND qiime emperor plot \
+        --i-pcoa $output_f/beta_"$i"_pcoa.phylo.qza \
+        --m-metadata-file $METADATA_FILE_PATH \
+        --o-visualization $output_f/beta_"$i"_emperor.phylo.qzv || exit_on_error
+
+     done
+
+fi
+
 # Alpha Diversity $SINGULARITY_COMMAND qiime diversity alpha \ --i-table 
 #$ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \ --p-metric shannon \ --o-alpha-diversity 
 #$output_f/alpha_shannon.qza

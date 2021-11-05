@@ -73,12 +73,12 @@ $SINGULARITY_COMMAND qiime taxa barplot \
 --m-metadata-file $METADATA_FILE_PATH \
 --o-visualization $ANALYSIS_NAME.barplots_taxo_dn"$p_perc_identity".qzv --verbose || exit_on_error
 
-if [ "$SKIP_FILTERING" == "true" ]
-then
-    echo "Filtering skip option detected, table-dada2 and rep-seqs will copied as filtered_table for filename coherency"
-    cp -v $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza
-    cp -v $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza $ANALYSIS_NAME.filtered_rep-seqs-dada2_dn"$p_perc_identity".qza
-fi
+#if [ "$SKIP_FILTERING" == "true" ]
+#then
+#    echo "Filtering skip option detected, table-dada2 and rep-seqs will copied as filtered_table for filename coherency"
+#    cp -v $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza
+#    cp -v $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza $ANALYSIS_NAME.filtered_rep-seqs-dada2_dn"$p_perc_identity".qza
+#fi
 
 
 

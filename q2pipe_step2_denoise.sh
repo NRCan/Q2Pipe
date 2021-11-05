@@ -82,6 +82,9 @@ $SINGULARITY_COMMAND qiime feature-table summarize \
 --i-table $ANALYSIS_NAME.table-dada2.qza \
 --o-visualization $ANALYSIS_NAME.table-dada2.qzv --verbose
 
+$SINGULARITY_COMMAND qiime metadata tabulate \
+--m-input-file $ANALYSIS_NAME.denoising-stats-dada2.qza \
+--o-visualization $ANALYSIS_NAME.denoising-stats-dada2.qzv 
 
 echo "Extracting Mean sample frequency"
 $SINGULARITY_COMMAND qiime tools export --input-path $ANALYSIS_NAME.table-dada2.qzv --output-path $ANALYSIS_NAME.temporary_export_dada2table
