@@ -170,3 +170,19 @@ beta_metrics=braycurtis,jaccard
 # Relevent only if GENERATE_PHYLOGENY is activated
 alpha_metrics_phylo=faith_pd
 beta_metrics_phylo=weighted_unifrac,weighted_normalized_unifrac,generalized_unifrac,unweighted_unifrac
+
+######################
+#   Step 11 Export   #
+######################
+
+
+# ANCOM specific options
+GENERATE_ANCOM=true
+# Collapse table at genus level (6)
+p_level=6
+
+# Depend on your metadata
+# Specify each target column seperated by a comma
+# Ex: Col1,Col2,Col3,Col4
+# There will be one ANCOM by column
+m_metadata_column=
