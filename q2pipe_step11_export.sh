@@ -81,11 +81,11 @@ then
     --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
     --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
     --p-level $p_level \
-    --o-collapsed-table "$ANALYSIS_NAME"_ANCOM/feature_table_ANCOM.qza
+    --o-collapsed-table "$ANALYSIS_NAME"_ANCOM/feature_table_ANCOM.qza || exit_on_error
 
     $SINGULARITY_COMMAND qiime composition add-pseudocount \
     --i-table "$ANALYSIS_NAME"_ANCOM/feature_table_ANCOM.qza \
-    --o-composition-table "$ANALYSIS_NAME"_ANCOM/composition_table_ANCOM.qza
+    --o-composition-table "$ANALYSIS_NAME"_ANCOM/composition_table_ANCOM.qza || exit_on_error
 
     m_metadata_column=$( echo $m_metadata_column | sed 's/,/ /g' )
     
@@ -96,7 +96,7 @@ then
         --i-table "$ANALYSIS_NAME"_ANCOM/composition_table_ANCOM.qza \
         --m-metadata-file $METADATA_FILE_PATH \
         --m-metadata-column $col \
-        --o-visualization "$ANALYSIS_NAME"_ANCOM/ANCOM_"$col"_results.qzv
+        --o-visualization "$ANALYSIS_NAME"_ANCOM/ANCOM_"$col"_results.qzv || exit_on_error
     done
 
 fi
