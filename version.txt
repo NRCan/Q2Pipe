@@ -14,3 +14,5 @@
 # Support for ANCOM differential abundancy tests
 # Optionfile now tagged with the pipeline version (for future reference)
 # Version file (this one) now available
+
+# Latest Qiime2 Version tested : qiime2-2021.8 (conda)
