@@ -64,6 +64,18 @@ $SINGULARITY_COMMAND qiime diversity alpha-rarefaction \
 --m-metadata-file $METADATA_FILE_PATH \
 --o-visualization $ANALYSIS_NAME.rarefaction_curves_filtered.qzv --verbose || exit_on_error
 
+if [ "$GENERATE_PHYLOGENY" == "true" ]
+then
+    $SINGULARITY_COMMAND qiime diversity alpha-rarefaction \
+    --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
+    --i-phylogeny $ANALYSIS_NAME.rooted_tree.qza \
+    --p-max-depth $p_max_depth \
+    --p-steps $p_steps \
+    --p-iterations $p_iterations $metric_str \
+    --m-metadata-file $METADATA_FILE_PATH \
+    --o-visualization $ANALYSIS_NAME.rarefaction_curves_filtered_phylo.qzv --verbose || exit_on_error
+fi
+
 # Do some things to prepare the curve (maybe show it inside the terminal)
 
 

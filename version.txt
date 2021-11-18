@@ -1,0 +1,18 @@
+##########################
+#                        #
+#   Q2Pipe Version 0.85  #
+#    November 8, 2021    #
+#                        #
+##########################
+
+# Changelog since Version 0.84
+# Support for Phylogeny in step 7, 8 and 10
+# Step 7 now mandatory, but can be bypassed with a parameter
+# Step 1.5 generate a feature table summarize
+# Step 2 generate a metadata tabulate
+# Step 11 now support ANCOM analysis
+# Support for ANCOM differential abundancy tests
+# Optionfile now tagged with the pipeline version (for future reference)
+# Version file (this one) now available
+
+# Latest Qiime2 Version tested : qiime2-2021.8 (conda)

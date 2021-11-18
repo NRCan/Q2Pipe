@@ -1,8 +1,9 @@
-############################
-#                          #
-#    Q2Pipe Option file    #
-#                          #
-############################
+#############################
+#                           #
+#     Q2Pipe Option file    #
+# Designed for Q2Pipe V0.85 #
+#                           #
+#############################
 
 ################################
 #  Common Analysis Parameters  #
@@ -121,10 +122,6 @@ CLASSIFIER_OUTPUT_NAME=
 # Only specify this if you skipped step 5
 CLASSIFIER_DATABASE_PATH=
 
-
-# TAXA FILTERING OVERRIDE
-# If true, Taxa filtering will be skipped (filename will still contain the filtered tag for compatibility purpose)
-SKIP_FILTERING=false
 ############################
 # Step 7 Taxa Filtering    #
 ############################
@@ -132,11 +129,15 @@ SKIP_FILTERING=false
 # Never use space in the list, only comma
 # p_exclude remove unwanted taxe and p_include keep only specified taxa
 # You can use both option to exclude parts of the inclusion
+# If both are empty, taxa filtering will be skipped
 p_include=bacteria
 p_exclude=mitochondria,chloroplast,unassigned
 
 # Must be exact or contains (default)
 p_mode=contains
+
+# Will also be used in step 8 and 10  
+GENERATE_PHYLOGENY=false
 
 # RAREFACTION OVERRIDE
 # if you activate this option, you can ignore the next sections, skip step 8 and 9
@@ -166,3 +167,22 @@ p_sampling_depth=10000
 alpha_metrics=shannon,simpson,observed_features,chao1,pielou_e
 beta_metrics=braycurtis,jaccard
 
+# Relevent only if GENERATE_PHYLOGENY is activated
+alpha_metrics_phylo=faith_pd
+beta_metrics_phylo=weighted_unifrac,weighted_normalized_unifrac,generalized_unifrac,unweighted_unifrac
+
+######################
+#   Step 11 Export   #
+######################
+
+
+# ANCOM specific options
+GENERATE_ANCOM=true
+# Collapse table at genus level (6)
+p_level=6
+
+# Depend on your metadata
+# Specify each target column seperated by a comma
+# Ex: Col1,Col2,Col3,Col4
+# There will be one ANCOM by column
+m_metadata_column=
