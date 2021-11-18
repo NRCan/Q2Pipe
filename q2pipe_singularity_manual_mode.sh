@@ -19,9 +19,9 @@ fi
 
 optionfile=$1
 
-if [ ! $optionfile ]
+if [ ! $optionfile ] || [ ! -e $optionfile ] || [ ! -r $optionfile ]
 then
-    echo "ERROR: you must specify a qiime2 optionfile"
+    echo "ERROR: you must specify a valid, accessible qiime2 optionfile"
     return 2
 fi
 
