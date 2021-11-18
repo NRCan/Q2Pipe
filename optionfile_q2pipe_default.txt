@@ -177,7 +177,7 @@ beta_metrics_phylo=weighted_unifrac,weighted_normalized_unifrac,generalized_unif
 
 
 # ANCOM specific options
-GENERATE_ANCOM=true
+GENERATE_ANCOM=false
 # Collapse table at genus level (6)
 p_level=6
 
