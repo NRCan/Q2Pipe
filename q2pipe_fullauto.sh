@@ -198,12 +198,12 @@ then
         rm q2pipe_step10.DONE
     fi
 
-    if [ -d "$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity" ]
+    if [ -d "$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity" ] && [ "$SKIP_RAREFACTION" == "true" ]
     then
         rm "$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity" -rf
     fi
 
-    if [ -d "$ANALYSIS_NAME.metrics_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"" ]
+    if [ -d "$ANALYSIS_NAME.metrics_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"" ] && [ "$SKIP_RAREFACTION" == "false" ]
     then
         rm "$ANALYSIS_NAME.metrics_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"" -rf
     fi
