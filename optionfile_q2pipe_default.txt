@@ -1,7 +1,7 @@
 #############################
 #                           #
 #     Q2Pipe Option file    #
-# Designed for Q2Pipe V0.85 #
+# Designed for Q2Pipe V0.86 #
 #                           #
 #############################
 
@@ -58,6 +58,10 @@ TESTFILE_PATH=
 # if true, will generate a new random manifest. even if one already exists
 # if false, will use the $ANALYSIS_NAME.eval_manifest.temp as subset
 FORCE_RESAMPLING=false
+
+# If true, will stop the step after generating $ANALYSIS_NAME.eval_manifest.temp
+# Nothing else will be generated until DRY_RUN is switched to false again
+DRY_RUN=false
 
 ################################
 #   Step 2 : Dada2 Denoising   #

@@ -17,6 +17,7 @@ exit_on_error(){
 
 
 
+
 # This Qiime2 step will help to evaluate optimals parameters for the denoising step
 # It will generate a serie of denoising on a random subsample (size defined by the user) extracted from the original manifest file
 
@@ -39,6 +40,12 @@ then
         exit 2
     fi
     export TMPDIR=$TEMPORARY_DIRECTORY
+fi
+
+if [ ! $TESTFILE_PATH ] || [ ! -e $TESTFILE_PATH ] || [ ! -r $TESTFILE_PATH ]
+then
+    echo "ERROR: you must specify a valid, accessible testfile in the optionfile"
+    exit 1
 fi
 
 if [ $DENOISE_EVALUATION_SAMPLE_SIZE -eq 0 ]
@@ -69,6 +76,12 @@ then
     fi
 else
     echo "Random manifest already present, skipping sampling"
+fi
+
+if [ "$DRY_RUN" == "true" ]
+then
+    echo "Dry run mode detected, ending program"
+    exit 0
 fi
 
 echo "Importing subsample into qiime2 artifact file"
@@ -108,24 +121,31 @@ then
 fi
 
 
+if [ ! -d "$ANALYSIS_NAME"_DenoiseTest_Results ]
+then
+    mkdir "$ANALYSIS_NAME"_DenoiseTest_Results
+fi
 echo "Preparing to launch tests"
 while read line
 do
-    if [ "${line::1}" == "#" ] || [ "$line" == "" ]
+    if [ "${line::1}" == "#" ] || [ -z "$line" ]
     then
         continue
     fi
     jobn=$( echo $line | awk -F ':' '{ print $1 }' )
     params=$( echo $line | awk -F ':' '{ print $2 }' | sed 's/\r$//' )
     echo "Launching $jobn parameters set"
-    $SINGULARITY_COMMAND qiime dada2 denoise-paired --i-demultiplexed-seqs $ANALYSIS_NAME.denoise_eval_import$ca_flag.qza $params --p-n-threads $NB_THREADS --o-table $ANALYSIS_NAME.feature-table.$jobn.qza --o-representative-sequences $ANALYSIS_NAME.rep-seqs.$jobn.qza --o-denoising-stats $ANALYSIS_NAME.stats.$jobn.qza --verbose
+    $SINGULARITY_COMMAND qiime dada2 denoise-paired --i-demultiplexed-seqs $ANALYSIS_NAME.denoise_eval_import$ca_flag.qza $params --p-n-threads $NB_THREADS --o-table $ANALYSIS_NAME.feature-table.$jobn.qza --o-representative-sequences $ANALYSIS_NAME.rep-seqs.$jobn.qza --o-denoising-stats $ANALYSIS_NAME.stats.$jobn.qza --verbose || echo "Command error detected during test denoising, $jobn will be skipped" ; continue
     $SINGULARITY_COMMAND qiime feature-table summarize --i-table $ANALYSIS_NAME.feature-table.$jobn.qza  --o-visualization $ANALYSIS_NAME.feature-table.$jobn.qzv
     $SINGULARITY_COMMAND qiime metadata tabulate --m-input-file $ANALYSIS_NAME.stats.$jobn.qza --o-visualization $ANALYSIS_NAME.stats.$jobn.qzv --verbose
+    $SINGULARITY_COMMAND  qiime feature-table tabulate-seqs --i-data $ANALYSIS_NAME.rep-seqs.$jobn.qza --o-visualization $ANALYSIS_NAME.rep-seqs.$jobn.qzv
     # Export results in TSV format (easier for downstream analysis)
     $SINGULARITY_COMMAND qiime tools export --input-path $ANALYSIS_NAME.stats.$jobn.qza --output-path $ANALYSIS_NAME.stats.$jobn
     mv $ANALYSIS_NAME.stats.$jobn/stats.tsv ./$ANALYSIS_NAME.stats.$jobn.tsv
     rm -rf $ANALYSIS_NAME.stats.$jobn
 
-done<$TESTFILE_PATH
+    echo "Moving $jobn results to "$ANALYSIS_NAME"_DenoiseTest_Results"
+    mv $ANALYSIS_NAME.*.$jobn.* "$ANALYSIS_NAME"_DenoiseTest_Results/
 
+done<$TESTFILE_PATH
 

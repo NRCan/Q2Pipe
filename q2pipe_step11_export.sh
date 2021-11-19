@@ -51,24 +51,56 @@ then
     --input-path $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
     --output-path $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity"
 
-    $SINGULARITY_COMMAND biom convert -i $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity"/feature-table.biom -o $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".tsv --to-tsv
+    $SINGULARITY_COMMAND biom convert \
+    -i $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity"/feature-table.biom \
+    -o $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity"/$ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".tsv --to-tsv
 
     $SINGULARITY_COMMAND qiime tools export \
     --input-path $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
     --output-path $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"
+
+    sed -i 's/Feature ID/#OTUID/g' $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"/taxonomy.tsv
+    sed -i 's/Taxon/taxonomy/g' $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"/taxonomy.tsv
+    sed -i 's/Confidence/confidence/g' $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"/taxonomy.tsv
+
+    $SINGULARITY_COMMAND biom add-metadata \
+    -i $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity"/feature-table.biom \
+    --observation-metadata-fp $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"/taxonomy.tsv \
+    --sc-separated taxonomy \
+    -o $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"/feature_taxonomy_merged.biom
+
+    $SINGULARITY_COMMAND biom convert \
+    -i $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"/feature_taxonomy_merged.biom \
+    -o $ANALYSIS_NAME.ASV_table_norarefaction_dn"$p_perc_identity".tsv --to-tsv --header-key taxonomy
 else
     $SINGULARITY_COMMAND qiime tools export \
     --input-path $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
     --output-path $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"
 
-    $SINGULARITY_COMMAND biom convert -i $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"/feature-table.biom -o $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".tsv --to-tsv
+    $SINGULARITY_COMMAND biom convert \
+    -i $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"/feature-table.biom \
+    -o $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"/$ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".tsv --to-tsv
 
     $SINGULARITY_COMMAND qiime tools export \
     --input-path $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
     --output-path $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"
+   
+    sed -i 's/Feature ID/#OTUID/g' $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/taxonomy.tsv
+    sed -i 's/Taxon/taxonomy/g' $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/taxonomy.tsv
+    sed -i 's/Confidence/confidence/g' $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/taxonomy.tsv
+   
+    $SINGULARITY_COMMAND biom add-metadata \
+    -i $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"/feature-table.biom \
+    --observation-metadata-fp $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/taxonomy.tsv \
+    --sc-separated taxonomy \
+    -o $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/feature_taxonomy_merged.biom
+
+    $SINGULARITY_COMMAND biom convert \
+    -i $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/feature_taxonomy_merged.biom \
+    -o $ANALYSIS_NAME.ASV_table_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv --to-tsv --header-key taxonomy
 fi
 
-# Feature in developpement
+
 if [ "$GENERATE_ANCOM" == "true" ]
 then
     echo "Preparing ANCOM analysis"

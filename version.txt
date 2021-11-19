@@ -1,11 +1,21 @@
 ##########################
 #                        #
-#   Q2Pipe Version 0.85  #
-#    November 8, 2021    #
+#   Q2Pipe Version 0.86  #
+#    November 19, 2021   #
 #                        #
 ##########################
 
-# Changelog since Version 0.84
+# Latest Qiime2 Version tested : qiime2-2021.8 (conda)
+
+# Changelog since version 0.85 (0.86)
+# Step 11 now generate ASV table (combine feature-table biom with taxonomy)
+# Step 2 now generate rep-seqs-dada2.qzv using representative sequences
+# Step 1.5 is now more resilient to crash during a test (skipping test instead of cascade crashing)
+# Step 1.5 results are now transfered in a folder to prevent folder cluttering
+# New option for step 1.5 'DRY_RUN' to stop the program after generating the temp file, but before importation
+
+
+# Changelog since Version 0.84 (0.85)
 # Support for Phylogeny in step 7, 8 and 10
 # Step 7 now mandatory, but can be bypassed with a parameter
 # Step 1.5 generate a feature table summarize
@@ -14,5 +24,3 @@
 # Support for ANCOM differential abundancy tests
 # Optionfile now tagged with the pipeline version (for future reference)
 # Version file (this one) now available
-
-# Latest Qiime2 Version tested : qiime2-2021.8 (conda)
