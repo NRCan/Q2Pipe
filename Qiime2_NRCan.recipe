@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: quay.io/qiime2/core:2021.8
+
+%files
+    /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt
+
+%labels
+    Qiime2_Author Bolyen,Evan et al
+    NRCan_Image_Maintainer Patrick Gagne
+    Maintainer_Email patrick.gagne@nrcan-rncan.gc.ca
+
+%help
+    This container is a standardised setup for Qiime2
+    It includes various programs needed at NRCan
+
+%post
+    apt update --allow-releaseinfo-change
+    apt install -y --no-install-recommends software-properties-common apt-utils
+    apt update
+    apt install -y --no-install-recommends \
+    ca-certificates \
+    nano \
+    less
+
+    # NRCan Certificate Cleanup 
+    rm /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt
+    update-ca-certificates
+
+#%environment
+    #source tab-qiime
+
+%runscript
+    qiime
