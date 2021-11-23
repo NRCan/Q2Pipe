@@ -135,7 +135,12 @@ do
     jobn=$( echo $line | awk -F ':' '{ print $1 }' )
     params=$( echo $line | awk -F ':' '{ print $2 }' | sed 's/\r$//' )
     echo "Launching $jobn parameters set"
-    $SINGULARITY_COMMAND qiime dada2 denoise-paired --i-demultiplexed-seqs $ANALYSIS_NAME.denoise_eval_import$ca_flag.qza $params --p-n-threads $NB_THREADS --o-table $ANALYSIS_NAME.feature-table.$jobn.qza --o-representative-sequences $ANALYSIS_NAME.rep-seqs.$jobn.qza --o-denoising-stats $ANALYSIS_NAME.stats.$jobn.qza --verbose || echo "Command error detected during test denoising, $jobn will be skipped" ; continue
+    $SINGULARITY_COMMAND qiime dada2 denoise-paired --i-demultiplexed-seqs $ANALYSIS_NAME.denoise_eval_import$ca_flag.qza $params --p-n-threads $NB_THREADS --o-table $ANALYSIS_NAME.feature-table.$jobn.qza --o-representative-sequences $ANALYSIS_NAME.rep-seqs.$jobn.qza --o-denoising-stats $ANALYSIS_NAME.stats.$jobn.qza --verbose
+    if [ $? -ne 0 ]
+    then
+        echo "Command error detected during test denoising, $jobn will be skipped"
+        continue
+    fi
     $SINGULARITY_COMMAND qiime feature-table summarize --i-table $ANALYSIS_NAME.feature-table.$jobn.qza  --o-visualization $ANALYSIS_NAME.feature-table.$jobn.qzv
     $SINGULARITY_COMMAND qiime metadata tabulate --m-input-file $ANALYSIS_NAME.stats.$jobn.qza --o-visualization $ANALYSIS_NAME.stats.$jobn.qzv --verbose
     $SINGULARITY_COMMAND  qiime feature-table tabulate-seqs --i-data $ANALYSIS_NAME.rep-seqs.$jobn.qza --o-visualization $ANALYSIS_NAME.rep-seqs.$jobn.qzv
