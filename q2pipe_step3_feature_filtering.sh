@@ -38,6 +38,18 @@ then
     export TMPDIR=$TEMPORARY_DIRECTORY
 fi
 
+if [ $CALCULATION_MODE == "auto" ]
+then
+    if [ $freq_threshold -eq 0 ] && [ $sample_threshold -eq 0 ]
+    then
+        p_min_frequency=0
+        p_min_samples=0
+    else
+        $SINGULARITY_COMMAND qiime tools export --input-path $ANALYSIS_NAME.table-dada2.qzv --output-path $ANALYSIS_NAME.temporary_export_dada2table
+    fi
+fi
+
+
 if [ $p_min_frequency -eq 0 ] && [ $p_min_samples -eq 0 ]
 then
     echo "WARNING: both min_frequency and min_samples are equal 0"

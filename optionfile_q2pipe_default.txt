@@ -86,16 +86,19 @@ p_min_fold_parent_over_abundance=1.0
 # Step3  Feature Table filtering   #
 ####################################
 
-# FUTURE DEV: REPLACE OR ADD AUTO CALCULATION ACCORDING TO VISUALIZATION DATA
+# If auto, step 3 will calculate correct p_min_frequency and p_min_sample according to freq_threshold and sample_threshold
+# If manual, step 3 will simply use the defined p_min_frequency and p_min_sample below 
+CALCULATION_MODE=manual
+
+## Manual mode only
 # Use 0 to disable
-#freq_threshold=0.0005
 p_min_frequency=16
-
-
-# IDEM ^^^^
-# Use 0 to disable
-#sample_threshold=0
 p_min_samples=0
+
+## Auto mode only
+# Use 0 to disable
+freq_threshold=0.0005
+sample_threshold=0
 
 ###############################
 # Step 4  Denovo Clustering   #
