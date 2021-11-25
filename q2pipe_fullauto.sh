@@ -54,148 +54,148 @@ echo "Installation path: $Q2P"
 
 invalid_next=0
 
-if [ ! -e q2pipe_step1.DONE ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step1.DONE ]
 then
     echo "Launching Step 1"
-    if [ -e q2pipe_step1.DONE ]
+    if [ -e $ANALYSIS_NAME.q2pipe_step1.DONE ]
     then
         echo "Invalid checkpoint detected. Deleting..."
-        rm q2pipe_step1.DONE
+        rm $ANALYSIS_NAME.q2pipe_step1.DONE
     fi
     $Q2P/q2pipe_step1_import.sh $optionfile || exit_on_error
-    touch q2pipe_step1.DONE
+    touch $ANALYSIS_NAME.q2pipe_step1.DONE
     invalid_next=1
 else
     echo "Step 1 checkpoint detected...skipping"
 fi
 
-if [ ! -e q2pipe_step2.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step2.DONE ] || [ $invalid_next -eq 1 ]
 then
     echo "Launching Step 2"
-    if [ -e q2pipe_step2.DONE ]
+    if [ -e $ANALYSIS_NAME.q2pipe_step2.DONE ]
     then
         echo "Invalid checkpoint detected. Deleting..."
-        rm q2pipe_step2.DONE
+        rm $ANALYSIS_NAME.q2pipe_step2.DONE
     fi
     $Q2P/q2pipe_step2_denoise.sh $optionfile || exit_on_error
-    touch q2pipe_step2.DONE
+    touch $ANALYSIS_NAME.q2pipe_step2.DONE
     invalid_next=1
 else
     echo "Step 2 checkpoint detected...skipping"
 fi
 
-if [ ! -e q2pipe_step3.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step3.DONE ] || [ $invalid_next -eq 1 ]
 then
     echo "Launching Step 3"
-    if [ -e q2pipe_step3.DONE ]
+    if [ -e $ANALYSIS_NAME.q2pipe_step3.DONE ]
     then
         echo "Invalid checkpoint detected. Deleting..."
-        rm q2pipe_step3.DONE
+        rm $ANALYSIS_NAME.q2pipe_step3.DONE
     fi
     $Q2P/q2pipe_step3_feature_filtering.sh $optionfile || exit_on_error
-    touch q2pipe_step3.DONE
+    touch $ANALYSIS_NAME.q2pipe_step3.DONE
     invalid_next=1
 else
     echo "Step 3 checkpoint detected...skipping"
 fi
 
-if [ ! -e q2pipe_step4.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step4.DONE ] || [ $invalid_next -eq 1 ]
 then
     echo "Launching Step 4"
-    if [ -e q2pipe_step4.DONE ]
+    if [ -e $ANALYSIS_NAME.q2pipe_step4.DONE ]
     then
         echo "Invalid checkpoint detected. Deleting..."
-        rm q2pipe_step4.DONE
+        rm $ANALYSIS_NAME.q2pipe_step4.DONE
     fi
     $Q2P/q2pipe_step4_denovo_clustering.sh $optionfile || exit_on_error
-    touch q2pipe_step4.DONE
+    touch $ANALYSIS_NAME.q2pipe_step4.DONE
     invalid_next=1
 else
     echo "Step 4 checkpoint detected...skipping"
 fi
 
-if [ ! -e q2pipe_step5.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step5.DONE ] || [ $invalid_next -eq 1 ]
 then
     echo "Launching Step 5"
-    if [ -e q2pipe_step5.DONE ]
+    if [ -e $ANALYSIS_NAME.q2pipe_step5.DONE ]
     then
         echo "Invalid checkpoint detected. Deleting..."
-        rm q2pipe_step5.DONE
+        rm $ANALYSIS_NAME.q2pipe_step5.DONE
     fi
     $Q2P/q2pipe_step5_classifier_training.sh $optionfile || exit_on_error
-    touch q2pipe_step5.DONE
+    touch $ANALYSIS_NAME.q2pipe_step5.DONE
     invalid_next=1
 else
     echo "Step 5 checkpoint detected...skipping"
 fi
 
-if [ ! -e q2pipe_step6.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step6.DONE ] || [ $invalid_next -eq 1 ]
 then
     echo "Launching Step 6"
-    if [ -e q2pipe_step6.DONE ]
+    if [ -e $ANALYSIS_NAME.q2pipe_step6.DONE ]
     then
         echo "Invalid checkpoint detected. Deleting..."
-        rm q2pipe_step6.DONE
+        rm $ANALYSIS_NAME.q2pipe_step6.DONE
     fi
     $Q2P/q2pipe_step6_classification.sh $optionfile || exit_on_error
-    touch q2pipe_step6.DONE
+    touch $ANALYSIS_NAME.q2pipe_step6.DONE
     invalid_next=1
 else
     echo "Step 6 checkpoint detected...skipping"
 fi
 
-if [ ! -e q2pipe_step7.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step7.DONE ] || [ $invalid_next -eq 1 ]
 then
     echo "Launching Step 7"
-    if [ -e q2pipe_step7.DONE ]
+    if [ -e $ANALYSIS_NAME.q2pipe_step7.DONE ]
     then
         echo "Invalid checkpoint detected. Deleting..."
-        rm q2pipe_step7.DONE
+        rm $ANALYSIS_NAME.q2pipe_step7.DONE
     fi
     $Q2P/q2pipe_step7_taxa_filtering.sh $optionfile || exit_on_error
-    touch q2pipe_step7.DONE
+    touch $ANALYSIS_NAME.q2pipe_step7.DONE
     invalid_next=1
 else
     echo "Step 7 checkpoint detected...skipping"
 fi
 
-if [ ! -e q2pipe_step8.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step8.DONE ] || [ $invalid_next -eq 1 ]
 then
     echo "Launching Step 8"
-    if [ -e q2pipe_step8.DONE ]
+    if [ -e $ANALYSIS_NAME.q2pipe_step8.DONE ]
     then
         echo "Invalid checkpoint detected. Deleting..."
-        rm q2pipe_step8.DONE
+        rm $ANALYSIS_NAME.q2pipe_step8.DONE
     fi
     $Q2P/q2pipe_step8_rarefaction_curve.sh $optionfile || exit_on_error
-    touch q2pipe_step8.DONE
+    touch $ANALYSIS_NAME.q2pipe_step8.DONE
     invalid_next=1
 else
     echo "Step 8 checkpoint detected...skipping"
 fi
 
-if [ ! -e q2pipe_step9.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step9.DONE ] || [ $invalid_next -eq 1 ]
 then
     echo "Launching Step 9"
-    if [ -e q2pipe_step9.DONE ]
+    if [ -e $ANALYSIS_NAME.q2pipe_step9.DONE ]
     then
         echo "Invalid checkpoint detected. Deleting..."
-        rm q2pipe_step9.DONE
+        rm $ANALYSIS_NAME.q2pipe_step9.DONE
     fi
     $Q2P/q2pipe_step9_rarefy.sh $optionfile || exit_on_error
-    touch q2pipe_step9.DONE
+    touch $ANALYSIS_NAME.q2pipe_step9.DONE
     invalid_next=1
 else
     echo "Step 9 checkpoint detected...skipping"
 fi
 
-if [ ! -e q2pipe_step10.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step10.DONE ] || [ $invalid_next -eq 1 ]
 then
     echo "Launching Step 10"
-    if [ -e q2pipe_step10.DONE ]
+    if [ -e $ANALYSIS_NAME.q2pipe_step10.DONE ]
     then
         echo "Invalid checkpoint detected. Deleting..."
-        rm q2pipe_step10.DONE
+        rm $ANALYSIS_NAME.q2pipe_step10.DONE
     fi
 
     if [ -d "$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity" ] && [ "$SKIP_RAREFACTION" == "true" ]
@@ -209,22 +209,22 @@ then
     fi
 
     $Q2P/q2pipe_step10_metrics.sh $optionfile || exit_on_error
-    touch q2pipe_step10.DONE
+    touch $ANALYSIS_NAME.q2pipe_step10.DONE
     invalid_next=1
 else
     echo "Step 10 checkpoint detected...skipping"
 fi
 
-if [ ! -e q2pipe_step11.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step11.DONE ] || [ $invalid_next -eq 1 ]
 then
     echo "Launching Step 11"
-    if [ -e q2pipe_step11.DONE ]
+    if [ -e $ANALYSIS_NAME.q2pipe_step11.DONE ]
     then
         echo "Invalid checkpoint detected. Deleting..."
-        rm q2pipe_step11.DONE
+        rm $ANALYSIS_NAME.q2pipe_step11.DONE
     fi
     $Q2P/q2pipe_step11_export.sh $optionfile || exit_on_error
-    touch q2pipe_step11.DONE
+    touch $ANALYSIS_NAME.q2pipe_step11.DONE
     invalid_next=1
 else
     echo "Step 11 checkpoint detected...skipping"
