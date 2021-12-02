@@ -67,6 +67,8 @@ else
         exit 3
     fi
     mkdir $output_f
+    mkdir $output_f/alpha_qza_export
+    mkdir $output_f/beta_qza_export
 fi
 
 #echo "Input table : $input_table"
@@ -83,6 +85,15 @@ do
     --i-alpha-diversity $output_f/alpha_$i.qza \
     --m-metadata-file $METADATA_FILE_PATH \
     --o-visualization $output_f/alpha_$i.qzv || exit_on_error
+
+    # NEW
+    $SINGULARITY_COMMAND qiime tools export \
+    --input-path $output_f/alpha_$i.qza \
+    --output-path $output_f/alpha_qza_export/alpha_$i
+    
+    # not sure yet
+    #mv $output_f/alpha_qza_export/alpha_$i/alpha-diversity.tsv $output_f/alpha_qza_export/alpha_$i.tsv
+    #rm -rf $output_f/alpha_qza_export/alpha_$i
 done
 
 for i in $beta_metrics
@@ -103,6 +114,20 @@ do
     --m-metadata-file $METADATA_FILE_PATH \
     --o-visualization $output_f/beta_"$i"_emperor.qzv || exit_on_error
 
+   # New
+   $SINGULARITY_COMMAND qiime tools export \
+   --input-path $output_f/beta_"$i"_distance_matrix.qza \
+   --output-path $output_f/beta_qza_export/beta_"$i"_distance_matrix
+
+   $SINGULARITY_COMMAND qiime tools export \
+   --input-path $output_f/beta_"$i"_pcoa.qza \
+   --output-path $output_f/beta_qza_export/beta_"$i"_pcoa
+
+   # not sure yet
+   #mv $output_f/beta_qza_export/beta_"$i"_distance_matrix/distance-matrix.tsv $output_f/beta_qza_export/beta_"$i"_distance_matrix.tsv
+   #mv $output_f/beta_qza_export/beta_"$i"_pcoa/ordination.txt $output_f/beta_qza_export/beta_"$i"_pcoa_ordination.txt
+   #rm -rf $output_f/beta_qza_export/beta_"$i"_distance_matrix
+   #rm -rf $output_f/beta_qza_export/beta_"$i"_pcoa
 done
 
 if [ "$GENERATE_PHYLOGENY" == "true" ]
@@ -123,6 +148,11 @@ then
         --i-alpha-diversity $output_f/alpha_$i.phylo.qza \
         --m-metadata-file $METADATA_FILE_PATH \
         --o-visualization $output_f/alpha_$i.phylo.qzv || exit_on_error
+
+        $SINGULARITY_COMMAND qiime tools export \
+        --input-path $output_f/alpha_$i.phylo.qza \
+        --output-path $output_f/alpha_qza_export/alpha_"$i"_phylo
+
     done
 
     for i in $beta_metrics_phylo
@@ -144,6 +174,13 @@ then
         --m-metadata-file $METADATA_FILE_PATH \
         --o-visualization $output_f/beta_"$i"_emperor.phylo.qzv || exit_on_error
 
+       $SINGULARITY_COMMAND qiime tools export \
+       --input-path $output_f/beta_"$i"_distance_matrix.phylo.qza \
+       --output-path $output_f/beta_qza_export/beta_"$i"_distance_matrix_phylo
+
+       $SINGULARITY_COMMAND qiime tools export \
+       --input-path $output_f/beta_"$i"_pcoa.phylo.qza \
+       --output-path $output_f/beta_qza_export/beta_"$i"_pcoa_phylo
      done
 
 fi
