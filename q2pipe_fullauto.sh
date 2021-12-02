@@ -19,6 +19,12 @@ exit_on_error(){
 
 
 optionfile=$1
+override_value=$2
+
+if [ ! $override_value ]
+then
+    override_value=0
+fi
 
 if [ ! $optionfile ] || [ ! -e $optionfile ] || [ ! -r $optionfile ]
 then
@@ -53,8 +59,12 @@ fi
 echo "Installation path: $Q2P"
 
 invalid_next=0
+if [ $override_value -gt 0 ]
+then
+    invalid_next=1
+fi
 
-if [ ! -e $ANALYSIS_NAME.q2pipe_step1.DONE ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step1.DONE ] || [ $invalid_next -eq 1 ] && [ $override_value -le 1 ]
 then
     echo "Launching Step 1"
     if [ -e $ANALYSIS_NAME.q2pipe_step1.DONE ]
@@ -69,7 +79,7 @@ else
     echo "Step 1 checkpoint detected...skipping"
 fi
 
-if [ ! -e $ANALYSIS_NAME.q2pipe_step2.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step2.DONE ] || [ $invalid_next -eq 1 ] && [ $override_value -le 2 ]
 then
     echo "Launching Step 2"
     if [ -e $ANALYSIS_NAME.q2pipe_step2.DONE ]
@@ -84,7 +94,7 @@ else
     echo "Step 2 checkpoint detected...skipping"
 fi
 
-if [ ! -e $ANALYSIS_NAME.q2pipe_step3.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step3.DONE ] || [ $invalid_next -eq 1 ] && [ $override_value -le 3 ]
 then
     echo "Launching Step 3"
     if [ -e $ANALYSIS_NAME.q2pipe_step3.DONE ]
@@ -99,7 +109,7 @@ else
     echo "Step 3 checkpoint detected...skipping"
 fi
 
-if [ ! -e $ANALYSIS_NAME.q2pipe_step4.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step4.DONE ] || [ $invalid_next -eq 1 ] && [ $override_value -le 4 ]
 then
     echo "Launching Step 4"
     if [ -e $ANALYSIS_NAME.q2pipe_step4.DONE ]
@@ -114,7 +124,7 @@ else
     echo "Step 4 checkpoint detected...skipping"
 fi
 
-if [ ! -e $ANALYSIS_NAME.q2pipe_step5.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step5.DONE ] || [ $invalid_next -eq 1 ] && [ $override_value -le 5 ]
 then
     echo "Launching Step 5"
     if [ -e $ANALYSIS_NAME.q2pipe_step5.DONE ]
@@ -129,7 +139,7 @@ else
     echo "Step 5 checkpoint detected...skipping"
 fi
 
-if [ ! -e $ANALYSIS_NAME.q2pipe_step6.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step6.DONE ] || [ $invalid_next -eq 1 ] && [ $override_value -le 6 ]
 then
     echo "Launching Step 6"
     if [ -e $ANALYSIS_NAME.q2pipe_step6.DONE ]
@@ -144,7 +154,7 @@ else
     echo "Step 6 checkpoint detected...skipping"
 fi
 
-if [ ! -e $ANALYSIS_NAME.q2pipe_step7.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step7.DONE ] || [ $invalid_next -eq 1 ] && [ $override_value -le 7 ]
 then
     echo "Launching Step 7"
     if [ -e $ANALYSIS_NAME.q2pipe_step7.DONE ]
@@ -159,7 +169,7 @@ else
     echo "Step 7 checkpoint detected...skipping"
 fi
 
-if [ ! -e $ANALYSIS_NAME.q2pipe_step8.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step8.DONE ] || [ $invalid_next -eq 1 ] && [ $override_value -le 8 ]
 then
     echo "Launching Step 8"
     if [ -e $ANALYSIS_NAME.q2pipe_step8.DONE ]
@@ -174,7 +184,7 @@ else
     echo "Step 8 checkpoint detected...skipping"
 fi
 
-if [ ! -e $ANALYSIS_NAME.q2pipe_step9.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step9.DONE ] || [ $invalid_next -eq 1 ] && [ $override_value -le 9 ]
 then
     echo "Launching Step 9"
     if [ -e $ANALYSIS_NAME.q2pipe_step9.DONE ]
@@ -189,7 +199,7 @@ else
     echo "Step 9 checkpoint detected...skipping"
 fi
 
-if [ ! -e $ANALYSIS_NAME.q2pipe_step10.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step10.DONE ] || [ $invalid_next -eq 1 ] && [ $override_value -le 10 ]
 then
     echo "Launching Step 10"
     if [ -e $ANALYSIS_NAME.q2pipe_step10.DONE ]
@@ -215,7 +225,7 @@ else
     echo "Step 10 checkpoint detected...skipping"
 fi
 
-if [ ! -e $ANALYSIS_NAME.q2pipe_step11.DONE ] || [ $invalid_next -eq 1 ]
+if [ ! -e $ANALYSIS_NAME.q2pipe_step11.DONE ] || [ $invalid_next -eq 1 ] && [ $override_value -le 11 ]
 then
     echo "Launching Step 11"
     if [ -e $ANALYSIS_NAME.q2pipe_step11.DONE ]
