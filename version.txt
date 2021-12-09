@@ -1,11 +1,13 @@
 ##########################
 #                        #
-#   Q2Pipe Version 0.86  #
-#    November 19, 2021   #
+#   Q2Pipe Version 0.87  #
+#    December 9, 2021    #
 #                        #
 ##########################
 
 # Latest Qiime2 Version tested : qiime2-2021.8 (conda)
+
+# Changelog since version 0.86 (0.87)
 
 # Changelog since version 0.85 (0.86)
 # Step 11 now generate ASV table (combine feature-table biom with taxonomy)
