@@ -11,11 +11,12 @@ echo -e "sample-id,absolute-filepath,direction" > manifest.csv
 file_format=$1
 forward_suffix=$2
 reverse_suffix=$3
+supp_tag=$4
 
 if [ ! $1 ] || [ ! $2 ] || [ ! $3 ]
 then
     echo "ERROR: missing argument"
-    echo "USAGE: $0 file_format forward_suffix reverse_suffix"
+    echo "USAGE: $0 file_format forward_suffix reverse_suffix [secondary_cleanup_tag]"
     exit 1
 fi
 
@@ -30,16 +31,23 @@ fi
 #reverse_suffix="_L001_R2_001.fastq.gz"
 
 echo "PROCEEDING..."
-samples=$( ls *$file_format | awk -F "$forward_suffix" '{ print $1 }' | awk -F "$reverse_suffix" '{ print $1 }' | sort | uniq )
+samples=$( ls *$file_format | awk -F "$forward_suffix" '{ print $1 }' | awk -F "$reverse_suffix" '{ print $1 }' | sort -V | uniq )
 
 
 for i in $samples
 do
-   echo $i
+   #echo $i
    file_path_f=$PWD/$i"$forward_suffix""$file_format"
    file_path_r=$PWD/$i"$reverse_suffix""$file_format"
-   echo -e "$i,$file_path_f,forward" >> manifest.csv
-   echo -e "$i,$file_path_r,reverse" >> manifest.csv
+   if [ $supp_tag ]
+   then
+       samp_corname=$( echo $i | awk -F"$supp_tag" '{ print $1 }' )
+   else
+       samp_corname=$i
+   fi
+   echo $samp_corname
+   echo -e "$samp_corname,$file_path_f,forward" >> manifest.csv
+   echo -e "$samp_corname,$file_path_r,reverse" >> manifest.csv
 done
 
 tail -n +1 manifest.csv > .manifest_check.temp
