@@ -106,7 +106,7 @@ freq=$( echo $freq | sed 's/,//g' )
 freq_n=$( $SINGULARITY_COMMAND python -c "exec(\"import math\nprint($freq*0.0005)\")" )
 freq_f=$( $SINGULARITY_COMMAND python -c "exec(\"import math\nprint(math.floor($freq*0.0005))\")" )
 freq_c=$( $SINGULARITY_COMMAND python -c "exec(\"import math\nprint(math.ceil($freq*0.0005))\")" )
-echo "Recommended filtration setting (0.0005%): $freq_n = $freq_f (floor) or $freq_c (ceiling)"
+echo "Recommended filtration setting (0.05%): $freq_n = $freq_f (floor) or $freq_c (ceiling)"
 rm -rf $ANALYSIS_NAME.temporary_export_dada2table
 
 
