@@ -1,7 +1,7 @@
 #############################
 #                           #
 #     Q2Pipe Option file    #
-# Designed for Q2Pipe V0.86 #
+# Designed for Q2Pipe V0.88 #
 #                           #
 #############################
 
@@ -125,6 +125,9 @@ CLASSIFIER_OUTPUT_NAME=
 
 # Only specify this if you skipped step 5
 CLASSIFIER_DATABASE_PATH=
+
+# Possible value [0, 1] or disable
+p_confidence=0.7
 
 ############################
 # Step 7 Taxa Filtering    #

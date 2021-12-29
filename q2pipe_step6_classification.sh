@@ -61,6 +61,7 @@ $SINGULARITY_COMMAND qiime feature-classifier classify-sklearn \
 --i-classifier $classifier_path \
 --i-reads $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza \
 --p-n-jobs $NB_THREADS \
+--p-confidence $p_confidence \
 --o-classification $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza --verbose || exit_on_error
 
 $SINGULARITY_COMMAND qiime metadata tabulate \
