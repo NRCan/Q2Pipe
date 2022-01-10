@@ -72,6 +72,16 @@ then
     $SINGULARITY_COMMAND biom convert \
     -i $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"/feature_taxonomy_merged.biom \
     -o $ANALYSIS_NAME.ASV_table_norarefaction_dn"$p_perc_identity".tsv --to-tsv --header-key taxonomy
+
+    sed -i '1d' $ANALYSIS_NAME.ASV_table_norarefaction_dn"$p_perc_identity".tsv
+
+    if [ "$GENERATE_FUNGUILD" == "true" ]
+    then
+        echo "Running FUNGuild analysis..."
+        $SINGULARITY_COMMAND Guilds_v1.1.py \
+        -otu $ANALYSIS_NAME.ASV_table_norarefaction_dn"$p_perc_identity".tsv \
+        -m -u -db $FUNGUILD_DATABASE_PATH
+    fi
 else
     $SINGULARITY_COMMAND qiime tools export \
     --input-path $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
@@ -98,7 +108,18 @@ else
     $SINGULARITY_COMMAND biom convert \
     -i $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/feature_taxonomy_merged.biom \
     -o $ANALYSIS_NAME.ASV_table_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv --to-tsv --header-key taxonomy
+
+    sed -i '1d' $ANALYSIS_NAME.ASV_table_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv
+
+    if [ "$GENERATE_FUNGUILD" == "true" ]
+    then
+        echo "Running FUNGuild analysis..."
+        $SINGULARITY_COMMAND Guilds_v1.1.py \
+        -otu $ANALYSIS_NAME.ASV_table_norarefaction_dn"$p_perc_identity".tsv \
+        -m -u -db $FUNGUILD_DATABASE_PATH
+    fi
 fi
+
 
 
 if [ "$GENERATE_ANCOM" == "true" ]

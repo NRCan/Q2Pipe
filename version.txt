@@ -1,13 +1,20 @@
 ##########################
 #                        #
-#   Q2Pipe Version 0.87  #
+#   Q2Pipe Version 0.88  #
 #    December 9, 2021    #
 #                        #
 ##########################
 
 # Latest Qiime2 Version tested : qiime2-2021.8 (conda)
 
+# Changelog since version 0.87 (0.88)
+# p-confidence now a customisable parameter in classification step (6)
+# FUNGuild support (must be installed on PATH using Patrick Gagne's version)
+
 # Changelog since version 0.86 (0.87)
+# Create_manifest_direct script now support secondary filter argument (useful to remove _S##)
+# Step 2 is now correctly report frequency threshold (typo only, did not have impact on analysis)
+# Default optionfile now comply with laboratory guidelines
 
 # Changelog since version 0.85 (0.86)
 # Step 11 now generate ASV table (combine feature-table biom with taxonomy)

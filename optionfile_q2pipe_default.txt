@@ -1,7 +1,7 @@
 #############################
 #                           #
 #     Q2Pipe Option file    #
-# Designed for Q2Pipe V0.86 #
+# Designed for Q2Pipe V0.88 #
 #                           #
 #############################
 
@@ -126,6 +126,9 @@ CLASSIFIER_OUTPUT_NAME=
 # Only specify this if you skipped step 5
 CLASSIFIER_DATABASE_PATH=
 
+# Possible value [0, 1] or disable
+p_confidence=0.7
+
 ############################
 # Step 7 Taxa Filtering    #
 ############################
@@ -180,7 +183,18 @@ beta_metrics_phylo=weighted_unifrac,weighted_normalized_unifrac,generalized_unif
 ######################
 
 
-# ANCOM specific options
+## FUNGuild specific options (Fungal ITS Only)
+# To use FUNGuild, Guilds_v1.1.py must be available in your path
+# Recommended FUNGuild version : https://github.com/Patg13/FUNGuild
+GENERATE_FUNGUILD=false
+# Enter remote_fungi to use remote fungi database (http://stbates.org/funguild_db.php)
+# You can also specify a local database path
+# Database must be downloaded with the provided bash script in https://github.com/Patg13/FUNGuild
+FUNGUILD_DATABASE_PATH=
+
+
+
+## ANCOM specific options
 GENERATE_ANCOM=false
 # Collapse table at genus level (6)
 p_level=6
