@@ -115,7 +115,7 @@ else
     then
         echo "Running FUNGuild analysis..."
         $SINGULARITY_COMMAND Guilds_v1.1.py \
-        -otu $ANALYSIS_NAME.ASV_table_norarefaction_dn"$p_perc_identity".tsv \
+        -otu $ANALYSIS_NAME.ASV_table_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv \
         -m -u -db $FUNGUILD_DATABASE_PATH
     fi
 fi
