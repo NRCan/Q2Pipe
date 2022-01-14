@@ -20,7 +20,17 @@ From: quay.io/qiime2/core:2021.8
     apt install -y --no-install-recommends \
     ca-certificates \
     nano \
+    git \
     less
+
+    # Install FUNGuild (Patrick Gagne's version for Q2Pipe)
+    mkdir /download
+    cd /download
+    git clone https://github.com/Patg13/FUNGuild.git
+    cd FUNGuild
+    cp Guilds_v1.1.py /usr/bin
+    cd /
+    rm -rf /download
 
     # NRCan Certificate Cleanup 
     rm /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt
