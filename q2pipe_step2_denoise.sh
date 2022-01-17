@@ -50,6 +50,7 @@ then
     $SINGULARITY_COMMAND qiime cutadapt trim-paired \
     --i-demultiplexed-sequences $ANALYSIS_NAME.import.qza  \
     --o-trimmed-sequences $ANALYSIS_NAME.import$ca_flag.qza  \
+    --p-match-adapter-wildcards \
     $forward_trim_param $forward_primer \
     $reverse_trim_param $reverse_primer \
     $untrimmed_flag --p-cores $NB_THREADS --verbose || exit_on_error
