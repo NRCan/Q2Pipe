@@ -69,9 +69,11 @@ DRY_RUN=false
 
 # NOT FOR STEP 1.5 (YOU MUST USE TESTFILE FOR STEP 1.5)
 
+# Use 0 to deactivate parameters (should be 0 if you used CutAdapt)
 p_trim_left_f=20 
 p_trim_left_r=22
 
+# Use 0 to deactivate parameters
 p_trunc_len_f=237
 p_trunc_len_r=209
 
