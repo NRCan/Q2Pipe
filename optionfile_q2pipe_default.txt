@@ -44,7 +44,7 @@ reverse_trim_param=--p-front-r
 forward_primer=GTGYCAGCMGCCGCGGTAA
 reverse_primer=CCGYCAATTYMTTTRAGTTT
 
-p_discard_untrimmed=false
+p_discard_untrimmed=true
 
 ######################################################
 #  Step 1.5 : Dada2 Denoising Parameters Evaluation  #
