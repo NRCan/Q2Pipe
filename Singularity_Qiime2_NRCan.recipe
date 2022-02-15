@@ -29,6 +29,7 @@ From: quay.io/qiime2/core:2021.8
     git clone https://github.com/Patg13/FUNGuild.git
     cd FUNGuild
     cp Guilds_v1.1.py /usr/bin
+    chmod 755 /usr/bin/Guilds_v1.1.py
     cd /
     rm -rf /download
 
