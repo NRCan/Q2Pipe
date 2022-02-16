@@ -45,7 +45,7 @@ then
 fi
 
 
-if [ "$SKIP_RAREFACTION" == "true" ]
+if [ "$SKIP_RAREFACTION" == "true" ] || [ "$SKIP_RAREFACTION" == "both" ]
 then
     $SINGULARITY_COMMAND qiime tools export \
     --input-path $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
@@ -82,7 +82,10 @@ then
         -otu $ANALYSIS_NAME.ASV_table_norarefaction_dn"$p_perc_identity".tsv \
         -m -u -db $FUNGUILD_DATABASE_PATH
     fi
-else
+fi
+
+if [ "$SKIP_RAREFACTION" == "false" ] || [ "$SKIP_RAREFACTION" == "both" ]
+then
     $SINGULARITY_COMMAND qiime tools export \
     --input-path $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
     --output-path $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"

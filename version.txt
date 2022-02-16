@@ -1,11 +1,14 @@
 ##########################
 #                        #
-#   Q2Pipe Version 0.88  #
-#    December 9, 2021    #
+#   Q2Pipe Version 0.89  #
+#    February 16, 2022   #
 #                        #
 ##########################
 
 # Latest Qiime2 Version tested : qiime2-2021.8 (conda)
+
+# Changelog since version 0.88 (0.89)
+# Rarefaction override now support "both" argument so it can run with and without rarefaction in a single run
 
 # Changelog since version 0.87 (0.88)
 # p-confidence now a customisable parameter in classification step (6)
