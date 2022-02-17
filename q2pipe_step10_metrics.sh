@@ -42,148 +42,164 @@ fi
 alpha_metrics=$( echo $alpha_metrics | sed 's/,/ /g' )
 beta_metrics=$( echo $beta_metrics | sed 's/,/ /g' )
 
-if [ "$SKIP_RAREFACTION" == "true" ]
+if [ "$SKIP_RAREFACTION" == "both" ]
 then
-    echo "Skip Rarefaction parameter detected"
-    echo "$ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza will be used"
-    input_table="$ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza"
-    output_f="$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity"
-    if [ -d $output_f ]
+    SKIP_RAREFACTION="false true"
+    if [ -d $ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity ] || [ -d $ANALYSIS_NAME.metrics_rarefied_"$p_sampling_depth"_dn"$p_perc_identity" ] 
     then
-        echo "ERROR: Folder $output_f already exist"
-        echo "Please delete this folder before proceeding"
+        echo "ERROR: Previous metrics folder detected from previous run"
+        echo "Please delete the following folders if they exist:"
+        echo "$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity"
+        echo "$ANALYSIS_NAME.metrics_rarefied_"$p_sampling_depth"_dn"$p_perc_identity""
         exit 3
     fi
-    mkdir $output_f
-else
-    echo "Rarefaction parameter detected"
-    echo "$ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza will be used"
-    input_table="$ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza"
-    output_f="$ANALYSIS_NAME.metrics_rarefied_"$p_sampling_depth"_dn"$p_perc_identity""
-    if [ -d $output_f ]
-    then
-        echo "ERROR: Folder $output_f already exist"
-        echo "Please delete this folder before proceeding"
-        exit 3
-    fi
-    mkdir $output_f
-    mkdir $output_f/alpha_qza_export
-    mkdir $output_f/beta_qza_export
 fi
+
+for raref_param in $SKIP_RAREFACTION
+do
+    if [ "$raref_param" == "true" ]
+    then
+        echo "Skip Rarefaction parameter detected"
+        echo "$ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza will be used"
+        input_table="$ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza"
+        output_f="$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity"
+        if [ -d $output_f ]
+        then
+            echo "ERROR: Folder $output_f already exist"
+            echo "Please delete this folder before proceeding"
+            exit 3
+        fi
+        mkdir $output_f
+    else
+        echo "Rarefaction parameter detected"
+        echo "$ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza will be used"
+        input_table="$ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza"
+        output_f="$ANALYSIS_NAME.metrics_rarefied_"$p_sampling_depth"_dn"$p_perc_identity""
+        if [ -d $output_f ]
+        then
+            echo "ERROR: Folder $output_f already exist"
+            echo "Please delete this folder before proceeding"
+            exit 3
+        fi
+        mkdir $output_f
+        mkdir $output_f/alpha_qza_export
+        mkdir $output_f/beta_qza_export
+    fi
 
 #echo "Input table : $input_table"
 
-for i in $alpha_metrics
-do
-    echo "Calculating alpha diversity metric $i"
-    $SINGULARITY_COMMAND qiime diversity alpha \
-    --i-table $input_table \
-    --p-metric $i \
-    --o-alpha-diversity $output_f/alpha_$i.qza || exit_on_error
-
-    $SINGULARITY_COMMAND qiime diversity alpha-group-significance \
-    --i-alpha-diversity $output_f/alpha_$i.qza \
-    --m-metadata-file $METADATA_FILE_PATH \
-    --o-visualization $output_f/alpha_$i.qzv || exit_on_error
-
-    # NEW
-    $SINGULARITY_COMMAND qiime tools export \
-    --input-path $output_f/alpha_$i.qza \
-    --output-path $output_f/alpha_qza_export/alpha_$i
-    
-    # not sure yet
-    #mv $output_f/alpha_qza_export/alpha_$i/alpha-diversity.tsv $output_f/alpha_qza_export/alpha_$i.tsv
-    #rm -rf $output_f/alpha_qza_export/alpha_$i
-done
-
-for i in $beta_metrics
-do
-    echo "Calculating beta diversity metric $i"
-    $SINGULARITY_COMMAND qiime diversity beta \
-    --i-table $input_table \
-    --p-metric $i \
-    --p-n-jobs $NB_THREADS \
-    --o-distance-matrix $output_f/beta_"$i"_distance_matrix.qza || exit_on_error
-
-    $SINGULARITY_COMMAND qiime diversity pcoa \
-    --i-distance-matrix $output_f/beta_"$i"_distance_matrix.qza \
-    --o-pcoa $output_f/beta_"$i"_pcoa.qza || exit_on_error
-
-    $SINGULARITY_COMMAND qiime emperor plot \
-    --i-pcoa $output_f/beta_"$i"_pcoa.qza \
-    --m-metadata-file $METADATA_FILE_PATH \
-    --o-visualization $output_f/beta_"$i"_emperor.qzv || exit_on_error
-
-   # New
-   $SINGULARITY_COMMAND qiime tools export \
-   --input-path $output_f/beta_"$i"_distance_matrix.qza \
-   --output-path $output_f/beta_qza_export/beta_"$i"_distance_matrix
-
-   $SINGULARITY_COMMAND qiime tools export \
-   --input-path $output_f/beta_"$i"_pcoa.qza \
-   --output-path $output_f/beta_qza_export/beta_"$i"_pcoa
-
-   # not sure yet
-   #mv $output_f/beta_qza_export/beta_"$i"_distance_matrix/distance-matrix.tsv $output_f/beta_qza_export/beta_"$i"_distance_matrix.tsv
-   #mv $output_f/beta_qza_export/beta_"$i"_pcoa/ordination.txt $output_f/beta_qza_export/beta_"$i"_pcoa_ordination.txt
-   #rm -rf $output_f/beta_qza_export/beta_"$i"_distance_matrix
-   #rm -rf $output_f/beta_qza_export/beta_"$i"_pcoa
-done
-
-if [ "$GENERATE_PHYLOGENY" == "true" ]
-then
-    alpha_metrics_phylo=$( echo $alpha_metrics_phylo | sed 's/,/ /g' )
-    beta_metrics_phylo=$( echo $beta_metrics_phylo | sed 's/,/ /g' )
-
-    for i in $alpha_metrics_phylo
+    for i in $alpha_metrics
     do
-        echo "Calculating phylogenetic alpha diversity metric $i"
-        $SINGULARITY_COMMAND qiime diversity alpha-phylogenetic \
+        echo "Calculating alpha diversity metric $i"
+        $SINGULARITY_COMMAND qiime diversity alpha \
         --i-table $input_table \
-        --i-phylogeny $ANALYSIS_NAME.rooted_tree.qza \
         --p-metric $i \
-        --o-alpha-diversity $output_f/alpha_$i.phylo.qza || exit_on_error
+        --o-alpha-diversity $output_f/alpha_$i.qza || exit_on_error
 
         $SINGULARITY_COMMAND qiime diversity alpha-group-significance \
-        --i-alpha-diversity $output_f/alpha_$i.phylo.qza \
+        --i-alpha-diversity $output_f/alpha_$i.qza \
         --m-metadata-file $METADATA_FILE_PATH \
-        --o-visualization $output_f/alpha_$i.phylo.qzv || exit_on_error
+        --o-visualization $output_f/alpha_$i.qzv || exit_on_error
 
+        # NEW
         $SINGULARITY_COMMAND qiime tools export \
-        --input-path $output_f/alpha_$i.phylo.qza \
-        --output-path $output_f/alpha_qza_export/alpha_"$i"_phylo
-
+        --input-path $output_f/alpha_$i.qza \
+        --output-path $output_f/alpha_qza_export/alpha_$i
+    
+        # not sure yet
+        #mv $output_f/alpha_qza_export/alpha_$i/alpha-diversity.tsv $output_f/alpha_qza_export/alpha_$i.tsv
+        #rm -rf $output_f/alpha_qza_export/alpha_$i
     done
 
-    for i in $beta_metrics_phylo
+    for i in $beta_metrics
     do
-        echo "Calculating phylogenetic beta diversity metric $i"
-        $SINGULARITY_COMMAND qiime diversity beta-phylogenetic \
+        echo "Calculating beta diversity metric $i"
+        $SINGULARITY_COMMAND qiime diversity beta \
         --i-table $input_table \
-        --i-phylogeny $ANALYSIS_NAME.rooted_tree.qza \
         --p-metric $i \
-        --p-threads $NB_THREADS \
-        --o-distance-matrix $output_f/beta_"$i"_distance_matrix.phylo.qza || exit_on_error
+        --p-n-jobs $NB_THREADS \
+        --o-distance-matrix $output_f/beta_"$i"_distance_matrix.qza || exit_on_error
 
         $SINGULARITY_COMMAND qiime diversity pcoa \
-        --i-distance-matrix $output_f/beta_"$i"_distance_matrix.phylo.qza \
-        --o-pcoa $output_f/beta_"$i"_pcoa.phylo.qza || exit_on_error
+        --i-distance-matrix $output_f/beta_"$i"_distance_matrix.qza \
+        --o-pcoa $output_f/beta_"$i"_pcoa.qza || exit_on_error
 
         $SINGULARITY_COMMAND qiime emperor plot \
-        --i-pcoa $output_f/beta_"$i"_pcoa.phylo.qza \
+        --i-pcoa $output_f/beta_"$i"_pcoa.qza \
         --m-metadata-file $METADATA_FILE_PATH \
-        --o-visualization $output_f/beta_"$i"_emperor.phylo.qzv || exit_on_error
+        --o-visualization $output_f/beta_"$i"_emperor.qzv || exit_on_error
+
+       # New
+       $SINGULARITY_COMMAND qiime tools export \
+       --input-path $output_f/beta_"$i"_distance_matrix.qza \
+       --output-path $output_f/beta_qza_export/beta_"$i"_distance_matrix
 
        $SINGULARITY_COMMAND qiime tools export \
-       --input-path $output_f/beta_"$i"_distance_matrix.phylo.qza \
-       --output-path $output_f/beta_qza_export/beta_"$i"_distance_matrix_phylo
+       --input-path $output_f/beta_"$i"_pcoa.qza \
+       --output-path $output_f/beta_qza_export/beta_"$i"_pcoa
 
-       $SINGULARITY_COMMAND qiime tools export \
-       --input-path $output_f/beta_"$i"_pcoa.phylo.qza \
-       --output-path $output_f/beta_qza_export/beta_"$i"_pcoa_phylo
-     done
+       # not sure yet
+       #mv $output_f/beta_qza_export/beta_"$i"_distance_matrix/distance-matrix.tsv $output_f/beta_qza_export/beta_"$i"_distance_matrix.tsv
+       #mv $output_f/beta_qza_export/beta_"$i"_pcoa/ordination.txt $output_f/beta_qza_export/beta_"$i"_pcoa_ordination.txt
+       #rm -rf $output_f/beta_qza_export/beta_"$i"_distance_matrix
+       #rm -rf $output_f/beta_qza_export/beta_"$i"_pcoa
+    done
 
-fi
+    if [ "$GENERATE_PHYLOGENY" == "true" ]
+    then
+        alpha_metrics_phylo=$( echo $alpha_metrics_phylo | sed 's/,/ /g' )
+        beta_metrics_phylo=$( echo $beta_metrics_phylo | sed 's/,/ /g' )
+
+        for i in $alpha_metrics_phylo
+        do
+            echo "Calculating phylogenetic alpha diversity metric $i"
+            $SINGULARITY_COMMAND qiime diversity alpha-phylogenetic \
+            --i-table $input_table \
+            --i-phylogeny $ANALYSIS_NAME.rooted_tree.qza \
+            --p-metric $i \
+            --o-alpha-diversity $output_f/alpha_$i.phylo.qza || exit_on_error
+
+            $SINGULARITY_COMMAND qiime diversity alpha-group-significance \
+            --i-alpha-diversity $output_f/alpha_$i.phylo.qza \
+            --m-metadata-file $METADATA_FILE_PATH \
+            --o-visualization $output_f/alpha_$i.phylo.qzv || exit_on_error
+
+            $SINGULARITY_COMMAND qiime tools export \
+            --input-path $output_f/alpha_$i.phylo.qza \
+            --output-path $output_f/alpha_qza_export/alpha_"$i"_phylo
+
+        done
+
+        for i in $beta_metrics_phylo
+        do
+            echo "Calculating phylogenetic beta diversity metric $i"
+            $SINGULARITY_COMMAND qiime diversity beta-phylogenetic \
+            --i-table $input_table \
+            --i-phylogeny $ANALYSIS_NAME.rooted_tree.qza \
+            --p-metric $i \
+            --p-threads $NB_THREADS \
+            --o-distance-matrix $output_f/beta_"$i"_distance_matrix.phylo.qza || exit_on_error
+
+            $SINGULARITY_COMMAND qiime diversity pcoa \
+            --i-distance-matrix $output_f/beta_"$i"_distance_matrix.phylo.qza \
+            --o-pcoa $output_f/beta_"$i"_pcoa.phylo.qza || exit_on_error
+
+            $SINGULARITY_COMMAND qiime emperor plot \
+            --i-pcoa $output_f/beta_"$i"_pcoa.phylo.qza \
+            --m-metadata-file $METADATA_FILE_PATH \
+            --o-visualization $output_f/beta_"$i"_emperor.phylo.qzv || exit_on_error
+
+           $SINGULARITY_COMMAND qiime tools export \
+           --input-path $output_f/beta_"$i"_distance_matrix.phylo.qza \
+           --output-path $output_f/beta_qza_export/beta_"$i"_distance_matrix_phylo
+
+           $SINGULARITY_COMMAND qiime tools export \
+           --input-path $output_f/beta_"$i"_pcoa.phylo.qza \
+           --output-path $output_f/beta_qza_export/beta_"$i"_pcoa_phylo
+         done
+
+    fi
+done
 
 # Alpha Diversity $SINGULARITY_COMMAND qiime diversity alpha \ --i-table 
 #$ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \ --p-metric shannon \ --o-alpha-diversity 

@@ -1,7 +1,7 @@
 #############################
 #                           #
 #     Q2Pipe Option file    #
-# Designed for Q2Pipe V0.88 #
+# Designed for Q2Pipe V0.89 #
 #                           #
 #############################
 
@@ -149,8 +149,10 @@ p_mode=contains
 GENERATE_PHYLOGENY=false
 
 # RAREFACTION OVERRIDE
+# true, false or both
 # if you activate this option, you can ignore the next sections, skip step 8 and 9
-SKIP_RAREFACTION=false
+# Use "both" without the quotes to run both with and without rarefaction in a single run
+SKIP_RAREFACTION=both
 ##########################################
 #   Step 8 Alpha rarefaction plotting    #
 ##########################################
