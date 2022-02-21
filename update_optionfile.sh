@@ -92,6 +92,11 @@ do
   line_to_add=$( echo $line | awk -F':' '{ print $2 }' )
   line_number=$( echo $line | awk -F':' '{ print $1 }' )
   echo "$line_to_add"
+  if [ $line_number -ge $( cat $optionfile.new | wc -l ) ]
+  then
+      echo $line_to_add >> $optionfile.new
+      continue
+  fi
   sed -i "$line_number i $line_to_add" $optionfile.new
 done
 
