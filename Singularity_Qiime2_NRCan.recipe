@@ -37,8 +37,5 @@ From: quay.io/qiime2/core:2021.8
     rm /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt
     update-ca-certificates
 
-#%environment
-    #source tab-qiime
-
 %runscript
     qiime
