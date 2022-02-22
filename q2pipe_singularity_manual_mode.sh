@@ -33,12 +33,16 @@ then
     return 3
 fi
 
+shell_command=$( echo $sing_command | sed 's/exec/shell/g' )
+
 alias qiime="$sing_command qiime"
 alias sing="$sing_command"
+alias singshell="$shell_command"
 
 echo "Singularity aliases ready"
 echo "use 'qiime' to launch qiime commands"
 echo "use 'sing' to launch other commands within the qiime2 container (ex sing biom)"
+echo "use 'singshell' to directly interact with the singularity container"
 
 return 0
 
