@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: quay.io/qiime2/core:2021.8
+From: quay.io/qiime2/core:2022.2
 
 %files
     /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt
