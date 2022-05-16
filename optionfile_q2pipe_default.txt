@@ -128,7 +128,7 @@ CLASSIFIER_OUTPUT_NAME=
 # Only specify this if you skipped step 5
 CLASSIFIER_DATABASE_PATH=
 
-# Possible value [0, 1] or disable
+# Possible value [0, 1]
 p_confidence=0.7
 
 ############################
