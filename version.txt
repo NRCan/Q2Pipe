@@ -1,11 +1,16 @@
 ##########################
 #                        #
-#   Q2Pipe Version 0.89  #
-#    February 16, 2022   #
+#   Q2Pipe Version 0.90  #
+#      May XX, 2022      #
 #                        #
 ##########################
 
-# Latest Qiime2 Version tested : qiime2-2021.8 (conda)
+# Latest Qiime2 Version tested : qiime2-2022.2 (Singularity)
+
+# Changelog since version 0.89 (0.90)
+# IN PROGRESS Step1 and Step2 rewritten to support multiple run (the correct way)
+# IN PROGRESS Step3 now support multiple run merging
+# IN PROGRESS New step for Chimera filtering (in case of merged run)
 
 # Changelog since version 0.88 (0.89)
 # Rarefaction override now support "both" argument so it can run with and without rarefaction in a single run
