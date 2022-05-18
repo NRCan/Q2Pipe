@@ -51,6 +51,10 @@ p_discard_untrimmed=true
 #  Step 1.5 : Dada2 Denoising Parameters Evaluation  #
 ######################################################
 
+# This step is design to work with a single manifest file
+# Manifest must be in CSV format
+EVAL_MANIFEST_FILE_PATH=
+
 # if your data is single-end, only p_trim_left_f, p_trunc_len_f and p_max_ee_f will be used in trimming
 
 # Use 0 to bypass evaluation (will just denoise all samples)
