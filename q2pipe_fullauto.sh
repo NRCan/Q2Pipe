@@ -94,6 +94,21 @@ else
     echo "Step 2 checkpoint detected...skipping"
 fi
 
+if [ ! -e $ANALYSIS_NAME.q2pipe_step2.5.DONE ] || [ $invalid_next -eq 1 ] && [ $override_value -le 2 ]
+then
+    echo "Launching Step 2.5"
+    if [ -e $ANALYSIS_NAME.q2pipe_step2..5.DONE ]
+    then
+        echo "Invalid checkpoint detected. Deleting..."
+        rm $ANALYSIS_NAME.q2pipe_step2.5.DONE
+    fi
+    $Q2P/q2pipe_step2.5_run_merging.sh $optionfile || exit_on_error
+    touch $ANALYSIS_NAME.q2pipe_step2.5.DONE
+    invalid_next=1
+else
+    echo "Step 2.5 checkpoint detected...skipping"
+fi
+
 if [ ! -e $ANALYSIS_NAME.q2pipe_step3.DONE ] || [ $invalid_next -eq 1 ] && [ $override_value -le 3 ]
 then
     echo "Launching Step 3"

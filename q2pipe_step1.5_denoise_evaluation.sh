@@ -21,6 +21,9 @@ exit_on_error(){
 # This Qiime2 step will help to evaluate optimals parameters for the denoising step
 # It will generate a serie of denoising on a random subsample (size defined by the user) extracted from the original manifest file
 
+echo "FEATURE NOT AVAILABLE" # DEBUG LINE BECAUSE MULTIPLE RUN IN V0.90 BREAK THIS FUNCTIONALITY
+exit 1                       #
+
 optionfile=$1
 
 if [ ! $optionfile ] || [ ! -e $optionfile ] || [ ! -r $optionfile ]

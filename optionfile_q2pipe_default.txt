@@ -18,6 +18,7 @@ SINGULARITY_COMMAND=
 
 # Metadata must be in TSV format
 # Manifest must be in CSV format
+# For multiple run, seperate each run manifest by a ,
 METADATA_FILE_PATH=
 MANIFEST_FILE_PATH=
 
@@ -83,6 +84,17 @@ p_n_reads_learn=1000000
 
 p_chimera_method=consensus
 p_min_fold_parent_over_abundance=1.0
+
+###########################
+# Step 2.5  Run Merging   #
+###########################
+
+
+# If true, will proceed with merging even if runs are incompatible (different denoising parameters)
+# NOT RECOMMENDED
+IGNORE_INCOMPATIBILITY=false
+
+
 
 ####################################
 # Step3  Feature Table filtering   #

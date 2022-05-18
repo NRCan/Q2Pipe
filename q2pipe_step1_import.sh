@@ -5,7 +5,7 @@
 #      Qiime 2 Pipeline        #
 #  By: Patrick Gagne (NRCan)   #
 #    Step 1 - Importation      #
-#       October 5, 2021        #
+#        May 16, 2022          #
 #                              #
 ################################
 
@@ -37,16 +37,35 @@ then
     export TMPDIR=$TEMPORARY_DIRECTORY
 fi
 
-echo "Importing Data into artifact file"
-$SINGULARITY_COMMAND qiime tools import \
---type 'SampleData[PairedEndSequencesWithQuality]' \
---input-path $MANIFEST_FILE_PATH \
---output-path $ANALYSIS_NAME.import.qza \
---input-format PairedEndFastqManifestPhred33 || exit_on_error
+manifest_list=$( echo $MANIFEST_FILE_PATH | sed 's/,/ /g' )
 
-echo "Summarizing Importation into visualisation file"
-$SINGULARITY_COMMAND qiime demux summarize \
---i-data $ANALYSIS_NAME.import.qza \
---o-visualization $ANALYSIS_NAME.import.qzv --verbose || exit_on_error
+echo "Creating run folder"
+for manifest in $manifest_list
+do
+    manifest_name=$( basename $manifest |  sed 's/\.[^.]*$//' )
+    if [ -d $manifest_name ]
+    then
+        echo "$manifest_name folder found... checking content"
+        if [ -e $manifest_name/$manifest_name.import.qza ]
+        then
+            echo "QZA file found, skipping run..."
+            continue
+        else
+            echo "QZA not found, proceeding with import"
+        fi
+    else
+        mkdir $manifest_name
+    fi
 
+    echo "Importing $manifest_name Data into artifact file"
+    $SINGULARITY_COMMAND qiime tools import \
+    --type 'SampleData[PairedEndSequencesWithQuality]' \
+    --input-path $manifest \
+    --output-path $manifest_name/$manifest_name.import.qza \
+    --input-format PairedEndFastqManifestPhred33 || exit_on_error
 
+    echo "Summarizing $manifest_name importation into visualisation file"
+    $SINGULARITY_COMMAND qiime demux summarize \
+    --i-data $manifest_name/$manifest_name.import.qza \
+    --o-visualization $manifest_name/$manifest_name.import.qzv --verbose || exit_on_error
+done
