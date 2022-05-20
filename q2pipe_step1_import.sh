@@ -11,10 +11,8 @@
 
 exit_on_error(){
    echo "Qiime2 command error detected"
-   echo "Exiting program"
    exit 1
 }
-
 
 optionfile=$1
 
@@ -39,9 +37,12 @@ fi
 
 manifest_list=$( echo $MANIFEST_FILE_PATH | sed 's/,/ /g' )
 
+tempcheck=$( mktemp -p . )
+
 echo "Creating run folder"
 for manifest in $manifest_list
 do
+    (
     manifest_name=$( basename $manifest |  sed 's/\.[^.]*$//' )
     if [ -d $manifest_name ]
     then
@@ -49,6 +50,7 @@ do
         if [ -e $manifest_name/$manifest_name.import.qza ]
         then
             echo "QZA file found, skipping run..."
+            echo $manifest_name >> $tempcheck
             continue
         else
             echo "QZA not found, proceeding with import"
@@ -57,6 +59,7 @@ do
         mkdir $manifest_name
     fi
     cp $manifest $manifest_name/
+
     echo "Importing $manifest_name Data into artifact file"
     $SINGULARITY_COMMAND qiime tools import \
     --type 'SampleData[PairedEndSequencesWithQuality]' \
@@ -67,5 +70,31 @@ do
     echo "Summarizing $manifest_name importation into visualisation file"
     $SINGULARITY_COMMAND qiime demux summarize \
     --i-data $manifest_name/$manifest_name.import.qza \
+    --p-n $p_n \
     --o-visualization $manifest_name/$manifest_name.import.qzv --verbose || exit_on_error
+    
+    echo $manifest_name >> $tempcheck
+    ) &
+    if [[ $(jobs -r -p | wc -l) -ge $NB_THREADS ]]; then
+        wait -n
+    fi
 done
+wait
+
+if [ $( cat $tempcheck | wc -l ) -ne  $( echo $manifest_list | wc -w ) ]
+then
+    echo "Step finished with errors"
+    exit 1
+fi
+rm $tempcheck
+
+# LAST RESORT Check loop because of the multithreading#
+#for manifest in $manifest_list
+#do
+#    manifest_name=$( basename $manifest |  sed 's/\.[^.]*$//' )
+#    if [ ! -e $manifest_name/$manifest_name.import.qza ] || [ ! -e $manifest_name/$manifest_name.import.qzv ]
+#    then
+#        echo "Step finished with errors"
+#        exit 1
+#    fi
+#done

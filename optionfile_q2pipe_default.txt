@@ -33,6 +33,9 @@ TEMPORARY_DIRECTORY=
 # PLACEHOLDER for single end support DO NOT CHANGE THIS, ONLY PAIRED IS SUPPORTED
 DATA_TYPE=paired
 
+# Number of sequences to use to generate quality plots (default: 10000)
+p_n=10000
+
 #########################
 #  Cutadapt (Optional)  #
 #########################
