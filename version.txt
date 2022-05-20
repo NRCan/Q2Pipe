@@ -8,8 +8,8 @@
 # Latest Qiime2 Version tested : qiime2-2022.2 (Singularity)
 
 # Changelog since version 0.89 (0.90)
-# IN PROGRESS Step1 and Step2 rewritten to support multiple run (the correct way)
-# IN PROGRESS Step3 now support multiple run merging
+# Step1 and Step2 rewritten to support multiple run (the correct way)
+# Step3 now support multiple run merging
 # IN PROGRESS New step for Chimera filtering (in case of merged run)
 
 # Changelog since version 0.88 (0.89)

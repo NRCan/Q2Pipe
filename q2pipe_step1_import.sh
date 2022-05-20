@@ -56,7 +56,7 @@ do
     else
         mkdir $manifest_name
     fi
-
+    cp $manifest $manifest_name/
     echo "Importing $manifest_name Data into artifact file"
     $SINGULARITY_COMMAND qiime tools import \
     --type 'SampleData[PairedEndSequencesWithQuality]' \
