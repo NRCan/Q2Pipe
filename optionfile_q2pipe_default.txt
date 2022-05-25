@@ -77,6 +77,12 @@ DRY_RUN=false
 
 # NOT FOR STEP 1.5 (YOU MUST USE TESTFILE FOR STEP 1.5)
 
+# If true, the program will adjust the thread number to denoise multiple run in parallel
+# Your number of thread should be a multiple of the number of manifest
+# Ex 3 manifest will all be denoised simultaneously if you use 9 threads
+# NOTICE: MAKE SURE YOU HAVE ENOUGH RAM AND ENOUGH DISK SPACE FOR MULTIPLE RUN
+#OPTIMIZE_THREADS=false FEATURE NOT READY
+
 # Use 0 to deactivate parameters (should be 0 if you used CutAdapt)
 p_trim_left_f=20 
 p_trim_left_r=22
