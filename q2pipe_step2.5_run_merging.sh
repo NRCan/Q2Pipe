@@ -69,12 +69,12 @@ do
    grep "chimera_method:" $check_file >> $ANALYSIS_NAME.mergecheck/$manifest_name.check
 done
 
-compare=$( sha256sum MULTIRUN_BASIC_TEST.mergecheck/*.check | awk '{ print $1 }' | sort | uniq | wc -l )
+compare=$( sha256sum $ANALYSIS_NAME.mergecheck/*.check | awk '{ print $1 }' | sort | uniq | wc -l )
 
 if [ $compare -ne 1 ]
 then
-    sha256sum MULTIRUN_BASIC_TEST.mergecheck/*.check
-    for i in $( ls MULTIRUN_BASIC_TEST.mergecheck/*.check )
+    sha256sum $ANALYSIS_NAME.mergecheck/*.check
+    for i in $( ls $ANALYSIS_NAME.mergecheck/*.check )
     do
       echo $i
       cat $i
