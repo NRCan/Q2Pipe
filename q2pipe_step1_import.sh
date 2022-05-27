@@ -36,6 +36,36 @@ then
 fi
 
 manifest_list=$( echo $MANIFEST_FILE_PATH | sed 's/,/ /g' )
+for manifest in $manifest_list
+do
+   if [ ! -e $manifest ]
+   then
+       echo "ERROR: $manifest not found"
+       exit 1
+   fi
+done
+
+
+# Sample duplicate checking #
+sampleline=$(( $( cat $manifest_list | uniq | wc -l ) - $( echo $manifest_list | wc -w ) ))
+uniqline=$(( $( cat $manifest_list | sort | uniq | wc -l ) -1 ))
+#echo $sampleline
+#echo $uniqline
+
+if [ $sampleline -ne $uniqline ]
+then
+    echo ""
+    echo "ERROR: some samples are present in more then one manifest"
+    echo ""
+    offendingl=$( cat $manifest_list | sort | uniq -d | grep -v "sample-id,absolute-filepath,direction" )
+    echo "Offending lines:"
+    for i in $offendingl
+    do
+        grep $i $manifest_list
+    done
+    exit 1
+fi
+
 
 tempcheck=$( mktemp -p . )
 
