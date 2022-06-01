@@ -15,6 +15,14 @@ exit_on_error(){
    exit 1
 }
 
+# DEBUG FUNCTION TIMER
+function calculate_time(){
+    i=$1
+    ((sec=i%60, i/=60, min=i%60, hrs=i/60))
+    timestamp=$(printf "%d:%02d:%02d" $hrs $min $sec)
+    echo $timestamp
+}
+
 
 optionfile=$1
 
@@ -39,9 +47,41 @@ fi
 
 manifest_list=$( echo $MANIFEST_FILE_PATH | sed 's/,/ /g' )
 
+tempcheck=$( mktemp -p . )
+
+start_time=$(date +'%s') # DEBUGLINE TIMER
+
+
+# Check concurrent job VS threads
+if [ $CONCURRENT_JOBS -gt $( echo $manifest_list | wc -w ) ]
+then
+    echo "WARNING: Number of concurrent job greater than number of run to denoise"
+    echo "Number of manifest will be used as job count"
+    CONCURRENT_JOBS=$( echo $manifest_list | wc -w )
+fi
+
+if [ $NB_THREADS -lt $CONCURRENT_JOBS ]
+then
+    echo "ERROR: Number of thread lower than job count"
+    echo "Number of threads must be at least equal the number of concurrent job"
+    exit 1
+fi
+
+threadcheck=$( $SINGULARITY_COMMAND python3 -c "print($NB_THREADS % $CONCURRENT_JOBS)" )
+
+if [ $threadcheck -ne 0 ]
+then
+    echo "WARNING: Number of threads not a multiple of concurrent jobs"
+    echo "Analysis will be less efficient"
+fi
+
+NB_THREADS=$(( $NB_THREADS/$CONCURRENT_JOBS ))
+echo "$NB_THREADS threads will be used for each denoising job"
+
 echo "Checking run folders"
 for manifest in $manifest_list
 do
+    ( # DEBUGLINE
     manifest_name=$( basename $manifest |  sed 's/\.[^.]*$//' )
     if [ -d $manifest_name ]
     then
@@ -49,6 +89,7 @@ do
         if [ -e $manifest_name/$manifest_name.table-dada2.qza ]
         then
             echo "QZA file found, skipping run..."
+            echo $manifest_name >> $tempcheck
             continue
         else
             echo "QZA not found, proceeding with denoising"
@@ -133,5 +174,23 @@ do
         echo "Recommended filtration setting (0.05%): $freq_n = $freq_f (floor) or $freq_c (ceiling)"
         rm -rf $manifest_name/$manifest_name.temporary_export_dada2table
     fi
+    echo $manifest_name >> $tempcheck
+    ) & # DEBUGLINE
+
+    if [[ $(jobs -r -p | wc -l) -ge $CONCURRENT_JOBS ]]; then
+        wait -n
+    fi
 
 done
+
+wait # DEBUGLINE
+
+if [ $( cat $tempcheck | wc -l ) -ne  $( echo $manifest_list | wc -w ) ]
+then
+    echo "Step finished with errors"
+    exit 1
+fi
+rm $tempcheck
+
+end_time=$(date +'%s') # DEBUGLINE TIMER
+echo -e "\n\nTotal Analysis time:\t$(calculate_time $((end_time - start_time)))" # DEBUGLINE TIMER

@@ -112,6 +112,22 @@ $SINGULARITY_COMMAND qiime feature-table tabulate-seqs \
 --i-data $ANALYSIS_NAME.rep-seqs-dada2.qza \
 --o-visualization $ANALYSIS_NAME.rep-seqs-dada2.qzv
 
+# Include PCoA for 
+
+$SINGULARITY_COMMAND qiime diversity beta \
+--i-table $ANALYSIS_NAME.table-dada2.qza \
+--p-metric jaccard \
+--p-n-jobs $NB_THREADS \
+--o-distance-matrix $ANALYSIS_NAME.mergecheck/merge_distancematrix.qza
+
+$SINGULARITY_COMMAND qiime diversity pcoa \
+--i-distance-matrix $ANALYSIS_NAME.mergecheck/merge_distancematrix.qza \
+--o-pcoa $ANALYSIS_NAME.mergecheck/merge_pcoa.qza
+
+$SINGULARITY_COMMAND qiime emperor plot \
+--i-pcoa $ANALYSIS_NAME.mergecheck/merge_pcoa.qza \
+--m-metadata-file $METADATA_FILE_PATH \
+--o-visualization $ANALYSIS_NAME.mergeplot.qzv
 
 echo "Extracting Mean sample frequency"
 $SINGULARITY_COMMAND qiime tools export --input-path $ANALYSIS_NAME.table-dada2.qzv --output-path $ANALYSIS_NAME.temporary_export_dada2table

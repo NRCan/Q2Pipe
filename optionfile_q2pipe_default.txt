@@ -77,11 +77,12 @@ DRY_RUN=false
 
 # NOT FOR STEP 1.5 (YOU MUST USE TESTFILE FOR STEP 1.5)
 
-# If true, the program will adjust the thread number to denoise multiple run in parallel
-# Your number of thread should be a multiple of the number of manifest
-# Ex 3 manifest will all be denoised simultaneously if you use 9 threads
-# NOTICE: MAKE SURE YOU HAVE ENOUGH RAM AND ENOUGH DISK SPACE FOR MULTIPLE RUN
-#OPTIMIZE_THREADS=false FEATURE NOT READY
+# Number of denoising job to launch simultaneously
+# Each job will use NB_THREADS / job count
+# For best result, your number of job should be a multiple of your NB_THREADS
+# Ex: 3 jobs should have 9, 12, 15, etc. NB_THREADS so each job have the same number of threads
+# If 1 is used, all job will run sequentially (which will be slower that having multiple jobs)  
+CONCURRENT_JOBS=1
 
 # Use 0 to deactivate parameters (should be 0 if you used CutAdapt)
 p_trim_left_f=20 
