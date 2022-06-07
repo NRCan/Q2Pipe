@@ -1,7 +1,7 @@
 #############################
 #                           #
 #     Q2Pipe Option file    #
-# Designed for Q2Pipe V0.89 #
+# Designed for Q2Pipe V0.90 #
 #                           #
 #############################
 
@@ -18,7 +18,7 @@ SINGULARITY_COMMAND=
 
 # Metadata must be in TSV format
 # Manifest must be in CSV format
-# For multiple run, seperate each run manifest by a ,
+# For multiple run, seperate each run manifest by a comma (,)
 METADATA_FILE_PATH=
 MANIFEST_FILE_PATH=
 

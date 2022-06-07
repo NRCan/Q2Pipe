@@ -1,7 +1,7 @@
 ##########################
 #                        #
 #   Q2Pipe Version 0.90  #
-#      May XX, 2022      #
+#      June 03, 2022     #
 #                        #
 ##########################
 
@@ -9,6 +9,7 @@
 
 # Changelog since version 0.89 (0.90)
 # Step1 and Step2 rewritten to support multiple run (the correct way)
+# Step1 and Step2 support multijob architecture to accelerate analysis
 # Step3 now support multiple run merging
 # IN PROGRESS New step for Chimera filtering (in case of merged run)
 
