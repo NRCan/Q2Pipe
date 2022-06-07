@@ -100,7 +100,7 @@ p_chimera_method=consensus
 p_min_fold_parent_over_abundance=1.0
 
 ###########################
-# Step 2.5  Run Merging   #
+# Step 2.5 : Run Merging  #
 ###########################
 
 
@@ -110,9 +110,9 @@ IGNORE_INCOMPATIBILITY=false
 
 
 
-####################################
-# Step3  Feature Table filtering   #
-####################################
+#####################################
+# Step 3 : Feature Table filtering  #
+#####################################
 
 # FUTURE DEV: REPLACE OR ADD AUTO CALCULATION ACCORDING TO VISUALIZATION DATA
 # Use 0 to disable
@@ -126,16 +126,16 @@ p_min_frequency=16
 p_min_samples=0
 
 ###############################
-# Step 4  Denovo Clustering   #
+# Step 4 : Denovo Clustering  #
 ###############################
 
 # Must be between ]0 , 1.0]
 # Use NA to skip denovo clustering (you must still launch step 4)
 p_perc_identity=NA
  
-#################################
-# Step 5  Classifier Training   #
-#################################
+##################################
+# Step 5 : Classifier Training   #
+##################################
 
 # Only Specify these if you want to train the classifier with your database
 # It's recommended to use the same name (different extension) for the fasta and the tax file
@@ -147,9 +147,9 @@ SEQS_QZA_PATH=
 TAXO_QZA_PATH=
 CLASSIFIER_OUTPUT_NAME=
 
-###############################
-# Step 6 Taxonomy Assignment  #
-###############################
+#################################
+# Step 6 : Taxonomy Assignment  #
+#################################
 
 # Only specify this if you skipped step 5
 CLASSIFIER_DATABASE_PATH=
@@ -158,7 +158,7 @@ CLASSIFIER_DATABASE_PATH=
 p_confidence=0.7
 
 ############################
-# Step 7 Taxa Filtering    #
+# Step 7 : Taxa Filtering  #
 ############################
 
 # Never use space in the list, only comma
@@ -180,7 +180,7 @@ GENERATE_PHYLOGENY=false
 # Use "both" without the quotes to run both with and without rarefaction in a single run
 SKIP_RAREFACTION=both
 ##########################################
-#   Step 8 Alpha rarefaction plotting    #
+#   Step 8 : Alpha rarefaction plotting  #
 ##########################################
 
 p_max_depth=8000
@@ -191,15 +191,15 @@ p_iterations=10
 # IMPORTANT: This is NOT the metrics for step 10, this is only for the rarefaction curve
 p_metrics=observed_features,shannon
 
-###########################
-# Step 9 Data Rarefaction #
-###########################
+#############################
+# Step 9 : Data Rarefaction #
+#############################
 
 p_sampling_depth=10000
 
-#######################
-#   Step 10 Metrics   #
-#######################
+########################
+#   Step 10 : Metrics  #
+########################
 
 alpha_metrics=shannon,simpson,observed_features,chao1,pielou_e
 beta_metrics=braycurtis,jaccard
@@ -209,7 +209,7 @@ alpha_metrics_phylo=faith_pd
 beta_metrics_phylo=weighted_unifrac,weighted_normalized_unifrac,generalized_unifrac,unweighted_unifrac
 
 ######################
-#   Step 11 Export   #
+#   Step 11 : Export #
 ######################
 
 
