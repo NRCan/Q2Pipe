@@ -120,7 +120,7 @@ do
     fi
 
     ca_flag=""
-    if [ "$SKIP_CUTADAPT" == "false" ]
+    if [ "$RUN_CUTADAPT" == "true" ]
     then
         ca_flag="_CA"
         untrimmed_flag=""

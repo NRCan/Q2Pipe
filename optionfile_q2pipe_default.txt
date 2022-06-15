@@ -41,7 +41,7 @@ p_n=10000
 #########################
 # This step is done during step 1.5 and step 2
 
-SKIP_CUTADAPT=true
+RUN_CUTADAPT=false
 forward_trim_param=--p-front-f
 reverse_trim_param=--p-front-r
 

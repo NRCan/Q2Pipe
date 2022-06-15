@@ -96,7 +96,7 @@ $SINGULARITY_COMMAND qiime demux summarize \
 --o-visualization $ANALYSIS_NAME.denoise_eval_import.qzv --verbose
 
 ca_flag=""
-if [ "$SKIP_CUTADAPT" == "false" ]
+if [ "$RUN_CUTADAPT" == "true" ]
 then
     ca_flag="_CA"
     untrimmed_flag=""
