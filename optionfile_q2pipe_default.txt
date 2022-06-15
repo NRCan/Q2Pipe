@@ -85,7 +85,7 @@ DRY_RUN=false
 CONCURRENT_JOBS=1
 
 # Use 0 to deactivate parameters (should be 0 if you used CutAdapt)
-p_trim_left_f=20 
+p_trim_left_f=20
 p_trim_left_r=22
 
 # Use 0 to deactivate parameters
