@@ -89,6 +89,9 @@ p_trim_left_f=20
 p_trim_left_r=22
 
 # Use 0 to deactivate parameters
+# If you have multiple run, you must input a value for each of them
+# seperate them by a comma (ex 234,235,223)
+# They must be in the same order then your manifest list
 p_trunc_len_f=237
 p_trunc_len_r=209
 

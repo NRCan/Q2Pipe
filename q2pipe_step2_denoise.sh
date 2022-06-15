@@ -46,10 +46,27 @@ then
 fi
 
 manifest_list=$( echo $MANIFEST_FILE_PATH | sed 's/,/ /g' )
+ftrunc_list=$( echo $p_trunc_len_f | sed 's/,/ /g' )
+rtrunc_list=$( echo $p_trunc_len_r | sed 's/,/ /g' )
+if [ $( echo $ftrunc_list | wc -w ) -ne $( echo $manifest_list | wc -w ) ]
+then
+    echo "ERROR: Inconsistent parameter list for forward truncation option"
+    exit 3
+fi
+
+if [ $( echo $rtrunc_list | wc -w ) -ne $( echo $manifest_list | wc -w ) ]
+then
+    echo "ERROR: Inconsistent parameter list for reverse truncation option"
+    exit 3
+fi
+
+ftrunc_arr=($ftrunc_list)
+rtrunc_arr=($rtrunc_list)
 
 tempcheck=$( mktemp -p . )
 
 start_time=$(date +'%s') # DEBUGLINE TIMER
+
 
 
 # Check concurrent job VS threads
@@ -78,9 +95,12 @@ fi
 NB_THREADS=$(( $NB_THREADS/$CONCURRENT_JOBS ))
 echo "$NB_THREADS threads will be used for each denoising job"
 
+arr_pos=-1
+
 echo "Checking run folders"
 for manifest in $manifest_list
 do
+    let $[ arr_pos += 1 ]
     ( # DEBUGLINE
     manifest_name=$( basename $manifest |  sed 's/\.[^.]*$//' )
     if [ -d $manifest_name ]
@@ -124,7 +144,8 @@ do
     fi
 
 
-
+    echo ${ftrunc_arr[arr_pos]} # DEBUGLINE
+    echo ${rtrunc_arr[arr_pos]} # DEBUGLINE
     $SINGULARITY_COMMAND qiime dada2 denoise-paired \
     --i-demultiplexed-seqs $manifest_name/$manifest_name.import$ca_flag.qza \
     --o-table $manifest_name/$manifest_name.table-dada2.qza \
@@ -132,8 +153,8 @@ do
     --o-denoising-stats $manifest_name/$manifest_name.denoising-stats-dada2.qza \
     --p-trim-left-f $p_trim_left_f \
     --p-trim-left-r $p_trim_left_r \
-    --p-trunc-len-f $p_trunc_len_f \
-    --p-trunc-len-r $p_trunc_len_r \
+    --p-trunc-len-f ${ftrunc_arr[arr_pos]} \
+    --p-trunc-len-r ${rtrunc_arr[arr_pos]} \
     --p-max-ee-f $p_max_ee_f \
     --p-max-ee-r $p_max_ee_r \
     --p-n-threads $NB_THREADS \

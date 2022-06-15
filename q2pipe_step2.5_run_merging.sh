@@ -65,7 +65,7 @@ do
    
    check_file=$ANALYSIS_NAME.mergecheck/$ext_folder/provenance/action/action.yaml 
    end_line=$( grep -n "min_overlap:" $check_file | awk -F: '{ print $1 }' )
-   head -n $end_line $check_file | tail -n 8 > $ANALYSIS_NAME.mergecheck/$manifest_name.check
+   head -n $end_line $check_file | tail -n 6 > $ANALYSIS_NAME.mergecheck/$manifest_name.check
    grep "chimera_method:" $check_file >> $ANALYSIS_NAME.mergecheck/$manifest_name.check
 done
 
