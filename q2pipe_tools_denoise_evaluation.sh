@@ -16,10 +16,9 @@ exit_on_error(){
 }
 
 
-
-
 # This Qiime2 step will help to evaluate optimals parameters for the denoising step
 # It will generate a serie of denoising on a random subsample (size defined by the user) extracted from the original manifest file
+
 
 optionfile=$1
 
@@ -59,20 +58,20 @@ if [ "$FORCE_RESAMPLING" == "true" ] || [ ! -e $ANALYSIS_NAME.eval_manifest.temp
 then
     # Make temporary manifest file using defined user sample size
     echo "Random Sampling of the manifest file"
-    head -n 1 $MANIFEST_FILE_PATH > $ANALYSIS_NAME.eval_manifest.temp
+    head -n 1 $EVAL_MANIFEST_FILE_PATH > $ANALYSIS_NAME.eval_manifest.temp
 
 
     if [ "$DATA_TYPE" == "paired" ]
     then
-        sublist=$( awk 'NR>1' $MANIFEST_FILE_PATH | grep ",forward" | shuf -n $DENOISE_EVALUATION_SAMPLE_SIZE  )
+        sublist=$( awk 'NR>1' $EVAL_MANIFEST_FILE_PATH | grep ",forward" | shuf -n $DENOISE_EVALUATION_SAMPLE_SIZE  )
         for i in $sublist
         do
             sample_name=$( echo $i | awk -F ',' '{ print $1 }' )
             echo $sample_name
-            grep $sample_name $MANIFEST_FILE_PATH  >> $ANALYSIS_NAME.eval_manifest.temp
+            grep $sample_name $EVAL_MANIFEST_FILE_PATH  >> $ANALYSIS_NAME.eval_manifest.temp
         done
     else
-        awk 'NR>1' $MANIFEST_FILE_PATH | shuf -n $DENOISE_EVALUATION_SAMPLE_SIZE >> $ANALYSIS_NAME.eval_manifest.temp
+        awk 'NR>1' $EVAL_MANIFEST_FILE_PATH | shuf -n $DENOISE_EVALUATION_SAMPLE_SIZE >> $ANALYSIS_NAME.eval_manifest.temp
     fi
 else
     echo "Random manifest already present, skipping sampling"
@@ -97,7 +96,7 @@ $SINGULARITY_COMMAND qiime demux summarize \
 --o-visualization $ANALYSIS_NAME.denoise_eval_import.qzv --verbose
 
 ca_flag=""
-if [ "$SKIP_CUTADAPT" == "false" ]
+if [ "$RUN_CUTADAPT" == "true" ]
 then
     ca_flag="_CA"
     untrimmed_flag=""

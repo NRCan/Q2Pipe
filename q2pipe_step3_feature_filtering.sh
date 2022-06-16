@@ -5,7 +5,7 @@
 #      Qiime 2 Pipeline        #
 #   By: Patrick Gagne (NRCan)  #
 #  Step 3 - Feature Filtering  #
-#       October 5, 2021        #
+#         May 17, 2022         #
 #                              #
 ################################
 
@@ -37,6 +37,22 @@ then
     fi
     export TMPDIR=$TEMPORARY_DIRECTORY
 fi
+
+manifest_list=$( echo $MANIFEST_FILE_PATH | sed 's/,/ /g' )
+if [ $( echo $manifest_list | wc -w ) -eq 1 ]
+then
+    manifest_name=$( basename $manifest_list |  sed 's/\.[^.]*$//' )
+    cp -v $manifest_name/$manifest_name.table-dada2.qza $ANALYSIS_NAME.table-dada2.qza
+    cp -v $manifest_name/$manifest_name.rep-seqs-dada2.qza $ANALYSIS_NAME.rep-seqs-dada2.qza
+else
+    if [ ! -e $ANALYSIS_NAME.table-dada2.qza ] || [ ! -e $ANALYSIS_NAME.rep-seqs-dada2.qza ]
+    then
+        echo "ERROR: Multiple manifests detected but cannot find $ANALYSIS_NAME.table-dada2.qza or $ANALYSIS_NAME.rep-seqs-dada2.qza"
+        echo "Step 2.5 Merging must be launch before step 3"
+        exit 1
+    fi
+fi
+
 
 if [ $p_min_frequency -eq 0 ] && [ $p_min_samples -eq 0 ]
 then
