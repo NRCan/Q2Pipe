@@ -195,13 +195,14 @@ do
         echo "Recommended filtration setting (0.05%): $freq_n = $freq_f (floor) or $freq_c (ceiling)"
         rm -rf $manifest_name/$manifest_name.temporary_export_dada2table
     fi
+    echo "$manifest_name DONE"
     echo $manifest_name >> $tempcheck
     ) & # DEBUGLINE
 
-    if [[ $(jobs -r -p | wc -l) -ge $CONCURRENT_JOBS ]]; then
+    while [[ $(jobs -r -p | wc -l) -ge $CONCURRENT_JOBS ]]; do
         # Replaced -n in wait command because incompatible with Compute Canada clusters (old bash version)
-        wait
-    fi
+        sleep 1
+    done
 
 done
 

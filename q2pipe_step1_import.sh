@@ -102,13 +102,13 @@ do
     --i-data $manifest_name/$manifest_name.import.qza \
     --p-n $p_n \
     --o-visualization $manifest_name/$manifest_name.import.qzv --verbose || exit_on_error
-    
+    echo "$manifest_name DONE"
     echo $manifest_name >> $tempcheck
     ) &
-    if [[ $(jobs -r -p | wc -l) -ge $NB_THREADS ]]; then
-        # Replaced -n in wait command because incompatible with Compute Canada Clusters (old bash version)
-        wait
-    fi
+    while [[ $(jobs -r -p | wc -l) -ge $NB_THREADS ]]; do
+        # Replaced wait -n command because incompatible with Compute Canada Clusters (old bash version)
+        sleep 1
+    done
 done
 wait
 
