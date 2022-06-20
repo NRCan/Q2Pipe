@@ -106,7 +106,8 @@ do
     echo $manifest_name >> $tempcheck
     ) &
     if [[ $(jobs -r -p | wc -l) -ge $NB_THREADS ]]; then
-        wait -n
+        # Replaced -n in wait command because incompatible with Compute Canada Clusters (old bash version)
+        wait
     fi
 done
 wait

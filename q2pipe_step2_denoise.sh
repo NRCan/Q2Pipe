@@ -199,7 +199,8 @@ do
     ) & # DEBUGLINE
 
     if [[ $(jobs -r -p | wc -l) -ge $CONCURRENT_JOBS ]]; then
-        wait -n
+        # Replaced -n in wait command because incompatible with Compute Canada clusters (old bash version)
+        wait
     fi
 
 done
