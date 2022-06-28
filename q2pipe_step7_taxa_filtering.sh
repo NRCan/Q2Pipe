@@ -44,6 +44,7 @@ then
     metatag=""
 else
     echo "Applying metadata filtering..."
+    echo "Metadata filtering parameter: $p_where"
     $SINGULARITY_COMMAND qiime feature-table filter-samples \
     --i-table $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza \
     --m-metadata-file $METADATA_FILE_PATH \
