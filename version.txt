@@ -1,17 +1,21 @@
 ##########################
 #                        #
-#   Q2Pipe Version 0.90  #
-#      June 03, 2022     #
+#   Q2Pipe Version 0.91  #
+#      June 28, 2022     #
 #                        #
 ##########################
 
 # Latest Qiime2 Version tested : qiime2-2022.2 (Singularity)
 
+# Changelog since version 0.90 (0.91)
+# Metadata filtering incorporated to taxa filtering step + p_where option in optionfile
+# Metric generation step no longer crash if alpha-significance fail, now return an error message
+
 # Changelog since version 0.89 (0.90)
 # Step1 and Step2 rewritten to support multiple run (the correct way)
 # Step1 and Step2 support multijob architecture to accelerate analysis
 # Step3 now support multiple run merging
-# IN PROGRESS New step for Chimera filtering (in case of merged run)
+# DELAYED TO FUTURE VERSION New step for Chimera filtering (in case of merged run)
 
 # Changelog since version 0.88 (0.89)
 # Rarefaction override now support "both" argument so it can run with and without rarefaction in a single run

@@ -164,6 +164,13 @@ p_confidence=0.7
 # Step 7 : Taxa Filtering  #
 ############################
 
+# Filter samples according to specific metadata
+# ex "[subject]='subject-1' AND NOT [body-site]='gut'"
+# ex "[body-site]='gut' OR [reported-antibiotic-usage]='Yes'"
+# ex "[body-site] IN ('left palm', 'right palm')"
+# Leave "" to ignore
+p_where=""
+
 # Never use space in the list, only comma
 # p_exclude remove unwanted taxe and p_include keep only specified taxa
 # You can use both option to exclude parts of the inclusion
