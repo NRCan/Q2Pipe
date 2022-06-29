@@ -38,7 +38,7 @@ then
 fi
 
 metatag="metafiltered_"
-if [ ! $p_where ] || [ "$p_where" == "" ]
+if [ "$p_where" == "" ]
 then
     echo "No metadata filtering parameter detected... skipping"
     metatag=""
@@ -48,7 +48,7 @@ else
     $SINGULARITY_COMMAND qiime feature-table filter-samples \
     --i-table $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza \
     --m-metadata-file $METADATA_FILE_PATH \
-    --p-where $p_where \
+    --p-where "$p_where" \
     --o-filtered-table $ANALYSIS_NAME."$metatag"table-dada2_dn"$p_perc_identity".qza || exit_on_error
 
     $SINGULARITY_COMMAND qiime feature-table summarize \
