@@ -107,6 +107,8 @@ then
     fi
 
     echo "Applying Taxa filtering..."
+    echo "Taxa filtering inclusion parameter: $p_include"
+    echo "Taxa filtering exclusion parameter: $p_exclude"
     $SINGULARITY_COMMAND qiime taxa filter-table \
     --i-table $ANALYSIS_NAME."$metatag"table-dada2_dn"$p_perc_identity".qza \
     --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
