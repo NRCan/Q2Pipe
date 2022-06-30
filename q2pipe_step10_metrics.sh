@@ -38,6 +38,7 @@ then
     export TMPDIR=$TEMPORARY_DIRECTORY
 fi
 
+detected_error=0
 # Preparing list to be for-loop compatible
 alpha_metrics=$( echo $alpha_metrics | sed 's/,/ /g' )
 beta_metrics=$( echo $beta_metrics | sed 's/,/ /g' )
@@ -99,7 +100,7 @@ do
         $SINGULARITY_COMMAND qiime diversity alpha-group-significance \
         --i-alpha-diversity $output_f/alpha_$i.qza \
         --m-metadata-file $METADATA_FILE_PATH \
-        --o-visualization $output_f/alpha_$i.qzv || exit_on_error
+        --o-visualization $output_f/alpha_$i.qzv || detected_error=1
 
         # NEW
         $SINGULARITY_COMMAND qiime tools export \
@@ -162,7 +163,7 @@ do
             $SINGULARITY_COMMAND qiime diversity alpha-group-significance \
             --i-alpha-diversity $output_f/alpha_$i.phylo.qza \
             --m-metadata-file $METADATA_FILE_PATH \
-            --o-visualization $output_f/alpha_$i.phylo.qzv || exit_on_error
+            --o-visualization $output_f/alpha_$i.phylo.qzv || detected_error=1
 
             $SINGULARITY_COMMAND qiime tools export \
             --input-path $output_f/alpha_$i.phylo.qza \
@@ -200,6 +201,11 @@ do
 
     fi
 done
+
+if [ $detected_error -eq 1 ]
+then
+    echo "WARNING: an alpha-group-significance step for one or more metrics returned an error"
+fi
 
 # Alpha Diversity $SINGULARITY_COMMAND qiime diversity alpha \ --i-table 
 #$ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \ --p-metric shannon \ --o-alpha-diversity 

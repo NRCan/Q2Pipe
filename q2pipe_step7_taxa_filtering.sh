@@ -37,6 +37,37 @@ then
     export TMPDIR=$TEMPORARY_DIRECTORY
 fi
 
+metatag="metafiltered_"
+if [ "$p_where" == "" ]
+then
+    echo "No metadata filtering parameter detected... skipping"
+    metatag=""
+else
+    echo "Applying metadata filtering..."
+    echo "Metadata filtering parameter: $p_where"
+    $SINGULARITY_COMMAND qiime feature-table filter-samples \
+    --i-table $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza \
+    --m-metadata-file $METADATA_FILE_PATH \
+    --p-where "$p_where" \
+    --o-filtered-table $ANALYSIS_NAME."$metatag"table-dada2_dn"$p_perc_identity".qza || exit_on_error
+
+    $SINGULARITY_COMMAND qiime feature-table summarize \
+    --i-table $ANALYSIS_NAME."$metatag"table-dada2_dn"$p_perc_identity".qza \
+    --o-visualization $ANALYSIS_NAME."$metatag"table-dada2_dn"$p_perc_identity".qzv \
+    --m-sample-metadata-file $METADATA_FILE_PATH || exit_on_error
+
+    $SINGULARITY_COMMAND qiime feature-table filter-seqs \
+    --i-data $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza \
+    --i-table $ANALYSIS_NAME."$metatag"table-dada2_dn"$p_perc_identity".qza \
+    --o-filtered-data $ANALYSIS_NAME."$metatag"rep-seqs-dada2_dn"$p_perc_identity".qza || exit_on_error
+
+    $SINGULARITY_COMMAND qiime taxa barplot \
+    --i-table $ANALYSIS_NAME."$metatag"table-dada2_dn"$p_perc_identity".qza \
+    --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
+    --m-metadata-file $METADATA_FILE_PATH \
+    --o-visualization $ANALYSIS_NAME."$metatag"barplots_taxo_dn"$p_perc_identity".qzv || exit_on_error
+fi
+
 #if [ "$SKIP_FILTERING" == "true" ]
 #then
 #    echo "Skip filtering option detected, you must skip this step"
@@ -50,10 +81,12 @@ if [ ! $p_exclude ] && [ ! $p_include ]
 then
     echo "Both p_include and p_exclude are undefined, Taxa filtering will be skipped"
     echo "table-dada2 and rep-seqs will copied as filtered_table for filename coherency"
-    cp -v $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza
-    cp -v $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza $ANALYSIS_NAME.filtered_rep-seqs-dada2_dn"$p_perc_identity".qza
+    cp -v $ANALYSIS_NAME."$metatag"table-dada2_dn"$p_perc_identity".qza $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza
+    cp -v $ANALYSIS_NAME."$metatag"rep-seqs-dada2_dn"$p_perc_identity".qza $ANALYSIS_NAME.filtered_rep-seqs-dada2_dn"$p_perc_identity".qza
     taxa_filt=0
 fi
+
+
 
 
 if [ $taxa_filt -eq 1 ]
@@ -73,9 +106,11 @@ then
         excl_param="--p-include $p_include --p-exclude $p_exclude"
     fi
 
-
+    echo "Applying Taxa filtering..."
+    echo "Taxa filtering inclusion parameter: $p_include"
+    echo "Taxa filtering exclusion parameter: $p_exclude"
     $SINGULARITY_COMMAND qiime taxa filter-table \
-    --i-table $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza \
+    --i-table $ANALYSIS_NAME."$metatag"table-dada2_dn"$p_perc_identity".qza \
     --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
     $excl_param \
     --p-mode $p_mode \
@@ -87,7 +122,7 @@ then
     --m-sample-metadata-file $METADATA_FILE_PATH
 
     $SINGULARITY_COMMAND qiime taxa filter-seqs \
-    --i-sequences $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza \
+    --i-sequences $ANALYSIS_NAME."$metatag"rep-seqs-dada2_dn"$p_perc_identity".qza \
     --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
     $excl_param \
     --p-mode $p_mode \
