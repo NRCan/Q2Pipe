@@ -1,0 +1,60 @@
+Bootstrap: docker
+From: quay.io/qiime2/core:2022.2
+
+%files
+    /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt
+
+%labels
+    Qiime2_Author Bolyen,Evan et al
+    NRCan_Image_Maintainer Patrick Gagne
+    Maintainer_Email patrick.gagne@nrcan-rncan.gc.ca
+
+%help
+    This container is a standardised setup for Qiime2
+    It includes various programs needed at NRCan
+
+%post
+    apt update --allow-releaseinfo-change
+    apt install -y --no-install-recommends software-properties-common apt-utils
+    apt update
+    apt install -y --no-install-recommends \
+    ca-certificates \
+    nano \
+    git \
+    gnupg \
+    less
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A6DCF7707EBC211F
+    apt-add-repository "deb http://ppa.launchpad.net/ubuntu-mozilla-security/ppa/ubuntu focal main"
+    apt update
+    apt install -y --no-install-recommends firefox
+
+    # Install FUNGuild (Patrick Gagne's version for Q2Pipe)
+    mkdir /download
+    cd /download
+    git clone https://github.com/Patg13/FUNGuild.git
+    cd FUNGuild
+    cp Guilds_v1.1.py /usr/bin
+    chmod 755 /usr/bin/Guilds_v1.1.py
+    cd /
+    rm -rf /download
+
+    #Install Figaro (Trimming value assessment software)
+    cd /opt
+    git clone https://github.com/Zymo-Research/figaro.git
+    chmod 755 figaro -R
+    cd /opt/figaro
+    # Figaro requirements already met by Qiime setup
+    pip3 install -r requirements.txt
+    sed -i '1i #!/usr/bin/env python3' /opt/figaro/figaro/figaro.py
+    ln -s /opt/figaro/figaro/figaro.py /usr/bin/figaro
+
+    # ITSxpress plugin setup
+    pip install q2-itsxpress
+    qiime dev refresh-cache
+
+    # NRCan Certificate Cleanup 
+    rm /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt
+    update-ca-certificates
+
+%runscript
+    qiime
