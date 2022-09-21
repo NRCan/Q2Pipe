@@ -40,7 +40,8 @@ From: quay.io/qiime2/core:2022.2
 
     #Install Figaro (Trimming value assessment software)
     cd /opt
-    git clone https://github.com/Zymo-Research/figaro.git
+    #git clone https://github.com/Zymo-Research/figaro.git
+    git clone https://github.com/Patg13/figaro.git
     chmod 755 figaro -R
     cd /opt/figaro
     # Figaro requirements already met by Qiime setup
