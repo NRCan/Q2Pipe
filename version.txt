@@ -11,7 +11,6 @@
 # Improvement to the ASV table generation, now generate an ASV Table with DNA Sequences for corresponding ASV
 # First dependencies of Q2Pipe, will be distributed from a secondary public repository 
 # Singularity recipes (regular + Dev) now include dependencies setup
-# Include instructions for the Conda installation
 
 
 # Changelog since version 0.90 (0.91)
