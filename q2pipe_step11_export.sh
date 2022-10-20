@@ -75,6 +75,21 @@ then
 
     sed -i '1d' $ANALYSIS_NAME.ASV_table_norarefaction_dn"$p_perc_identity".tsv
 
+    $SINGULARITY_COMMAND qiime tools export \
+    --input-path $ANALYSIS_NAME.filtered_rep-seqs-dada2_dn"$p_perc_identity".qza \
+    --output-path $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"
+
+    if [ "$( $SINGULARITY_COMMAND which ASV_Table_DNA_Merger.py )" != "" ]
+    then
+        $SINGULARITY_COMMAND ASV_Table_DNA_Merger.py \
+        --fasta $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"/dna-sequences.fasta \
+        --asv-table $ANALYSIS_NAME.ASV_table_norarefaction_dn"$p_perc_identity".tsv \
+        --out $ANALYSIS_NAME.ASV_tableSeqs_norarefaction_dn"$p_perc_identity".tsv || echo "WARNING: ASV_Table_DNA_Merger not installed"
+    else
+       echo "WARNING: ASV_Table_DNA_Merger.py not available in PATH"
+       echo "ASV table merge with DNA sequences cannot be done"
+    fi
+
     if [ "$GENERATE_FUNGUILD" == "true" ]
     then
         echo "Running FUNGuild analysis..."
@@ -113,6 +128,21 @@ then
     -o $ANALYSIS_NAME.ASV_table_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv --to-tsv --header-key taxonomy
 
     sed -i '1d' $ANALYSIS_NAME.ASV_table_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv
+
+    $SINGULARITY_COMMAND qiime tools export \
+    --input-path $ANALYSIS_NAME.filtered_rep-seqs-dada2_dn"$p_perc_identity".qza \
+    --output-path $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"
+
+    if [ "$( $SINGULARITY_COMMAND which ASV_Table_DNA_Merger.py )" != "" ]
+    then
+        $SINGULARITY_COMMAND ASV_Table_DNA_Merger.py \
+        --fasta $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/dna-sequences.fasta \
+        --asv-table $ANALYSIS_NAME.ASV_table_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv \
+        --out $ANALYSIS_NAME.ASV_tableSeqs_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv || echo "WARNING: ASV_Table_DNA_Merger not installed"
+    else
+       echo "WARNING: ASV_Table_DNA_Merger.py not available in PATH"
+       echo "ASV table merge with DNA sequences cannot be done"
+    fi
 
     if [ "$GENERATE_FUNGUILD" == "true" ]
     then

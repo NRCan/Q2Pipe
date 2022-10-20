@@ -1,11 +1,17 @@
 ##########################
 #                        #
-#   Q2Pipe Version 0.91  #
+#   Q2Pipe Version 0.92  #
 #      June 28, 2022     #
 #                        #
 ##########################
 
 # Latest Qiime2 Version tested : qiime2-2022.2 (Singularity)
+
+# Changelog since version 0.91 (0.92)
+# Improvement to the ASV table generation, now generate an ASV Table with DNA Sequences for corresponding ASV
+# First dependencies of Q2Pipe, will be distributed from a secondary public repository 
+# Singularity recipes (regular + Dev) now include dependencies setup
+
 
 # Changelog since version 0.90 (0.91)
 # Metadata filtering incorporated to taxa filtering step + p_where option in optionfile

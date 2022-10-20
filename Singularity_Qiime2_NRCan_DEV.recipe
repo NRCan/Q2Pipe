@@ -38,6 +38,16 @@ From: quay.io/qiime2/core:2022.2
     cd /
     rm -rf /download
 
+    # Install Q2Pipe Dependencies (from Patrick Gagne's public repo)
+    mkdir /download
+    cd /download
+    git clone https://github.com/Patg13/Q2Pipe_Deps.git
+    cd Q2Pipe_Deps
+    cp ASV_Table_DNA_Merger.py /usr/bin
+    chmod 755 /usr/bin/ASV_Table_DNA_Merger.py
+    cd /
+    rm -rf /download
+
     #Install Figaro (Trimming value assessment software)
     cd /opt
     #git clone https://github.com/Zymo-Research/figaro.git
