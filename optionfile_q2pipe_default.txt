@@ -1,9 +1,10 @@
 #############################
 #                           #
 #     Q2Pipe Option file    #
-# Designed for Q2Pipe V0.91 #
+# Designed for Q2Pipe V0.92 #
 #                           #
 #############################
+
 
 ################################
 #  Common Analysis Parameters  #
