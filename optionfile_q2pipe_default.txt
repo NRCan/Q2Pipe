@@ -233,7 +233,8 @@ GENERATE_FUNGUILD=false
 # Database must be downloaded with the provided bash script in https://github.com/Patg13/FUNGuild
 FUNGUILD_DATABASE_PATH=
 
-
+# Path to the result extraction form (in tsv format)
+EXTRACTION_FORM_PATH=
 
 ## ANCOM specific options
 GENERATE_ANCOM=false
