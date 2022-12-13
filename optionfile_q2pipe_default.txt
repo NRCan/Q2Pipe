@@ -1,7 +1,7 @@
 #############################
 #                           #
 #     Q2Pipe Option file    #
-# Designed for Q2Pipe V0.92 #
+# Designed for Q2Pipe V0.93 #
 #                           #
 #############################
 
