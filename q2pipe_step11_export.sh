@@ -164,7 +164,8 @@ then
     echo "Extracting results files according to $EXTRACTION_FORM_PATH"
     mkdir "$ANALYSIS_NAME"_form_extraction 2>/dev/null
     head -n 1 $EXTRACTION_FORM_PATH > "$ANALYSIS_NAME"_form_extraction/extraction_form.tsv
-
+    
+    # NOTICE: use sed 's/,/ /g'  to remove , from the file before converting to CSV (better to not use , in form)
     cat $EXTRACTION_FORM_PATH | sed 's/\t/,/g' | while read line
     do
         if [ "$( echo $line | awk -F',' '{ print $2 }' )" != "True" ]
@@ -172,14 +173,36 @@ then
             continue
         fi
         #echo $line
-        
-        filename=$( echo $line | awk -F',' '{ print $6 }' | sed "s/ANALYSIS_NAME/$ANALYSIS_NAME/g" | sed "s/RARELEVEL/$p_sampling_depth/g" | sed "s/FREQLEVEL/$p_min_frequency/g" | sed "s/SAMPLEVEL/$p_min_samples/g" )
-        echo $filename
-        if [ ! -e $filename ]
+        if [ "$( echo $line | grep MANIFEST_NAME )" != "" ]
+        then
+            filetype=$( echo $line | awk -F',' '{ print $6 }' | sed 's;./MANIFEST_NAME/MANIFEST_NAME.;;g' )
+            filenames=$( find -maxdepth 2 -mindepth 2  -wholename "./*/*.$filetype" -type f )
+            cp -R --parent $filenames "$ANALYSIS_NAME"_form_extraction/
+            echo $line | sed 's/,/\t/g' >> "$ANALYSIS_NAME"_form_extraction/extraction_form.tsv
+            continue
+        fi
+        not_found_tag=0
+        filename=$( echo $line | awk -F',' '{ print $6 }' | sed "s/ANALYSIS_NAME/$ANALYSIS_NAME/g" | sed "s/RARELEVEL/$p_sampling_depth/g" | sed "s/FREQLEVEL/$p_min_frequency/g" | sed "s/SAMPLEVEL/$p_min_samples/g" | sed "s/CLUSTID/$p_perc_identity/g" )
+        # Looping trough files is better for multiple folder cases (beta_metrics)
+        for files in $filename
+        do
+            #echo $files
+            if [ ! -e $files ]
+            then
+                not_found_tag=1
+            fi
+        done
+        if [ $not_found_tag -eq 1 ]
         then
             echo "WARNING: $filename not found"
             continue
         fi
+        #echo $filename
+        #if [ ! -e $filename ]
+        #then
+        #    echo "WARNING: $filename not found"
+        #    continue
+        #fi
         cp -R --parent $filename "$ANALYSIS_NAME"_form_extraction/
         echo $line | sed 's/,/\t/g' >> "$ANALYSIS_NAME"_form_extraction/extraction_form.tsv
     done
