@@ -1,11 +1,15 @@
 ##########################
 #                        #
-#   Q2Pipe Version 0.92  #
+#   Q2Pipe Version 0.93  #
 #      June 28, 2022     #
 #                        #
 ##########################
 
 # Latest Qiime2 Version tested : qiime2-2022.2 (Singularity)
+
+# Changelog since version 0.92 (0.93)
+# Implementation of the results form extraction in step 11, which makes the isolation of specific results file easier
+# XLSX form included to complement the results form extraction
 
 # Changelog since version 0.91 (0.92)
 # Improvement to the ASV table generation, now generate an ASV Table with DNA Sequences for corresponding ASV
