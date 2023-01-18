@@ -18,40 +18,40 @@ NOT AVAILABLE FOR NOW, IMAGE STILL NOT ON REPO
 Q2Pipe was seperated into 11 different steps to make it easier to control, customise, update, etc.
 You can check the provided user guide for more information on using Q2Pipe
 
-##1 Importation
+## 1 Importation
 This step will grab your manifest(s) file(s) and compress them in a Qiime2 artifact file (QZA) and generate a Qiime2 Visualization file (QZV) containing the run's quality graphs to help you identify the best trimming parameter. If you have more than one sequencing run for a single gene, you must create a manifest per run and speicify them both in the option file, they will be automatically treated independently and merged later on.
 
-##2 Dada2 Denoising
+## 2 Dada2 Denoising
 This step will proceed to trim, denoise and build ASV from your imported data
 
-##2. Run Merging
+## 2.5 Run Merging
 Because Dada2 guideline specify to NEVER denoise multiple sequencing run together, this step will merge runs together to carry on with the analysis
 
-##3 Frequency Filtering
+## 3 Frequency Filtering
 You can use this step to remove rare or low occuring ASVs
 
-##4 Vsearch Clustering
+## 4 Vsearch Clustering
 This optional step is to cluster some ASV together depending on their similarity, it is recommended to skip this step instead of using a 1.0 clustering level, which will still regroup identical ASV with variable length. NOTICE, using this step will transform your ASVs into OTUs.
 
-##5 Classifier Training
+## 5 Classifier Training
 Optional step if you don't have a pre-trained Qiime2 Classifier for the taxonomical classification. THIS STEP IS DEPRECIATED AND WILL BE REMOVE IN FUTURE VERSION
 
-##6 Taxonomy Classification
+## 6 Taxonomy Classification
 Using a pre-trained classifier, this step will classify your ASVs into their correcponding taxonomical group
 
-##7 Metadata + Taxa Filtering
+## 7 Metadata + Taxa Filtering
 In certain situation you can use a taxonomical filter to remove certain species/organism/groups from you data, this step will do just that. You can also use it to exclude samples depending on their Metadata infomation (Ex. Exclude every sample from a specific site)
 
-##8 Rarefaction curve
+## 8 Rarefaction curve
 Because rarefaction is pretty much a must when doing statistical analysis on metabarcoding data, this step will generate a rarefaction curve to help you identify a proper rarefaction level (one that does not exclude too much sequences, but samplig enough so don't change the sample composition). you can also skiprarefaction altogether.
 
-##9 Rarefaction
+## 9 Rarefaction
 Use the level identified in the previous step to rarefy your data
 
-##10 Metrics Generation
+## 10 Metrics Generation
 Will generate Qiime2 default metrics (according to core-metrics command, but will no use the command per se)
 
-##11 Exportation
+## 11 Exportation
 Will proceed with different secondary analysis (FUNguild, ANCOM, etc.) and produce the ASV Tables.
 
 
