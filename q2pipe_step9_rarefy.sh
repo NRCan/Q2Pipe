@@ -42,16 +42,16 @@ then
     exit 0
 fi
 
-$SINGULARITY_COMMAND qiime feature-table rarefy \
+$APPTAINER_COMMAND qiime feature-table rarefy \
 --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
 --p-sampling-depth $p_sampling_depth \
 --o-rarefied-table $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza --verbose || exit_on_error
 
-$SINGULARITY_COMMAND qiime feature-table summarize \
+$APPTAINER_COMMAND qiime feature-table summarize \
 --i-table $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
 --o-visualization $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qzv --verbose
 
-$SINGULARITY_COMMAND qiime taxa barplot \
+$APPTAINER_COMMAND qiime taxa barplot \
 --i-table $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
 --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
 --m-metadata-file $METADATA_FILE_PATH \
