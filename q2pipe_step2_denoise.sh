@@ -158,6 +158,7 @@ do
     --p-trunc-len-r ${rtrunc_arr[arr_pos]} \
     --p-max-ee-f $p_max_ee_f \
     --p-max-ee-r $p_max_ee_r \
+    --p-trunc-q $p_trunc_q \
     --p-n-threads $NB_THREADS \
     --p-n-reads-learn $p_n_reads_learn \
     --p-chimera-method $p_chimera_method \

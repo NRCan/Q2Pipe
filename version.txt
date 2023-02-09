@@ -7,7 +7,8 @@
 
 # Latest Qiime2 Version tested : qiime2-2022.11 (Apptainer)
 
-# Changelog since version 0.93 (0.93.1)
+# Changelog since version 0.93 (0.93.2)
+# New supported option for denoising (p-trunc-q) for auto quality truncation
 # Apptainer recipes updated for qiime2-2022.11 (Q2Pipe tested and working correctly)
 # BUGFIX : Using Ubuntu 20.04 cause a bug in step 1 and 2 when checking already completed datasets
 # Singularity was rebranded Apptainer and is now the open-source branch, every mention of singularity must be replaced by apptainer (should not affect running, but image must be rebuid)
