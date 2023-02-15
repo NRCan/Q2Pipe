@@ -42,6 +42,17 @@ From: quay.io/qiime2/core:2022.11
     chmod 755 /usr/bin/ASV_Table_DNA_Merger.py 
     cd /
     rm -rf /download
+    
+    #Install Figaro (Trimming value assessment software)
+    cd /opt
+    #git clone https://github.com/Zymo-Research/figaro.git
+    git clone https://github.com/Patg13/figaro.git
+    chmod 755 figaro -R
+    cd /opt/figaro
+    # Figaro requirements already met by Qiime setup
+    pip3 install -r requirements.txt
+    sed -i '1i #!/usr/bin/env python3' /opt/figaro/figaro/figaro.py
+    ln -s /opt/figaro/figaro/figaro.py /usr/bin/figaro
 
     # NRCan Certificate Cleanup 
     rm /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt

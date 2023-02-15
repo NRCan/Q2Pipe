@@ -37,6 +37,28 @@ DATA_TYPE=paired
 # Number of sequences to use to generate quality plots (default: 10000)
 p_n=10000
 
+# Launch Figaro program to predict correct trimming positions
+# This program will NEVER affect your reads, it is using reads copies.
+RUN_FIGARO=true
+
+# Will substract the longest sequence length by this number
+# This will make sure every reads are the same length
+# NOTE : This will NOT affect your reads, only the cpies
+trim_offset=2
+
+# size must EXCLUDE the primers, ff amplicon length is variable, use the longest length expected
+# If you want to test different amplicon size, you can input multiple values (separate them by ,)
+# NOTE: each amplicon size takes approximately 40s to compute
+f_amplicon_size=368,370,372,374,376,378,380
+f_forward_primer_len=20
+f_reverse_primer_len=18
+
+# 12 is default value for overlap in Qiime2
+f_min_overlap=12
+
+# If true, will delete the exportation file to save disk space (results will be kept)
+CLEAN_FIGARO_OUTPUT=true
+
 #########################
 #  Cutadapt (Optional)  #
 #########################
