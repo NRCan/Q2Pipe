@@ -45,23 +45,23 @@ then
 else
     echo "Applying metadata filtering..."
     echo "Metadata filtering parameter: $p_where"
-    $SINGULARITY_COMMAND qiime feature-table filter-samples \
+    $APPTAINER_COMMAND qiime feature-table filter-samples \
     --i-table $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza \
     --m-metadata-file $METADATA_FILE_PATH \
     --p-where "$p_where" \
     --o-filtered-table $ANALYSIS_NAME."$metatag"table-dada2_dn"$p_perc_identity".qza || exit_on_error
 
-    $SINGULARITY_COMMAND qiime feature-table summarize \
+    $APPTAINER_COMMAND qiime feature-table summarize \
     --i-table $ANALYSIS_NAME."$metatag"table-dada2_dn"$p_perc_identity".qza \
     --o-visualization $ANALYSIS_NAME."$metatag"table-dada2_dn"$p_perc_identity".qzv \
     --m-sample-metadata-file $METADATA_FILE_PATH || exit_on_error
 
-    $SINGULARITY_COMMAND qiime feature-table filter-seqs \
+    $APPTAINER_COMMAND qiime feature-table filter-seqs \
     --i-data $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza \
     --i-table $ANALYSIS_NAME."$metatag"table-dada2_dn"$p_perc_identity".qza \
     --o-filtered-data $ANALYSIS_NAME."$metatag"rep-seqs-dada2_dn"$p_perc_identity".qza || exit_on_error
 
-    $SINGULARITY_COMMAND qiime taxa barplot \
+    $APPTAINER_COMMAND qiime taxa barplot \
     --i-table $ANALYSIS_NAME."$metatag"table-dada2_dn"$p_perc_identity".qza \
     --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
     --m-metadata-file $METADATA_FILE_PATH \
@@ -109,30 +109,30 @@ then
     echo "Applying Taxa filtering..."
     echo "Taxa filtering inclusion parameter: $p_include"
     echo "Taxa filtering exclusion parameter: $p_exclude"
-    $SINGULARITY_COMMAND qiime taxa filter-table \
+    $APPTAINER_COMMAND qiime taxa filter-table \
     --i-table $ANALYSIS_NAME."$metatag"table-dada2_dn"$p_perc_identity".qza \
     --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
     $excl_param \
     --p-mode $p_mode \
     --o-filtered-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza --verbose || exit_on_error
 
-    $SINGULARITY_COMMAND qiime feature-table summarize \
+    $APPTAINER_COMMAND qiime feature-table summarize \
     --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
     --o-visualization $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qzv --verbose \
     --m-sample-metadata-file $METADATA_FILE_PATH
 
-    $SINGULARITY_COMMAND qiime taxa filter-seqs \
+    $APPTAINER_COMMAND qiime taxa filter-seqs \
     --i-sequences $ANALYSIS_NAME."$metatag"rep-seqs-dada2_dn"$p_perc_identity".qza \
     --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
     $excl_param \
     --p-mode $p_mode \
     --o-filtered-sequences $ANALYSIS_NAME.filtered_rep-seqs-dada2_dn"$p_perc_identity".qza --verbose || exit_on_error
 
-    $SINGULARITY_COMMAND qiime feature-table tabulate-seqs \
+    $APPTAINER_COMMAND qiime feature-table tabulate-seqs \
     --i-data $ANALYSIS_NAME.filtered_rep-seqs-dada2_dn"$p_perc_identity".qza \
     --o-visualization $ANALYSIS_NAME.filtered_rep-seqs-dada2_dn"$p_perc_identity".qzv --verbose
 
-    $SINGULARITY_COMMAND qiime taxa barplot \
+    $APPTAINER_COMMAND qiime taxa barplot \
     --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
     --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
     --m-metadata-file $METADATA_FILE_PATH \
@@ -142,7 +142,7 @@ fi
 if [ "$GENERATE_PHYLOGENY" == "true" ]
 then
     echo "Generating phylogenetic trees"
-    $SINGULARITY_COMMAND qiime phylogeny align-to-tree-mafft-fasttree \
+    $APPTAINER_COMMAND qiime phylogeny align-to-tree-mafft-fasttree \
     --p-n-threads $NB_THREADS \
     --i-sequences $ANALYSIS_NAME.filtered_rep-seqs-dada2_dn"$p_perc_identity".qza \
     --o-alignment $ANALYSIS_NAME.filtered_aligned_rep-seqs-dada2_dn"$p_perc_identity".qza \

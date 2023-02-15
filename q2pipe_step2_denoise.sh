@@ -84,7 +84,7 @@ then
     exit 1
 fi
 
-threadcheck=$( $SINGULARITY_COMMAND python3 -c "print($NB_THREADS % $CONCURRENT_JOBS)" )
+threadcheck=$( $APPTAINER_COMMAND python3 -c "print($NB_THREADS % $CONCURRENT_JOBS)" )
 
 if [ $threadcheck -ne 0 ]
 then
@@ -110,7 +110,8 @@ do
         then
             echo "QZA file found, skipping run..."
             echo $manifest_name >> $tempcheck
-            continue
+            kill $BASHPID 
+            #continue
         else
             echo "QZA not found, proceeding with denoising"
         fi
@@ -129,7 +130,7 @@ do
             untrimmed_flag="--p-discard-untrimmed"
         fi
         echo "Removing Adapters/Primers from reads with CutAdapt"
-        $SINGULARITY_COMMAND qiime cutadapt trim-paired \
+        $APPTAINER_COMMAND qiime cutadapt trim-paired \
         --i-demultiplexed-sequences $manifest_name/$manifest_name.import.qza  \
         --o-trimmed-sequences $manifest_name/$manifest_name.import$ca_flag.qza  \
         --p-match-adapter-wildcards \
@@ -138,7 +139,7 @@ do
         $untrimmed_flag --p-cores $NB_THREADS --verbose || exit_on_error
 
         echo "Summarizing Cutadapt trimming into visualisation file"
-        $SINGULARITY_COMMAND qiime demux summarize \
+        $APPTAINER_COMMAND qiime demux summarize \
         --i-data $manifest_name/$manifest_name.import$ca_flag.qza \
         --o-visualization $manifest_name/$manifest_name.import$ca_flag.qzv --verbose
     fi
@@ -146,7 +147,7 @@ do
 
     echo ${ftrunc_arr[arr_pos]} # DEBUGLINE
     echo ${rtrunc_arr[arr_pos]} # DEBUGLINE
-    $SINGULARITY_COMMAND qiime dada2 denoise-paired \
+    $APPTAINER_COMMAND qiime dada2 denoise-paired \
     --i-demultiplexed-seqs $manifest_name/$manifest_name.import$ca_flag.qza \
     --o-table $manifest_name/$manifest_name.table-dada2.qza \
     --o-representative-sequences $manifest_name/$manifest_name.rep-seqs-dada2.qza \
@@ -157,20 +158,21 @@ do
     --p-trunc-len-r ${rtrunc_arr[arr_pos]} \
     --p-max-ee-f $p_max_ee_f \
     --p-max-ee-r $p_max_ee_r \
+    --p-trunc-q $p_trunc_q \
     --p-n-threads $NB_THREADS \
     --p-n-reads-learn $p_n_reads_learn \
     --p-chimera-method $p_chimera_method \
     --p-min-fold-parent-over-abundance $p_min_fold_parent_over_abundance --verbose || exit_on_error
 
-    $SINGULARITY_COMMAND qiime feature-table summarize \
+    $APPTAINER_COMMAND qiime feature-table summarize \
     --i-table $manifest_name/$manifest_name.table-dada2.qza \
     --o-visualization $manifest_name/$manifest_name.table-dada2.qzv --verbose
 
-    $SINGULARITY_COMMAND qiime metadata tabulate \
+    $APPTAINER_COMMAND qiime metadata tabulate \
     --m-input-file $manifest_name/$manifest_name.denoising-stats-dada2.qza \
     --o-visualization $manifest_name/$manifest_name.denoising-stats-dada2.qzv
 
-    $SINGULARITY_COMMAND qiime feature-table tabulate-seqs \
+    $APPTAINER_COMMAND qiime feature-table tabulate-seqs \
     --i-data $manifest_name/$manifest_name.rep-seqs-dada2.qza \
     --o-visualization $manifest_name/$manifest_name.rep-seqs-dada2.qzv
     
@@ -178,7 +180,7 @@ do
     if [ $( echo $manifest_list | wc -w ) -eq 1 ]
     then
         echo "Extracting Mean sample frequency"
-        $SINGULARITY_COMMAND qiime tools export --input-path $manifest_name/$manifest_name.table-dada2.qzv --output-path $manifest_name/$manifest_name.temporary_export_dada2table
+        $APPTAINER_COMMAND qiime tools export --input-path $manifest_name/$manifest_name.table-dada2.qzv --output-path $manifest_name/$manifest_name.temporary_export_dada2table
 
 
         mean_line=$( grep -n "Mean frequency" $manifest_name/$manifest_name.temporary_export_dada2table/index.html | head -n 1 | cut -f1 -d: )
@@ -189,9 +191,9 @@ do
         echo ""
         echo "Mean frequency: $freq"
         freq=$( echo $freq | sed 's/,//g' )
-        freq_n=$( $SINGULARITY_COMMAND python -c "exec(\"import math\nprint($freq*0.0005)\")" )
-        freq_f=$( $SINGULARITY_COMMAND python -c "exec(\"import math\nprint(math.floor($freq*0.0005))\")" )
-        freq_c=$( $SINGULARITY_COMMAND python -c "exec(\"import math\nprint(math.ceil($freq*0.0005))\")" )
+        freq_n=$( $APPTAINER_COMMAND python -c "exec(\"import math\nprint($freq*0.0005)\")" )
+        freq_f=$( $APPTAINER_COMMAND python -c "exec(\"import math\nprint(math.floor($freq*0.0005))\")" )
+        freq_c=$( $APPTAINER_COMMAND python -c "exec(\"import math\nprint(math.ceil($freq*0.0005))\")" )
         echo "Recommended filtration setting (0.05%): $freq_n = $freq_f (floor) or $freq_c (ceiling)"
         rm -rf $manifest_name/$manifest_name.temporary_export_dada2table
     fi

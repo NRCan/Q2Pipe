@@ -73,6 +73,7 @@ echo "Creating run folder"
 for manifest in $manifest_list
 do
     (
+    #echo $BASHPID
     manifest_name=$( basename $manifest |  sed 's/\.[^.]*$//' )
     if [ -d $manifest_name ]
     then
@@ -81,7 +82,8 @@ do
         then
             echo "QZA file found, skipping run..."
             echo $manifest_name >> $tempcheck
-            continue
+            kill $BASHPID # Had to modify because of 20.04 upgrade (continue now out of scope of the main loop)
+            #continue
         else
             echo "QZA not found, proceeding with import"
         fi
@@ -91,14 +93,14 @@ do
     cp $manifest $manifest_name/
 
     echo "Importing $manifest_name Data into artifact file"
-    $SINGULARITY_COMMAND qiime tools import \
+    $APPTAINER_COMMAND qiime tools import \
     --type 'SampleData[PairedEndSequencesWithQuality]' \
     --input-path $manifest \
     --output-path $manifest_name/$manifest_name.import.qza \
     --input-format PairedEndFastqManifestPhred33 || exit_on_error
 
     echo "Summarizing $manifest_name importation into visualisation file"
-    $SINGULARITY_COMMAND qiime demux summarize \
+    $APPTAINER_COMMAND qiime demux summarize \
     --i-data $manifest_name/$manifest_name.import.qza \
     --p-n $p_n \
     --o-visualization $manifest_name/$manifest_name.import.qzv --verbose || exit_on_error

@@ -47,15 +47,15 @@ fi
 
 if [ "$SKIP_RAREFACTION" == "true" ] || [ "$SKIP_RAREFACTION" == "both" ]
 then
-    $SINGULARITY_COMMAND qiime tools export \
+    $APPTAINER_COMMAND qiime tools export \
     --input-path $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
     --output-path $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity"
 
-    $SINGULARITY_COMMAND biom convert \
+    $APPTAINER_COMMAND biom convert \
     -i $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity"/feature-table.biom \
     -o $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity"/$ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".tsv --to-tsv
 
-    $SINGULARITY_COMMAND qiime tools export \
+    $APPTAINER_COMMAND qiime tools export \
     --input-path $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
     --output-path $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"
 
@@ -63,25 +63,25 @@ then
     sed -i 's/Taxon/taxonomy/g' $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"/taxonomy.tsv
     sed -i 's/Confidence/confidence/g' $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"/taxonomy.tsv
 
-    $SINGULARITY_COMMAND biom add-metadata \
+    $APPTAINER_COMMAND biom add-metadata \
     -i $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity"/feature-table.biom \
     --observation-metadata-fp $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"/taxonomy.tsv \
     --sc-separated taxonomy \
     -o $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"/feature_taxonomy_merged.biom
 
-    $SINGULARITY_COMMAND biom convert \
+    $APPTAINER_COMMAND biom convert \
     -i $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"/feature_taxonomy_merged.biom \
     -o $ANALYSIS_NAME.ASV_table_norarefaction_dn"$p_perc_identity".tsv --to-tsv --header-key taxonomy
 
     sed -i '1d' $ANALYSIS_NAME.ASV_table_norarefaction_dn"$p_perc_identity".tsv
 
-    $SINGULARITY_COMMAND qiime tools export \
+    $APPTAINER_COMMAND qiime tools export \
     --input-path $ANALYSIS_NAME.filtered_rep-seqs-dada2_dn"$p_perc_identity".qza \
     --output-path $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"
 
-    if [ "$( $SINGULARITY_COMMAND which ASV_Table_DNA_Merger.py )" != "" ]
+    if [ "$( $APPTAINER_COMMAND which ASV_Table_DNA_Merger.py )" != "" ]
     then
-        $SINGULARITY_COMMAND ASV_Table_DNA_Merger.py \
+        $APPTAINER_COMMAND ASV_Table_DNA_Merger.py \
         --fasta $ANALYSIS_NAME.asv_tax_dir_dn"$p_perc_identity"/dna-sequences.fasta \
         --asv-table $ANALYSIS_NAME.ASV_table_norarefaction_dn"$p_perc_identity".tsv \
         --out $ANALYSIS_NAME.ASV_tableSeqs_norarefaction_dn"$p_perc_identity".tsv || echo "WARNING: ASV_Table_DNA_Merger not installed"
@@ -93,7 +93,7 @@ then
     if [ "$GENERATE_FUNGUILD" == "true" ]
     then
         echo "Running FUNGuild analysis..."
-        $SINGULARITY_COMMAND Guilds_v1.1.py \
+        $APPTAINER_COMMAND Guilds_v1.1.py \
         -otu $ANALYSIS_NAME.ASV_table_norarefaction_dn"$p_perc_identity".tsv \
         -m -u -db $FUNGUILD_DATABASE_PATH
     fi
@@ -101,15 +101,15 @@ fi
 
 if [ "$SKIP_RAREFACTION" == "false" ] || [ "$SKIP_RAREFACTION" == "both" ]
 then
-    $SINGULARITY_COMMAND qiime tools export \
+    $APPTAINER_COMMAND qiime tools export \
     --input-path $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
     --output-path $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"
 
-    $SINGULARITY_COMMAND biom convert \
+    $APPTAINER_COMMAND biom convert \
     -i $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"/feature-table.biom \
     -o $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"/$ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".tsv --to-tsv
 
-    $SINGULARITY_COMMAND qiime tools export \
+    $APPTAINER_COMMAND qiime tools export \
     --input-path $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
     --output-path $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"
    
@@ -117,25 +117,25 @@ then
     sed -i 's/Taxon/taxonomy/g' $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/taxonomy.tsv
     sed -i 's/Confidence/confidence/g' $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/taxonomy.tsv
    
-    $SINGULARITY_COMMAND biom add-metadata \
+    $APPTAINER_COMMAND biom add-metadata \
     -i $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"/feature-table.biom \
     --observation-metadata-fp $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/taxonomy.tsv \
     --sc-separated taxonomy \
     -o $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/feature_taxonomy_merged.biom
 
-    $SINGULARITY_COMMAND biom convert \
+    $APPTAINER_COMMAND biom convert \
     -i $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/feature_taxonomy_merged.biom \
     -o $ANALYSIS_NAME.ASV_table_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv --to-tsv --header-key taxonomy
 
     sed -i '1d' $ANALYSIS_NAME.ASV_table_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv
 
-    $SINGULARITY_COMMAND qiime tools export \
+    $APPTAINER_COMMAND qiime tools export \
     --input-path $ANALYSIS_NAME.filtered_rep-seqs-dada2_dn"$p_perc_identity".qza \
     --output-path $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"
 
-    if [ "$( $SINGULARITY_COMMAND which ASV_Table_DNA_Merger.py )" != "" ]
+    if [ "$( $APPTAINER_COMMAND which ASV_Table_DNA_Merger.py )" != "" ]
     then
-        $SINGULARITY_COMMAND ASV_Table_DNA_Merger.py \
+        $APPTAINER_COMMAND ASV_Table_DNA_Merger.py \
         --fasta $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/dna-sequences.fasta \
         --asv-table $ANALYSIS_NAME.ASV_table_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv \
         --out $ANALYSIS_NAME.ASV_tableSeqs_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv || echo "WARNING: ASV_Table_DNA_Merger not installed"
@@ -147,7 +147,7 @@ then
     if [ "$GENERATE_FUNGUILD" == "true" ]
     then
         echo "Running FUNGuild analysis..."
-        $SINGULARITY_COMMAND Guilds_v1.1.py \
+        $APPTAINER_COMMAND Guilds_v1.1.py \
         -otu $ANALYSIS_NAME.ASV_table_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv \
         -m -u -db $FUNGUILD_DATABASE_PATH
     fi
@@ -217,13 +217,13 @@ then
         mkdir "$ANALYSIS_NAME"_ANCOM 
     fi
 
-    $SINGULARITY_COMMAND qiime taxa collapse \
+    $APPTAINER_COMMAND qiime taxa collapse \
     --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
     --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
     --p-level $p_level \
     --o-collapsed-table "$ANALYSIS_NAME"_ANCOM/feature_table_ANCOM.qza || exit_on_error
 
-    $SINGULARITY_COMMAND qiime composition add-pseudocount \
+    $APPTAINER_COMMAND qiime composition add-pseudocount \
     --i-table "$ANALYSIS_NAME"_ANCOM/feature_table_ANCOM.qza \
     --o-composition-table "$ANALYSIS_NAME"_ANCOM/composition_table_ANCOM.qza || exit_on_error
 
@@ -232,7 +232,7 @@ then
     for col in $m_metadata_column
     do
         echo "Generating ANCOM for column $col"
-        $SINGULARITY_COMMAND qiime composition ancom  \
+        $APPTAINER_COMMAND qiime composition ancom  \
         --i-table "$ANALYSIS_NAME"_ANCOM/composition_table_ANCOM.qza \
         --m-metadata-file $METADATA_FILE_PATH \
         --m-metadata-column $col \

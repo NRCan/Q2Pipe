@@ -56,7 +56,7 @@ then
 fi
 
 
-$SINGULARITY_COMMAND qiime diversity alpha-rarefaction \
+$APPTAINER_COMMAND qiime diversity alpha-rarefaction \
 --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
 --p-max-depth $p_max_depth \
 --p-steps $p_steps \
@@ -66,7 +66,7 @@ $SINGULARITY_COMMAND qiime diversity alpha-rarefaction \
 
 if [ "$GENERATE_PHYLOGENY" == "true" ]
 then
-    $SINGULARITY_COMMAND qiime diversity alpha-rarefaction \
+    $APPTAINER_COMMAND qiime diversity alpha-rarefaction \
     --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
     --i-phylogeny $ANALYSIS_NAME.rooted_tree.qza \
     --p-max-depth $p_max_depth \

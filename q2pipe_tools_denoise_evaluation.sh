@@ -84,14 +84,14 @@ then
 fi
 
 echo "Importing subsample into qiime2 artifact file"
-$SINGULARITY_COMMAND qiime tools import \
+$APPTAINER_COMMAND qiime tools import \
 --type 'SampleData[PairedEndSequencesWithQuality]' \
 --input-path $ANALYSIS_NAME.eval_manifest.temp \
 --output-path $ANALYSIS_NAME.denoise_eval_import.qza \
 --input-format PairedEndFastqManifestPhred33 || exit_on_error
 
 echo "Summarizing data import into visualisation file"
-$SINGULARITY_COMMAND qiime demux summarize \
+$APPTAINER_COMMAND qiime demux summarize \
 --i-data $ANALYSIS_NAME.denoise_eval_import.qza \
 --o-visualization $ANALYSIS_NAME.denoise_eval_import.qzv --verbose
 
@@ -105,7 +105,7 @@ then
         untrimmed_flag="--p-discard-untrimmed"
     fi
     echo "Removing Adapters/Primers from reads with CutAdapt"
-    $SINGULARITY_COMMAND qiime cutadapt trim-paired \
+    $APPTAINER_COMMAND qiime cutadapt trim-paired \
     --i-demultiplexed-sequences $ANALYSIS_NAME.denoise_eval_import.qza \
     --o-trimmed-sequences $ANALYSIS_NAME.denoise_eval_import$ca_flag.qza \
     --p-match-adapter-wildcards \
@@ -114,7 +114,7 @@ then
     $untrimmed_flag --p-cores $NB_THREADS --verbose || exit_on_error
 
     echo "Summarizing Cutadapt trimming into visualisation file"
-    $SINGULARITY_COMMAND qiime demux summarize \
+    $APPTAINER_COMMAND qiime demux summarize \
     --i-data $ANALYSIS_NAME.denoise_eval_import$ca_flag.qza \
     --o-visualization $ANALYSIS_NAME.denoise_eval_import$ca_flag.qzv --verbose
 
@@ -135,17 +135,17 @@ do
     jobn=$( echo $line | awk -F ':' '{ print $1 }' )
     params=$( echo $line | awk -F ':' '{ print $2 }' | sed 's/\r$//' )
     echo "Launching $jobn parameters set"
-    $SINGULARITY_COMMAND qiime dada2 denoise-paired --i-demultiplexed-seqs $ANALYSIS_NAME.denoise_eval_import$ca_flag.qza $params --p-n-threads $NB_THREADS --o-table $ANALYSIS_NAME.feature-table.$jobn.qza --o-representative-sequences $ANALYSIS_NAME.rep-seqs.$jobn.qza --o-denoising-stats $ANALYSIS_NAME.stats.$jobn.qza --verbose
+    $APPTAINER_COMMAND qiime dada2 denoise-paired --i-demultiplexed-seqs $ANALYSIS_NAME.denoise_eval_import$ca_flag.qza $params --p-n-threads $NB_THREADS --o-table $ANALYSIS_NAME.feature-table.$jobn.qza --o-representative-sequences $ANALYSIS_NAME.rep-seqs.$jobn.qza --o-denoising-stats $ANALYSIS_NAME.stats.$jobn.qza --verbose
     if [ $? -ne 0 ]
     then
         echo "Command error detected during test denoising, $jobn will be skipped"
         continue
     fi
-    $SINGULARITY_COMMAND qiime feature-table summarize --i-table $ANALYSIS_NAME.feature-table.$jobn.qza  --o-visualization $ANALYSIS_NAME.feature-table.$jobn.qzv
-    $SINGULARITY_COMMAND qiime metadata tabulate --m-input-file $ANALYSIS_NAME.stats.$jobn.qza --o-visualization $ANALYSIS_NAME.stats.$jobn.qzv --verbose
-    $SINGULARITY_COMMAND  qiime feature-table tabulate-seqs --i-data $ANALYSIS_NAME.rep-seqs.$jobn.qza --o-visualization $ANALYSIS_NAME.rep-seqs.$jobn.qzv
+    $APPTAINER_COMMAND qiime feature-table summarize --i-table $ANALYSIS_NAME.feature-table.$jobn.qza  --o-visualization $ANALYSIS_NAME.feature-table.$jobn.qzv
+    $APPTAINER_COMMAND qiime metadata tabulate --m-input-file $ANALYSIS_NAME.stats.$jobn.qza --o-visualization $ANALYSIS_NAME.stats.$jobn.qzv --verbose
+    $APPTAINER_COMMAND  qiime feature-table tabulate-seqs --i-data $ANALYSIS_NAME.rep-seqs.$jobn.qza --o-visualization $ANALYSIS_NAME.rep-seqs.$jobn.qzv
     # Export results in TSV format (easier for downstream analysis)
-    $SINGULARITY_COMMAND qiime tools export --input-path $ANALYSIS_NAME.stats.$jobn.qza --output-path $ANALYSIS_NAME.stats.$jobn
+    $APPTAINER_COMMAND qiime tools export --input-path $ANALYSIS_NAME.stats.$jobn.qza --output-path $ANALYSIS_NAME.stats.$jobn
     mv $ANALYSIS_NAME.stats.$jobn/stats.tsv ./$ANALYSIS_NAME.stats.$jobn.tsv
     rm -rf $ANALYSIS_NAME.stats.$jobn
 

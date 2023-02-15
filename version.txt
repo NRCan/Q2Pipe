@@ -1,11 +1,21 @@
-##########################
-#                        #
-#   Q2Pipe Version 0.93  #
-#      June 28, 2022     #
-#                        #
-##########################
+############################
+#                          #
+#   Q2Pipe Version 0.93.2  #
+#     February 28, 2023    #
+#                          #
+############################
 
-# Latest Qiime2 Version tested : qiime2-2022.2 (Singularity)
+# Latest Qiime2 Version tested : qiime2-2022.11 (Apptainer)
+
+# Changelog since version 0.93 (0.93.2)
+# New supported option for denoising (p-trunc-q) for auto quality truncation
+# Apptainer recipes updated for qiime2-2022.11 (Q2Pipe tested and working correctly)
+# BUGFIX : Using Ubuntu 20.04 cause a bug in step 1 and 2 when checking already completed datasets
+# Singularity was rebranded Apptainer and is now the open-source branch, every mention of singularity must be replaced by apptainer (should not affect running, but image must be rebuid)
+# Now following version numbering standard (X.Y.Z)
+# X: Major version where changes makes API incompatible
+# Y: Minor version where you add functionnality
+# Z: Bugfix without functionnality changes
 
 # Changelog since version 0.92 (0.93)
 # Implementation of the results form extraction in step 11, which makes the isolation of specific results file easier

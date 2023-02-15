@@ -13,9 +13,9 @@
 ANALYSIS_NAME=BASIC_TEST
 NB_THREADS=8
 
-# Leave empty if you don't use singularity image to launch Qiime2
+# Leave empty if you don't use apptainer image to launch Qiime2
 # To define a different temporary folder, add -B /path/to/your/folder:/tmp
-SINGULARITY_COMMAND=
+APPTAINER_COMMAND=
 
 # Metadata must be in TSV format
 # Manifest must be in CSV format
@@ -24,7 +24,7 @@ METADATA_FILE_PATH=
 MANIFEST_FILE_PATH=
 
 # Leave empty to use system's default  (/tmp)
-# DO NOT SPECIFY IF YOU ARE USING SINGULARITY COMMAND
+# DO NOT SPECIFY IF YOU ARE USING APPTAINER COMMAND
 TEMPORARY_DIRECTORY=
 
 ########################## 
@@ -98,6 +98,7 @@ p_trunc_len_r=209
 
 p_max_ee_f=2
 p_max_ee_r=2
+p_trunc_q=2
 p_n_reads_learn=1000000 
 
 p_chimera_method=consensus

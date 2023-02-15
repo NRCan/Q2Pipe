@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: quay.io/qiime2/core:2022.2
+From: quay.io/qiime2/core:2022.11
 
 %files
     /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt
@@ -23,10 +23,11 @@ From: quay.io/qiime2/core:2022.2
     git \
     gnupg \
     less
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A6DCF7707EBC211F
-    apt-add-repository "deb http://ppa.launchpad.net/ubuntu-mozilla-security/ppa/ubuntu focal main"
-    apt update
-    apt install -y --no-install-recommends firefox
+    # Uncomment to install Firefox on container
+    #apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A6DCF7707EBC211F
+    #apt-add-repository "deb http://ppa.launchpad.net/ubuntu-mozilla-security/ppa/ubuntu focal main"
+    #apt update
+    #apt install -y --no-install-recommends firefox
 
     # Install FUNGuild (Patrick Gagne's version for Q2Pipe)
     mkdir /download

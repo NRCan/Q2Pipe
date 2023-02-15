@@ -61,7 +61,7 @@ do
    fi
    merge_table_list="$merge_table_list $manifest_name/$manifest_name.table-dada2.qza"
    merge_repseqs_list="$merge_repseqs_list $manifest_name/$manifest_name.rep-seqs-dada2.qza"
-   ext_folder=$( $SINGULARITY_COMMAND qiime tools extract --input-path $manifest_name/$manifest_name.table-dada2.qza --output-path $ANALYSIS_NAME.mergecheck | sed 's:.*/::' )
+   ext_folder=$( $APPTAINER_COMMAND qiime tools extract --input-path $manifest_name/$manifest_name.table-dada2.qza --output-path $ANALYSIS_NAME.mergecheck | sed 's:.*/::' )
    
    check_file=$ANALYSIS_NAME.mergecheck/$ext_folder/provenance/action/action.yaml 
    end_line=$( grep -n "min_overlap:" $check_file | awk -F: '{ print $1 }' )
@@ -96,41 +96,41 @@ echo "Merging runs"
 #echo $merge_table_list
 #echo $merge_repseqs_list
 
-$SINGULARITY_COMMAND qiime feature-table merge \
+$APPTAINER_COMMAND qiime feature-table merge \
 --i-tables $merge_table_list \
 --o-merged-table $ANALYSIS_NAME.table-dada2.qza || exit_on_error
 
-$SINGULARITY_COMMAND qiime feature-table merge-seqs \
+$APPTAINER_COMMAND qiime feature-table merge-seqs \
 --i-data $merge_repseqs_list \
 --o-merged-data $ANALYSIS_NAME.rep-seqs-dada2.qza  || exit_on_error
 
-$SINGULARITY_COMMAND qiime feature-table summarize \
+$APPTAINER_COMMAND qiime feature-table summarize \
 --i-table $ANALYSIS_NAME.table-dada2.qza \
 --o-visualization $ANALYSIS_NAME.table-dada2.qzv --verbose
 
-$SINGULARITY_COMMAND qiime feature-table tabulate-seqs \
+$APPTAINER_COMMAND qiime feature-table tabulate-seqs \
 --i-data $ANALYSIS_NAME.rep-seqs-dada2.qza \
 --o-visualization $ANALYSIS_NAME.rep-seqs-dada2.qzv
 
 # Include PCoA for 
 
-$SINGULARITY_COMMAND qiime diversity beta \
+$APPTAINER_COMMAND qiime diversity beta \
 --i-table $ANALYSIS_NAME.table-dada2.qza \
 --p-metric jaccard \
 --p-n-jobs $NB_THREADS \
 --o-distance-matrix $ANALYSIS_NAME.mergecheck/merge_distancematrix.qza
 
-$SINGULARITY_COMMAND qiime diversity pcoa \
+$APPTAINER_COMMAND qiime diversity pcoa \
 --i-distance-matrix $ANALYSIS_NAME.mergecheck/merge_distancematrix.qza \
 --o-pcoa $ANALYSIS_NAME.mergecheck/merge_pcoa.qza
 
-$SINGULARITY_COMMAND qiime emperor plot \
+$APPTAINER_COMMAND qiime emperor plot \
 --i-pcoa $ANALYSIS_NAME.mergecheck/merge_pcoa.qza \
 --m-metadata-file $METADATA_FILE_PATH \
 --o-visualization $ANALYSIS_NAME.mergeplot.qzv
 
 echo "Extracting Mean sample frequency"
-$SINGULARITY_COMMAND qiime tools export --input-path $ANALYSIS_NAME.table-dada2.qzv --output-path $ANALYSIS_NAME.temporary_export_dada2table
+$APPTAINER_COMMAND qiime tools export --input-path $ANALYSIS_NAME.table-dada2.qzv --output-path $ANALYSIS_NAME.temporary_export_dada2table
 
 
 mean_line=$( grep -n "Mean frequency" $ANALYSIS_NAME.temporary_export_dada2table/index.html | head -n 1 | cut -f1 -d: )
@@ -141,9 +141,9 @@ freq=$( head -n $mean_line $ANALYSIS_NAME.temporary_export_dada2table/index.html
 echo ""
 echo "Mean frequency: $freq"
 freq=$( echo $freq | sed 's/,//g' )
-freq_n=$( $SINGULARITY_COMMAND python -c "exec(\"import math\nprint($freq*0.0005)\")" )
-freq_f=$( $SINGULARITY_COMMAND python -c "exec(\"import math\nprint(math.floor($freq*0.0005))\")" )
-freq_c=$( $SINGULARITY_COMMAND python -c "exec(\"import math\nprint(math.ceil($freq*0.0005))\")" )
+freq_n=$( $APPTAINER_COMMAND python -c "exec(\"import math\nprint($freq*0.0005)\")" )
+freq_f=$( $APPTAINER_COMMAND python -c "exec(\"import math\nprint(math.floor($freq*0.0005))\")" )
+freq_c=$( $APPTAINER_COMMAND python -c "exec(\"import math\nprint(math.ceil($freq*0.0005))\")" )
 echo "Recommended filtration setting (0.05%): $freq_n = $freq_f (floor) or $freq_c (ceiling)"
 rm -rf $ANALYSIS_NAME.temporary_export_dada2table
 
