@@ -1,11 +1,15 @@
 ############################
 #                          #
-#   Q2Pipe Version 0.93.2  #
-#     February 28, 2023    #
+#   Q2Pipe Version 0.94.0  #
+#     February 15, 2023    #
 #                          #
 ############################
 
 # Latest Qiime2 Version tested : qiime2-2022.11 (Apptainer)
+
+# Changelog since version 0.93.2 (0.94.0)
+# NEW FEATURE : Implementation of Figaro (Denoising trimming parameters prediction)
+# Optionfile adjusted for Figaro implementation
 
 # Changelog since version 0.93 (0.93.2)
 # New supported option for denoising (p-trunc-q) for auto quality truncation

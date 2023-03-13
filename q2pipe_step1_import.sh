@@ -14,6 +14,19 @@ exit_on_error(){
    exit 1
 }
 
+function ProgressBar {
+
+	let _progress=(${1}*100/${2}*100)/100
+	let _done=(${_progress}*4)/10
+	let _left=40-$_done
+
+	_done=$(printf "%${_done}s")
+	_left=$(printf "%${_left}s")
+
+printf "\rProgress : [${_done// /#}${_left// /-}] ${_progress}%%"
+
+} # Reference : https://github.com/fearside/ProgressBar/ Author: Teddy Skarin
+
 optionfile=$1
 
 if [ ! $optionfile ] || [ ! -e $optionfile ] || [ ! -r $optionfile ]
@@ -73,7 +86,6 @@ echo "Creating run folder"
 for manifest in $manifest_list
 do
     (
-    #echo $BASHPID
     manifest_name=$( basename $manifest |  sed 's/\.[^.]*$//' )
     if [ -d $manifest_name ]
     then
@@ -82,8 +94,7 @@ do
         then
             echo "QZA file found, skipping run..."
             echo $manifest_name >> $tempcheck
-            kill $BASHPID # Had to modify because of 20.04 upgrade (continue now out of scope of the main loop)
-            #continue
+            kill $BASHPID
         else
             echo "QZA not found, proceeding with import"
         fi
@@ -104,6 +115,68 @@ do
     --i-data $manifest_name/$manifest_name.import.qza \
     --p-n $p_n \
     --o-visualization $manifest_name/$manifest_name.import.qzv --verbose || exit_on_error
+
+    if [ "$RUN_FIGARO" == "true" ]
+    then
+        if [ -d $manifest_name/figaro_export ]
+        then
+            rm -Rf $manifest_name/figaro_export
+        fi
+        echo  "Extracting data for Figaro execution"
+        $APPTAINER_COMMAND qiime tools export \
+        --input-path $manifest_name/$manifest_name.import.qza \
+        --output-path $manifest_name/figaro_export
+       
+        echo "Preparing sequences files..."
+        sed 1d $manifest_name/figaro_export/MANIFEST | while read line
+        do
+            samp_name=$( echo $line | awk -F',' '{ print $1 }' )
+            file_name=$( echo $line | awk -F',' '{ print $2 }' )
+            correct_name=$( echo $file_name | sed "s/"$samp_name"_[0-9]*_/"$samp_name"_/g" )
+            #echo $samp_name
+            #echo $file_name
+            #echo $correct_name
+            mv $manifest_name/figaro_export/$file_name $manifest_name/figaro_export/$correct_name
+        done
+        mkdir $manifest_name/figaro_export/trimmed
+        bigfile=$( ls -S $manifest_name/figaro_export | head -n 1 | xargs -n 1 basename )
+
+        $APPTAINER_COMMAND vsearch --fastq_stats $manifest_name/figaro_export/$bigfile \
+        --log $manifest_name/figaro_export/trim_report.txt --quiet
+
+        trimsize=$( grep ">=" $manifest_name/figaro_export/trim_report.txt | awk -F' ' '{ print $2 }' )
+        let $[ trimsize -= trim_offset ]
+        echo "According to detected length, sequences will be trimmed to $trimsize"
+        echo "Trimming sequences files..."
+        totalfile=$( ls $manifest_name/figaro_export/*.fastq.gz | wc -l )
+        filedone=0
+        for i in $( ls $manifest_name/figaro_export/*.fastq.gz | xargs -n 1 basename )
+        do
+            $APPTAINER_COMMAND vsearch --fastq_filter $manifest_name/figaro_export/$i \
+            --fastq_trunclen $trimsize \
+            --fastqout $manifest_name/figaro_export/trimmed/$i --quiet
+            let $[ filedone += 1]
+            ProgressBar $filedone $totalfile
+        done
+        echo ""
+        echo "Launching Figaro on $manifest_name/figaro_export/trimmed"
+        mkdir $manifest_name/figaro_results
+        for amp in $( echo "$f_amplicon_size" | sed 's/,/ /g' )
+        do
+            echo "Amplicon size : $amp"
+            $APPTAINER_COMMAND figaro -i $manifest_name/figaro_export/trimmed -o $manifest_name/figaro_results/AmpliconSize_$amp \
+            --ampliconLength $amp \
+            --forwardPrimerLength $f_forward_primer_len \
+            --reversePrimerLength $f_reverse_primer_len \
+            --minimumOverlap $f_min_overlap > $manifest_name/figaro_results/AmpliconSize_$amp.txt
+        done
+        if [ "$CLEAN_FIGARO_OUTPUT" == "true" ]
+        then
+            echo "Cleaning Figaro temporary files"
+            rm -Rf $manifest_name/figaro_export
+        fi
+
+    fi
     echo "$manifest_name DONE"
     echo $manifest_name >> $tempcheck
     ) &
