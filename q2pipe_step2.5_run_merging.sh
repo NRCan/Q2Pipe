@@ -49,6 +49,12 @@ fi
 merge_table_list=""
 merge_repseqs_list=""
 
+if [ -d $ANALYSIS_NAME.mergecheck ]
+then
+    echo "ERROR: $ANALYSIS_NAME.mergecheck folder already exist"
+    echo "Please delete this folder and relaunch the step"
+    exit 2
+fi
 
 echo "Checking run folders"
 for manifest in $manifest_list

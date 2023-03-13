@@ -1,11 +1,17 @@
 ############################
 #                          #
-#   Q2Pipe Version 0.94.0  #
+#   Q2Pipe Version 0.94.1  #
 #     February 15, 2023    #
 #                          #
 ############################
 
 # Latest Qiime2 Version tested : qiime2-2022.11 (Apptainer)
+
+# Changelog since version 0.94.0 (0.94.1)
+# ENHANCEMENT: Figaro section in step 1 now create a temporary folder in TMPDIR and run the analysis there, following Qiime2's guidelines
+# BUGFIX: Running step 1 without specifing a manifest file now return an error instead of stucking the program in an infinite loop
+# BUGFIX: Step 2.5 now check if mergecheck folder already exist and exit the program if it is. The fullauto mode also delete the folder automatically (same concept as the metrics folder)
+# Qiime2 Recipe updated to new Qiime2 version (2023.2) + small modification to the base runscript to display qiime2 information instead of command list
 
 # Changelog since version 0.93.2 (0.94.0)
 # NEW FEATURE : Implementation of Figaro (Denoising trimming parameters prediction)

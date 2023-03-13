@@ -102,6 +102,12 @@ then
         echo "Invalid checkpoint detected. Deleting..."
         rm $ANALYSIS_NAME.q2pipe_step2.5.DONE
     fi
+
+    if [ -d $ANALYSIS_NAME.mergecheck ]
+    then
+        rm $ANALYSIS_NAME.mergecheck -rf
+    fi
+
     $Q2P/q2pipe_step2.5_run_merging.sh $optionfile || exit_on_error
     touch $ANALYSIS_NAME.q2pipe_step2.5.DONE
     invalid_next=1

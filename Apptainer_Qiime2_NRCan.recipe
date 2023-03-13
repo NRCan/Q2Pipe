@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: quay.io/qiime2/core:2022.11
+From: quay.io/qiime2/core:2023.2
 
 %files
     /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt
@@ -59,4 +59,4 @@ From: quay.io/qiime2/core:2022.11
     update-ca-certificates
 
 %runscript
-    qiime
+    qiime --info

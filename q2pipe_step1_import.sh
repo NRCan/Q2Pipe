@@ -49,6 +49,11 @@ then
 fi
 
 manifest_list=$( echo $MANIFEST_FILE_PATH | sed 's/,/ /g' )
+if [ "$manifest_list" == ""  ]
+then
+    echo "ERROR: no manifest file defined in $optionfile"
+    exit 3
+fi
 for manifest in $manifest_list
 do
    if [ ! -e $manifest ]
@@ -122,13 +127,19 @@ do
         then
             rm -Rf $manifest_name/figaro_export
         fi
+        if [ -d $manifest_name/figaro_results ]
+        then
+            rm -Rf $manifest_name/figaro_results
+        fi
+        WORK_DIR=`mktemp --suffix=_figaro -d -p "$TMPDIR"`
+        mkdir $WORK_DIR/$manifest_name
         echo  "Extracting data for Figaro execution"
         $APPTAINER_COMMAND qiime tools export \
         --input-path $manifest_name/$manifest_name.import.qza \
-        --output-path $manifest_name/figaro_export
-       
+        --output-path $WORK_DIR/$manifest_name/figaro_export
+
         echo "Preparing sequences files..."
-        sed 1d $manifest_name/figaro_export/MANIFEST | while read line
+        sed 1d $WORK_DIR/$manifest_name/figaro_export/MANIFEST | while read line
         do
             samp_name=$( echo $line | awk -F',' '{ print $1 }' )
             file_name=$( echo $line | awk -F',' '{ print $2 }' )
@@ -136,44 +147,49 @@ do
             #echo $samp_name
             #echo $file_name
             #echo $correct_name
-            mv $manifest_name/figaro_export/$file_name $manifest_name/figaro_export/$correct_name
+            mv $WORK_DIR/$manifest_name/figaro_export/$file_name $WORK_DIR/$manifest_name/figaro_export/$correct_name
         done
-        mkdir $manifest_name/figaro_export/trimmed
-        bigfile=$( ls -S $manifest_name/figaro_export | head -n 1 | xargs -n 1 basename )
+        mkdir $WORK_DIR/$manifest_name/figaro_export/trimmed
+        bigfile=$( ls -S $WORK_DIR/$manifest_name/figaro_export | head -n 1 | xargs -n 1 basename )
 
-        $APPTAINER_COMMAND vsearch --fastq_stats $manifest_name/figaro_export/$bigfile \
-        --log $manifest_name/figaro_export/trim_report.txt --quiet
+        $APPTAINER_COMMAND vsearch --fastq_stats $WORK_DIR/$manifest_name/figaro_export/$bigfile \
+        --log $WORK_DIR/$manifest_name/figaro_export/trim_report.txt --quiet
 
-        trimsize=$( grep ">=" $manifest_name/figaro_export/trim_report.txt | awk -F' ' '{ print $2 }' )
+        trimsize=$( grep ">=" $WORK_DIR/$manifest_name/figaro_export/trim_report.txt | awk -F' ' '{ print $2 }' )
         let $[ trimsize -= trim_offset ]
         echo "According to detected length, sequences will be trimmed to $trimsize"
         echo "Trimming sequences files..."
-        totalfile=$( ls $manifest_name/figaro_export/*.fastq.gz | wc -l )
+        totalfile=$( ls $WORK_DIR/$manifest_name/figaro_export/*.fastq.gz | wc -l )
         filedone=0
-        for i in $( ls $manifest_name/figaro_export/*.fastq.gz | xargs -n 1 basename )
+        for i in $( ls $WORK_DIR/$manifest_name/figaro_export/*.fastq.gz | xargs -n 1 basename )
         do
-            $APPTAINER_COMMAND vsearch --fastq_filter $manifest_name/figaro_export/$i \
+            $APPTAINER_COMMAND vsearch --fastq_filter $WORK_DIR/$manifest_name/figaro_export/$i \
             --fastq_trunclen $trimsize \
-            --fastqout $manifest_name/figaro_export/trimmed/$i --quiet
+            --fastqout $WORK_DIR/$manifest_name/figaro_export/trimmed/$i --quiet
             let $[ filedone += 1]
             ProgressBar $filedone $totalfile
         done
         echo ""
         echo "Launching Figaro on $manifest_name/figaro_export/trimmed"
-        mkdir $manifest_name/figaro_results
+        mkdir $WORK_DIR/$manifest_name/figaro_results
         for amp in $( echo "$f_amplicon_size" | sed 's/,/ /g' )
         do
             echo "Amplicon size : $amp"
-            $APPTAINER_COMMAND figaro -i $manifest_name/figaro_export/trimmed -o $manifest_name/figaro_results/AmpliconSize_$amp \
+            $APPTAINER_COMMAND figaro -i $WORK_DIR/$manifest_name/figaro_export/trimmed -o $WORK_DIR/$manifest_name/figaro_results/AmpliconSize_$amp \
             --ampliconLength $amp \
             --forwardPrimerLength $f_forward_primer_len \
             --reversePrimerLength $f_reverse_primer_len \
-            --minimumOverlap $f_min_overlap > $manifest_name/figaro_results/AmpliconSize_$amp.txt
+            --minimumOverlap $f_min_overlap > $WORK_DIR/$manifest_name/figaro_results/AmpliconSize_$amp.txt
         done
+        mv $WORK_DIR/$manifest_name/figaro_results $manifest_name/figaro_results
         if [ "$CLEAN_FIGARO_OUTPUT" == "true" ]
         then
             echo "Cleaning Figaro temporary files"
-            rm -Rf $manifest_name/figaro_export
+            rm -Rf $WORK_DIR
+            #rm -Rf $manifest_name/figaro_export
+        else
+            mv $WORK_DIR/$manifest_name/figaro_export $manifest_name/figaro_results
+            rm -Rf $WORK_DIR
         fi
 
     fi
