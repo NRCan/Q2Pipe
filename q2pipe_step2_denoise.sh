@@ -123,6 +123,7 @@ do
     ca_flag=""
     if [ "$RUN_CUTADAPT" == "true" ]
     then
+        bypass_interrupt=0
         ca_flag="_CA"
         untrimmed_flag=""
         if [ "$p_discard_untrimmed" == "true" ]
@@ -130,20 +131,33 @@ do
             untrimmed_flag="--p-discard-untrimmed"
         fi
         echo "Removing Adapters/Primers from reads with CutAdapt"
-        $APPTAINER_COMMAND qiime cutadapt trim-paired \
-        --i-demultiplexed-sequences $manifest_name/$manifest_name.import.qza  \
-        --o-trimmed-sequences $manifest_name/$manifest_name.import$ca_flag.qza  \
-        --p-match-adapter-wildcards \
-        $forward_trim_param $forward_primer \
-        $reverse_trim_param $reverse_primer \
-        $untrimmed_flag --p-cores $NB_THREADS --verbose || exit_on_error
+        if [ ! -e $manifest_name/$manifest_name.import$ca_flag.qza ]
+        then
+            $APPTAINER_COMMAND qiime cutadapt trim-paired \
+            --i-demultiplexed-sequences $manifest_name/$manifest_name.import.qza  \
+            --o-trimmed-sequences $manifest_name/$manifest_name.import$ca_flag.qza  \
+            --p-match-adapter-wildcards \
+            $forward_trim_param $forward_primer \
+            $reverse_trim_param $reverse_primer \
+            $untrimmed_flag --p-cores $NB_THREADS --verbose || exit_on_error
 
-        echo "Summarizing Cutadapt trimming into visualisation file"
-        $APPTAINER_COMMAND qiime demux summarize \
-        --i-data $manifest_name/$manifest_name.import$ca_flag.qza \
-        --o-visualization $manifest_name/$manifest_name.import$ca_flag.qzv --verbose
+            echo "Summarizing Cutadapt trimming into visualisation file"
+            $APPTAINER_COMMAND qiime demux summarize \
+            --i-data $manifest_name/$manifest_name.import$ca_flag.qza \
+            --o-visualization $manifest_name/$manifest_name.import$ca_flag.qzv --verbose
+        else
+            bypass_interrupt=1
+            echo "CutAdapt QZA file found. Skipping..."
+        fi
     fi
 
+    if [ "$CA_FORCE_INTERRUPTION" == "true" ] && [ $bypass_interrupt -ne 1 ]
+    then
+        echo "CutAdapt interruption parameter detected"
+        echo "Exiting Process"
+        echo "CAINTERRUPTION_$manifest_name" >> $tempcheck
+        kill $BASHPID
+    fi
 
     echo ${ftrunc_arr[arr_pos]} # DEBUGLINE
     echo ${rtrunc_arr[arr_pos]} # DEBUGLINE
