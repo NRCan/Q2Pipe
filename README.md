@@ -1,4 +1,4 @@
-# Q2Pipe V 0.94.2
+# Q2Pipe
 Q2Pipe is a Qiime2 based pipeline designed to facilitate and standardise ecological studies by metabarcoding using Illumina Miseq data. It basically shell scripts calling different Qiime2 commands and Q2Pipe dependencies (https://github.com/Patg13/Q2Pipe_Deps) to produce the results. Q2Pipe was also designed to minimized the installation work and maximise the compatiblity between different systems.
 
 # Setup
