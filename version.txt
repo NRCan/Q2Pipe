@@ -1,11 +1,16 @@
 ############################
 #                          #
-#   Q2Pipe Version 0.94.1  #
-#     February 15, 2023    #
+#   Q2Pipe Version 0.94.2  #
+#       June 15, 2023      #
 #                          #
 ############################
 
-# Latest Qiime2 Version tested : qiime2-2022.11 (Apptainer)
+# Latest Qiime2 Version tested : qiime2-2023.2 (Apptainer)
+
+# Changelog since version 0.94.1 (0.94.2)
+
+# MINOR ENHANCEMENT: New option to stop denoising step after cutadapt to help evaluate trimming parameters for the DADA2 denoising (issue #24)
+# Developpement Apptainer recipe now include Falco support (see issues #29)
 
 # Changelog since version 0.94.0 (0.94.1)
 # ENHANCEMENT: Figaro section in step 1 now create a temporary folder in TMPDIR and run the analysis there, following Qiime2's guidelines

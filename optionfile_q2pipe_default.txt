@@ -73,6 +73,10 @@ reverse_primer=CCGYCAATTYMTTTRAGTTT
 
 p_discard_untrimmed=true
 
+# if true, will force the step to stop just after cutadapt
+# Useful for debugging and accessing CutAdapt qzv files
+CA_FORCE_INTERRUPTION=false
+
 ######################################################
 #  Step 1.5 : Dada2 Denoising Parameters Evaluation  #
 ######################################################
