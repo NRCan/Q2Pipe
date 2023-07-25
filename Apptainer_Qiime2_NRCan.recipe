@@ -21,6 +21,9 @@ From: quay.io/qiime2/core:2023.2
     ca-certificates \
     nano \
     git \
+    build-essential \
+    zlib1g \
+    zlib1g-dev \
     less
 
     # Install FUNGuild (Patrick Gagne's version for Q2Pipe)
@@ -36,9 +39,10 @@ From: quay.io/qiime2/core:2023.2
     # Install Q2Pipe Dependencies (from NRCan/Q2Pipe public repo)
     mkdir /download
     cd /download
-    #git clone https://github.com/Patg13/Q2Pipe_Deps.git
-    git clone https://github.com/NRCan/Q2Pipe.git
-    cd Q2Pipe/Dependencies
+    git clone https://github.com/Patg13/Q2Pipe_Deps.git
+    cd Q2Pipe_Deps
+    #git clone https://github.com/NRCan/Q2Pipe.git
+    #cd Q2Pipe_Deps/Dependencies
     cp ASV_Table_DNA_Merger.py /usr/bin
     chmod 755 /usr/bin/ASV_Table_DNA_Merger.py 
     cd /
@@ -54,6 +58,36 @@ From: quay.io/qiime2/core:2023.2
     pip3 install -r requirements.txt
     sed -i '1i #!/usr/bin/env python3' /opt/figaro/figaro/figaro.py
     ln -s /opt/figaro/figaro/figaro.py /usr/bin/figaro
+
+    #Install Falco MTT (quality assessment tool) stable release (forked from smithlabcode/falco)
+    cd /opt
+    #git clone https://github.com/Patg13/falco.git
+    falco_version=1.2.2_MTT
+    #wget --no-check-certificate https://github.com/smithlabcode/falco/releases/download/v1.2.1/falco-"$falco_version"
+    wget --no-check-certificate https://github.com/Patg13/falco/releases/download/"$falco_version"/falco-"$falco_version".tar.gz
+    tar -zxvf falco-"$falco_version".tar.gz
+    cd falco
+    ./configure CXXFLAGS="-O3 -Wall"
+    make all
+    make install
+    # Adjust the default limits file to make it more appropriate for metabarcoding analysis
+    cd Configuration
+    analysis="duplication:1 kmer:1 n_content:0 overrepresented:1 quality_base:0 sequence:1 gc_sequence:1 quality_sequence:0 tile:0 sequence_length:0 adapter:0"
+    for i in $analysis
+    do
+        var=$( echo $i | awk -F':' '{ print $1 }' )
+        choice=$( echo $i | awk -F':' '{ print $2 }' )
+        line=$( grep -wn "^$var" limits.txt | grep "ignore" | awk -F':' '{ print $1 }' )
+
+        if [ $choice -eq 0 ]
+        then
+            sed -i ""$line"s/1/0/" limits.txt
+        fi
+        if [ $choice -eq 1 ]
+        then
+            sed -i ""$line"s/0/1/" limits.txt
+        fi
+    done
 
     # NRCan Certificate Cleanup 
     rm /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt

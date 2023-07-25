@@ -1,14 +1,22 @@
 ############################
 #                          #
-#   Q2Pipe Version 0.94.2  #
-#       June 15, 2023      #
+#   Q2Pipe Version 0.95.1  #
+#       July 25, 2023      #
 #                          #
 ############################
 
 # Latest Qiime2 Version tested : qiime2-2023.2 (Apptainer)
 
-# Changelog since version 0.94.1 (0.94.2)
+# Changelog since version 0.95 (0.95.1)
+# ENHANCEMENT/BUGFIX: Figaro modified on repo to support multithreading control (was taking all cores on system before)
+# ENHANCEMENT: Figaro Sequences trimming now multithreaded (much faster now)
+# ENHANCEMENT: Falco MTT version now support multithread and on-the-fly trimming 
+# ENHANCEMENT: Step 1 now calculate the amount of available thread for each manifest so they can all gain speed on multithreaded processes
+# MINOR ENHANCEMENT: New option to control the maximum error rate in primer recognition by CutAdapt step
 
+# Changelog since version 0.94.2 (0.95)
+# ENHANCEMENT: Falco now supported in importation step, will scan all samples and raise potential problems
+# CHANGE: Dependencies now part of Q2Pipe repo (complete migration to NRCan public repo for publication)
 # MINOR ENHANCEMENT: New option to stop denoising step after cutadapt to help evaluate trimming parameters for the DADA2 denoising (issue #24)
 # Developpement Apptainer recipe now include Falco support (see issues #29)
 
