@@ -5,7 +5,7 @@
 #                          #
 ############################
 
-# Latest Qiime2 Version tested : qiime2-2023.2 (Apptainer)
+# Latest Qiime2 Version tested : qiime2-2023.5 (Apptainer)
 
 # Changelog since version 0.95 (0.95.1)
 # ENHANCEMENT/BUGFIX: Figaro modified on repo to support multithreading control (was taking all cores on system before)
