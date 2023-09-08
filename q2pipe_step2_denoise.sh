@@ -139,6 +139,7 @@ do
             --p-match-adapter-wildcards \
             $forward_trim_param $forward_primer \
             $reverse_trim_param $reverse_primer \
+            --p-error-rate $p_error_rate \
             $untrimmed_flag --p-cores $NB_THREADS --verbose || exit_on_error
 
             echo "Summarizing Cutadapt trimming into visualisation file"

@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: quay.io/qiime2/core:2023.2
+From: quay.io/qiime2/core:2023.5
 
 %files
     /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt
@@ -22,13 +22,16 @@ From: quay.io/qiime2/core:2023.2
     nano \
     git \
     gnupg \
+    build-essential \
+    zlib1g \
+    zlib1g-dev \
     less
     # Uncomment to install Firefox on container
     #apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A6DCF7707EBC211F
     #apt-add-repository "deb http://ppa.launchpad.net/ubuntu-mozilla-security/ppa/ubuntu focal main"
     #apt update
     #apt install -y --no-install-recommends firefox
-
+    update-ca-certificates
     # Install FUNGuild (Patrick Gagne's version for Q2Pipe)
     mkdir /download
     cd /download
@@ -42,9 +45,9 @@ From: quay.io/qiime2/core:2023.2
     # Install Q2Pipe Dependencies (from NRCan/Q2pipe public repo)
     mkdir /download
     cd /download
-    #git clone https://github.com/Patg13/Q2Pipe_Deps.git
-    git clone https://github.com/NRCan/Q2Pipe.git
-    cd Q2Pipe/Dependencies
+    git clone https://github.com/Patg13/Q2Pipe_Deps.git
+    #git clone https://github.com/NRCan/Q2Pipe.git
+    cd Q2Pipe_Deps
     cp ASV_Table_DNA_Merger.py /usr/bin
     chmod 755 /usr/bin/ASV_Table_DNA_Merger.py
     cd /
@@ -64,11 +67,11 @@ From: quay.io/qiime2/core:2023.2
     #Install Falco (quality assessment tool) stable release (forked from smithlabcode/falco)
     cd /opt
     #git clone https://github.com/Patg13/falco.git
-    falco_version=1.2.1
-    #wget https://github.com/smithlabcode/falco/releases/download/v1.2.1/falco-"$falco_version".tar.gz
-    wget  https://github.com/Patg13/falco/releases/download/1.2.1_Original/falco-"$falco_version".tar.gz
+    falco_version=1.2.2_MTT
+    #wget --no-check-certificate https://github.com/smithlabcode/falco/releases/download/v1.2.1/falco-"$falco_version".tar.gz
+    wget --no-check-certificate https://github.com/Patg13/falco/releases/download/"$falco_version"/falco-"$falco_version".tar.gz
     tar -zxvf falco-"$falco_version".tar.gz
-    cd falco-"$falco_version"
+    cd falco
     ./configure CXXFLAGS="-O3 -Wall"
     make all
     make install
@@ -81,7 +84,8 @@ From: quay.io/qiime2/core:2023.2
     #make install
 
     cd Configuration
-    analysis="duplication:1 kmer:1 n_content:0 overrepresented:1 quality_base:0 sequence:1 gc_sequence:1 quality_sequen>    for i in $analysis
+    analysis="duplication:1 kmer:1 n_content:0 overrepresented:1 quality_base:0 sequence:1 gc_sequence:1 quality_sequence:0 tile:0 sequence_length:0 adapter:0"
+    for i in $analysis
     do
         var=$( echo $i | awk -F':' '{ print $1 }' )
         choice=$( echo $i | awk -F':' '{ print $2 }' )

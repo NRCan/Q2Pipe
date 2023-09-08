@@ -1,7 +1,7 @@
 #############################
 #                           #
 #     Q2Pipe Option file    #
-# Designed for Q2Pipe V0.93 #
+# Designed for Q2Pipe V0.95 #
 #                           #
 #############################
 
@@ -37,6 +37,28 @@ DATA_TYPE=paired
 # Number of sequences to use to generate quality plots (default: 10000)
 p_n=10000
 
+### FALCO ###
+
+# Launch Falco analysis on samples (similar to fastqc but faster implementation)
+# This program will NEVER affect your reads, it is using reads copies
+RUN_FALCO=true
+
+# Trim the end of the reads to reduce false positive on Falco FAIL detection
+# Use 0 to analyse the complete sequence (not recommended as you many of your sample will fail
+# screening because of the low-quality ends whit Illumina data
+# Use 0 to disable the trimming
+falco_right_trim=280
+
+# Create a combined R1 file and a combined R2 file and run it through Falco
+# Should give similar results to Qiime2 import, but could help flag entire run problems
+# Will take more time to run and take more disk space
+FALCO_COMBINED_RUN=true
+
+# If true, will delete the exportation file to save disk space (results will be kept)
+CLEAN_FALCO_OUTPUT=true
+
+### FIGARO ###
+
 # Launch Figaro program to predict correct trimming positions
 # This program will NEVER affect your reads, it is using reads copies.
 RUN_FIGARO=true
@@ -44,7 +66,7 @@ RUN_FIGARO=true
 # Will substract the longest sequence length by this number
 # This will make sure every reads are the same length
 # NOTE : This will NOT affect your reads, only the cpies
-trim_offset=2
+figaro_trim_offset=2
 
 # size must EXCLUDE the primers, ff amplicon length is variable, use the longest length expected
 # If you want to test different amplicon size, you can input multiple values (separate them by ,)
@@ -72,6 +94,12 @@ forward_primer=GTGYCAGCMGCCGCGGTAA
 reverse_primer=CCGYCAATTYMTTTRAGTTT
 
 p_discard_untrimmed=true
+
+# Ratio of error in the adapter recognition
+# The actual error rate is computed as the number of errors in the match 
+# divided by the length of the matching part of the adapter
+# Ex: an adapter match of length 8 containing 1 error has an error rate of 1/8=0.125
+p_error_rate=0.1
 
 # if true, will force the step to stop just after cutadapt
 # Useful for debugging and accessing CutAdapt qzv files
