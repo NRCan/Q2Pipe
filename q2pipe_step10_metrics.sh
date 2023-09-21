@@ -6,7 +6,7 @@
 #   By: Patrick Gagne (NRCan)  #
 # Step 10 - Metrics Generation #
 #       Complete Version       #
-#       October 14, 2021       #
+#       september 8, 2023      #
 #                              #
 ################################
 
@@ -91,10 +91,12 @@ do
 
     for i in $alpha_metrics
     do
+        (
         echo "Calculating alpha diversity metric $i"
         $APPTAINER_COMMAND qiime diversity alpha \
         --i-table $input_table \
         --p-metric $i \
+        --no-recycle \
         --o-alpha-diversity $output_f/alpha_$i.qza || exit_on_error
 
         $APPTAINER_COMMAND qiime diversity alpha-group-significance \
@@ -106,20 +108,26 @@ do
         $APPTAINER_COMMAND qiime tools export \
         --input-path $output_f/alpha_$i.qza \
         --output-path $output_f/alpha_qza_export/alpha_$i
-    
+        ) &
+        while [[ $(jobs -r -p | wc -l) -ge $NB_THREADS ]]; do
+        sleep 1
+        done
         # not sure yet
         #mv $output_f/alpha_qza_export/alpha_$i/alpha-diversity.tsv $output_f/alpha_qza_export/alpha_$i.tsv
         #rm -rf $output_f/alpha_qza_export/alpha_$i
     done
+    #wait
 
     for i in $beta_metrics
     do
+        (
         echo "Calculating beta diversity metric $i"
         $APPTAINER_COMMAND qiime diversity beta \
         --i-table $input_table \
         --p-metric $i \
-        --p-n-jobs $NB_THREADS \
+        --no-recycle \
         --o-distance-matrix $output_f/beta_"$i"_distance_matrix.qza || exit_on_error
+        #--p-n-jobs $NB_THREADS \
 
         $APPTAINER_COMMAND qiime diversity pcoa \
         --i-distance-matrix $output_f/beta_"$i"_distance_matrix.qza \
@@ -138,14 +146,17 @@ do
        $APPTAINER_COMMAND qiime tools export \
        --input-path $output_f/beta_"$i"_pcoa.qza \
        --output-path $output_f/beta_qza_export/beta_"$i"_pcoa
-
+        ) &
+        while [[ $(jobs -r -p | wc -l) -ge $NB_THREADS ]]; do
+        sleep 1
+        done
        # not sure yet
        #mv $output_f/beta_qza_export/beta_"$i"_distance_matrix/distance-matrix.tsv $output_f/beta_qza_export/beta_"$i"_distance_matrix.tsv
        #mv $output_f/beta_qza_export/beta_"$i"_pcoa/ordination.txt $output_f/beta_qza_export/beta_"$i"_pcoa_ordination.txt
        #rm -rf $output_f/beta_qza_export/beta_"$i"_distance_matrix
        #rm -rf $output_f/beta_qza_export/beta_"$i"_pcoa
     done
-
+    #wait
     if [ "$GENERATE_PHYLOGENY" == "true" ]
     then
         alpha_metrics_phylo=$( echo $alpha_metrics_phylo | sed 's/,/ /g' )
@@ -153,11 +164,13 @@ do
 
         for i in $alpha_metrics_phylo
         do
+            (
             echo "Calculating phylogenetic alpha diversity metric $i"
             $APPTAINER_COMMAND qiime diversity alpha-phylogenetic \
             --i-table $input_table \
             --i-phylogeny $ANALYSIS_NAME.rooted_tree.qza \
             --p-metric $i \
+            --no-recycle \
             --o-alpha-diversity $output_f/alpha_$i.phylo.qza || exit_on_error
 
             $APPTAINER_COMMAND qiime diversity alpha-group-significance \
@@ -168,19 +181,24 @@ do
             $APPTAINER_COMMAND qiime tools export \
             --input-path $output_f/alpha_$i.phylo.qza \
             --output-path $output_f/alpha_qza_export/alpha_"$i"_phylo
-
+            ) &
+            while [[ $(jobs -r -p | wc -l) -ge $NB_THREADS ]]; do
+            sleep 1
+            done
         done
-
+        #wait
         for i in $beta_metrics_phylo
         do
+            (
             echo "Calculating phylogenetic beta diversity metric $i"
             $APPTAINER_COMMAND qiime diversity beta-phylogenetic \
             --i-table $input_table \
             --i-phylogeny $ANALYSIS_NAME.rooted_tree.qza \
             --p-metric $i \
-            --p-threads $NB_THREADS \
+            --no-recycle \
             --o-distance-matrix $output_f/beta_"$i"_distance_matrix.phylo.qza || exit_on_error
 
+            #--p-threads $NB_THREADS \
             $APPTAINER_COMMAND qiime diversity pcoa \
             --i-distance-matrix $output_f/beta_"$i"_distance_matrix.phylo.qza \
             --o-pcoa $output_f/beta_"$i"_pcoa.phylo.qza || exit_on_error
@@ -197,11 +215,16 @@ do
            $APPTAINER_COMMAND qiime tools export \
            --input-path $output_f/beta_"$i"_pcoa.phylo.qza \
            --output-path $output_f/beta_qza_export/beta_"$i"_pcoa_phylo
-         done
-
+           ) &
+           while [[ $(jobs -r -p | wc -l) -ge $NB_THREADS ]]; do
+           sleep 1
+           done
+       done
+       #wait
     fi
+    #wait
 done
-
+wait
 if [ $detected_error -eq 1 ]
 then
     echo "WARNING: an alpha-group-significance step for one or more metrics returned an error"

@@ -1,11 +1,14 @@
 ############################
 #                          #
-#   Q2Pipe Version 0.95.1  #
-#       July 25, 2023      #
+#   Q2Pipe Version 0.95.2  #
+#     September 11, 2023   #
 #                          #
 ############################
 
 # Latest Qiime2 Version tested : qiime2-2023.5 (Apptainer)
+
+# Changelog since version 0.95.1 (0.95.2)
+# MINOR ENHANCEMENT: Metrics Generation step now multithreaded (10-fold speed gain on test data)
 
 # Changelog since version 0.95 (0.95.1)
 # ENHANCEMENT/BUGFIX: Figaro modified on repo to support multithreading control (was taking all cores on system before)
