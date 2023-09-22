@@ -9,6 +9,9 @@
 #                              #
 ################################
 
+echo "WARNING: STEP DEPRECATED IN VERSION Q2PIPE V0.93"
+echo "THIS STEP WILL BE COMPLETELY REMOVED IN Q2PIPE V0.94"
+
 exit_on_error(){
    echo "Qiime2 command error detected"
    echo "Exiting program"
