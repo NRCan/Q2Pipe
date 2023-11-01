@@ -60,7 +60,7 @@ You are now set to run Q2Pipe
 
 # USAGE
 
-To correctly execute Q2Pipe, you can refer to the user guide provided in the repo (Q2Pipe_User_Guide_V0.95.4_Public.pdf) 
+To correctly execute Q2Pipe, you can refer to the user guide provided in the repo **[User Guide](https://github.com/NRCan/Q2Pipe/blob/main/Q2Pipe_User_Guide_V0.95.4_Public.pdf) 
 
 # License
 
