@@ -52,6 +52,7 @@ You have to link your apptainer image to the option file so Q2Pipe can correctly
 ```
 # Modify the APPTAINER_COMMAND= line in optionfile_q2pipe_default.txt
 # You can specify a different temprary folder by adding -B /path/to/your/temp/folder:/tmp before the image path
+
 APPTAINER_COMMAND="apptainer exec --cleanenv --env MPLCONFIGDIR=/tmp,TMPDIR=/tmp /path/to/your/apptainer_image.sif"
 ```
 
