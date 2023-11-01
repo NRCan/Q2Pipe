@@ -1,61 +1,64 @@
 # Q2Pipe
-Q2Pipe is a Qiime2 based pipeline designed to facilitate and standardise ecological studies by metabarcoding using Illumina Miseq data. It basically shell scripts calling different Qiime2 commands and Q2Pipe dependencies (https://github.com/Patg13/Q2Pipe_Deps) to produce the results. Q2Pipe was also designed to minimized the installation work and maximise the compatiblity between different systems.
+Q2Pipe is a powerful and flexible pipeline designed to streamline and automate the microbiome analysis process. It serves as a user-friendly interface for conducting complex microbial community analyses, specifically designed to work seamlessly with Qiime2 (Bolyen, et al., 2019), a popular bioinformatics platform for microbiome research.
+
+## What it does:
+•	Q2Pipe provides a comprehensive workflow for microbiome analysis, guiding users through every step, from data import to metrics and tables generation for statistical analyses.
+•	It automates routine tasks and ensures that best practices in data processing and analysis are followed. 
+•	Users can customize and fine-tune various analysis parameters to meet their specific research needs.
+
+## Who should use it:
+•	Researchers and scientists working on microbiome projects who want to simplify and expedite their data analysis.
+•	Those with varying levels of expertise, from beginners to experienced bioinformaticians, as Q2Pipe offers both automation and customization options.
+•	Anyone looking to conduct microbiome analyses using Qiime2 and benefit from a streamlined and user-friendly workflow.
 
 # Setup
 
-Q2Pipe can be used with the Qiime2's anaconda environment but was designed to work with a Apptainer image container (which is based on the Qiime2's Docker release) and therefore is the recommended method for this pipeline.
+Q2Pipe was designed to work with a Apptainer image container (which is based on the Qiime2's Docker release) and therefore is the recommended method for this pipeline. You can however use it with the Qiime2's anaconda environment, but you'll have to manually include the Q2Pipe dependencies into it.
 
-## Building the Apptainer image yourself
+## Qiime2 environment setup with apptainer
+
+### Building the Apptainer image yourself
 **Make sure Apptainer is installed and ready on your system before building the image**
-You can build the Apptainer using the provided recipe in this repo (Apptainer_Qiime2_NRCan.recipe)
+You can build the Apptainer using the provided recipe in this repo (Apptainer_Qiime2_NRCan.recipe) with this command (in sudo or with --fakeroot if supported on your system):
+```
+apptainer build qiime2_2023_5_q2p0954.sif $Q2P/Apptainer_Qiime2_NRCan.recipe
+```
 
-Once the build is done, you must edit the default option file (
+Once the build is done, you must edit the default option file
 
-## Pulling the image from the Singularity repo
-NOT AVAILABLE FOR NOW, IMAGE STILL NOT ON REPO
+### Pulling the image from the Singularity repo
+You can pull the apptainer image from ghcr.io by using this command:
+```
+apptainer pull qiime2_2023_5_q2p0954.sif oras://ghcr.io/patg13/q2pipe/qiime2_q2pipe:2023_5_v0954
+```
+
+## Prepare Q2Pipe pipeline
+
+### Clone the repo and create Q2P environment variable
+```
+git clone https://github.com/NRCan/Q2Pipe.git
+export Q2P="$PWD/Q2Pipe"
+
+# Optional
+echo "export Q2P="$PWD/Q2Pipe"" >> $HOME/.bashrc
+```
+### Modify the default option file
+You have to link your apptainer image to the option file so Q2Pipe can correctly make command calls during execution.
+
+```
+# Modify the APPTAINER_COMMAND=
+APPTAINER_COMMAND="apptainer exec --cleanenv --env MPLCONFIGDIR=/tmp,TMPDIR=/tmp /path/to/your/apptainer_image.sif"
+```
+
+You are now set to run Q2Pipe
 
 # USAGE
-Q2Pipe was seperated into 11 different steps to make it easier to control, customise, update, etc.
-You can check the provided user guide for more information on using Q2Pipe
 
-## 1 Importation
-This step will grab your manifest(s) file(s) and compress them in a Qiime2 artifact file (QZA) and generate a Qiime2 Visualization file (QZV) containing the run's quality graphs to help you identify the best trimming parameter. If you have more than one sequencing run for a single gene, you must create a manifest per run and speicify them both in the option file, they will be automatically treated independently and merged later on.
-
-## 2 Dada2 Denoising
-This step will proceed to trim, denoise and build ASV from your imported data
-
-## 2.5 Run Merging
-Because Dada2 guideline specify to NEVER denoise multiple sequencing run together, this step will merge runs together to carry on with the analysis
-
-## 3 Frequency Filtering
-You can use this step to remove rare or low occuring ASVs
-
-## 4 Vsearch Clustering
-This optional step is to cluster some ASV together depending on their similarity, it is recommended to skip this step instead of using a 1.0 clustering level, which will still regroup identical ASV with variable length. NOTICE, using this step will transform your ASVs into OTUs.
-
-## 5 Classifier Training
-Optional step if you don't have a pre-trained Qiime2 Classifier for the taxonomical classification. THIS STEP IS DEPRECIATED AND WILL BE REMOVE IN FUTURE VERSION
-
-## 6 Taxonomy Classification
-Using a pre-trained classifier, this step will classify your ASVs into their correcponding taxonomical group
-
-## 7 Metadata + Taxa Filtering
-In certain situation you can use a taxonomical filter to remove certain species/organism/groups from you data, this step will do just that. You can also use it to exclude samples depending on their Metadata infomation (Ex. Exclude every sample from a specific site)
-
-## 8 Rarefaction curve
-Because rarefaction is pretty much a must when doing statistical analysis on metabarcoding data, this step will generate a rarefaction curve to help you identify a proper rarefaction level (one that does not exclude too much sequences, but samplig enough so don't change the sample composition). you can also skiprarefaction altogether.
-
-## 9 Rarefaction
-Use the level identified in the previous step to rarefy your data
-
-## 10 Metrics Generation
-Will generate Qiime2 default metrics (according to core-metrics command, but will no use the command per se)
-
-## 11 Exportation
-Will proceed with different secondary analysis (FUNguild, ANCOM, etc.) and produce the ASV Tables.
-
+Consult the user guide provided in the repo (Q2Pipe_User_Guide_V0.95.4_Public.pdf)
 
 # License
+
+Q2Pipe is open-source software released under the **[MIT License](LICENSE)**.
 
 This pipeline was developped at Natural Ressources Canada's Dr. Christine Martineau laboratory
 
