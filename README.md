@@ -3,12 +3,16 @@ Q2Pipe is a powerful and flexible pipeline designed to streamline and automate t
 
 ## What it does:
 •	Q2Pipe provides a comprehensive workflow for microbiome analysis, guiding users through every step, from data import to metrics and tables generation for statistical analyses.
+
 •	It automates routine tasks and ensures that best practices in data processing and analysis are followed. 
+
 •	Users can customize and fine-tune various analysis parameters to meet their specific research needs.
 
 ## Who should use it:
 •	Researchers and scientists working on microbiome projects who want to simplify and expedite their data analysis.
+
 •	Those with varying levels of expertise, from beginners to experienced bioinformaticians, as Q2Pipe offers both automation and customization options.
+
 •	Anyone looking to conduct microbiome analyses using Qiime2 and benefit from a streamlined and user-friendly workflow.
 
 # Setup
@@ -55,7 +59,7 @@ You are now set to run Q2Pipe
 
 # USAGE
 
-Consult the user guide provided in the repo (Q2Pipe_User_Guide_V0.95.4_Public.pdf)
+To correctly execute Q2Pipe, you can refer to the user guide provided in the repo (Q2Pipe_User_Guide_V0.95.4_Public.pdf) 
 
 # License
 
