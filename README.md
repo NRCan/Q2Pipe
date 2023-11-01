@@ -62,6 +62,10 @@ You are now set to run Q2Pipe
 
 To correctly execute Q2Pipe, you can refer to the **[User Guide](https://github.com/NRCan/Q2Pipe/blob/main/Q2Pipe_User_Guide_V0.95.4_Public.pdf)**.
 
+# Citation
+
+AVAILABLE SOON
+
 # License
 
 Q2Pipe is open-source software released under the **[MIT License](LICENSE)**.
