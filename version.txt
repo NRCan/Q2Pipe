@@ -7,8 +7,10 @@
 
 # Latest Qiime2 Version tested : qiime2-2023.5 (Apptainer)
 
-# Changelog since version 0.95.1 (0.95.2)
+# Changelog since version 0.95.1 (0.95.4)
 # MINOR ENHANCEMENT: Metrics Generation step now multithreaded (10-fold speed gain on test data)
+# MINOR CHANGE: User guide now available in the repository
+# DEPRECIATION: Step 5 is now deprecated and will be removed in version 0.96
 
 # Changelog since version 0.95 (0.95.1)
 # ENHANCEMENT/BUGFIX: Figaro modified on repo to support multithreading control (was taking all cores on system before)
