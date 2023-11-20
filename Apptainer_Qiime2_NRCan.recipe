@@ -39,10 +39,10 @@ From: quay.io/qiime2/core:2023.5
     # Install Q2Pipe Dependencies (from NRCan/Q2Pipe public repo)
     mkdir /download
     cd /download
-    git clone https://github.com/Patg13/Q2Pipe_Deps.git
-    cd Q2Pipe_Deps
-    #git clone https://github.com/NRCan/Q2Pipe.git
-    #cd Q2Pipe_Deps/Dependencies
+    #git clone https://github.com/Patg13/Q2Pipe_Deps.git
+    #cd Q2Pipe_Deps
+    git clone https://github.com/NRCan/Q2Pipe.git
+    cd Q2Pipe_Deps/Dependencies
     cp ASV_Table_DNA_Merger.py /usr/bin
     chmod 755 /usr/bin/ASV_Table_DNA_Merger.py 
     cd /
