@@ -12,6 +12,8 @@
 
 ANALYSIS_NAME=BASIC_TEST
 NB_THREADS=8
+
+# Threads fine-tuning
 CLASSIFIER_NB_THREADS=2
 
 # Leave empty if you don't use apptainer image to launch Qiime2
