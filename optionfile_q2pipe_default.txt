@@ -12,6 +12,7 @@
 
 ANALYSIS_NAME=BASIC_TEST
 NB_THREADS=8
+CLASSIFIER_NB_THREADS=2
 
 # Leave empty if you don't use apptainer image to launch Qiime2
 # To define a different temporary folder, add -B /path/to/your/folder:/tmp

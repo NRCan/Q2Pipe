@@ -5,7 +5,7 @@
 #      Qiime 2 Pipeline        #
 #   By: Patrick Gagne (NRCan)  #
 #   Step 6 - Classification    #
-#       October 5, 2021        #
+#      November 28, 2023       #
 #                              #
 ################################
 
@@ -57,10 +57,18 @@ else
 fi
 
 
+if [ ! $CLASSIFIER_NB_THREADS ]
+then
+    echo "WARNING: CLASSIFIER_NB_THREADS variable not set, will fallback on NB_THREADS"
+    echo "This could cause a RAM overload during the classification"
+    CLASSIFIER_NB_THREADS=$NB_THREADS
+fi
+
+
 $APPTAINER_COMMAND qiime feature-classifier classify-sklearn \
 --i-classifier $classifier_path \
 --i-reads $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza \
---p-n-jobs $NB_THREADS \
+--p-n-jobs $CLASSIFIER_NB_THREADS \
 --p-confidence $p_confidence \
 --o-classification $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza --verbose || exit_on_error
 
