@@ -1,11 +1,15 @@
 ############################
 #                          #
-#   Q2Pipe Version 0.95.2  #
-#     September 11, 2023   #
+#   Q2Pipe Version 0.95.5  #
+#     November 28, 2023    #
 #                          #
 ############################
 
-# Latest Qiime2 Version tested : qiime2-2023.5 (Apptainer)
+# Latest Qiime2 Version tested : qiime2-2023.9 (Apptainer)
+
+# Changelog since version 0.95.4 (0.95.5)
+# MINOR ENHANCEMENT: Number of threads for the classifier now a seperated option
+# Qiime2 Recipe updated to new Qiime2 version (2023.9)
 
 # Changelog since version 0.95.1 (0.95.4)
 # MINOR ENHANCEMENT: Metrics Generation step now multithreaded (10-fold speed gain on test data)

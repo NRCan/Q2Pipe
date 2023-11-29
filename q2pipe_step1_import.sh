@@ -95,6 +95,12 @@ then
     exit 1
 fi
 
+# Create a version summary for reference
+echo "$( $APPTAINER_COMMAND qiime info )" > $ANALYSIS_NAME.version_summary.txt
+echo "" >> $ANALYSIS_NAME.version_summary.txt
+echo "Q2Pipe Version 0.95.5" >> $ANALYSIS_NAME.version_summary.txt
+echo $( date ) >> $ANALYSIS_NAME.version_summary.txt
+
 
 tempcheck=$( mktemp -p . )
 
