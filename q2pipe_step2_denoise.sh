@@ -51,12 +51,14 @@ rtrunc_list=$( echo $p_trunc_len_r | sed 's/,/ /g' )
 if [ $( echo $ftrunc_list | wc -w ) -ne $( echo $manifest_list | wc -w ) ]
 then
     echo "ERROR: Inconsistent parameter list for forward truncation option"
+    echo "You must have a forward trimming parameter for each of your manifest"
     exit 3
 fi
 
 if [ $( echo $rtrunc_list | wc -w ) -ne $( echo $manifest_list | wc -w ) ]
 then
     echo "ERROR: Inconsistent parameter list for reverse truncation option"
+    echo "You must have a reverse trimming parameter for each of your manifest"
     exit 3
 fi
 
