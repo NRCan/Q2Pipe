@@ -13,6 +13,10 @@ From: quay.io/qiime2/core:2023.9
     This container is a standardised setup for Qiime2
     It includes various programs needed at NRCan
 
+%environment
+    # DO NOT OVERRIDE THIS, USE BINDING IN APPTAINER COMMAND INSTEAD ( -B /path/to/temp:/tmp )
+    export TMPDIR=/tmp 
+
 %post
     apt update --allow-releaseinfo-change
     apt install -y --no-install-recommends software-properties-common apt-utils
