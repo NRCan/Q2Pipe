@@ -18,6 +18,9 @@ CLASSIFIER_NB_THREADS=2
 
 # Leave empty if you don't use apptainer image to launch Qiime2
 # To define a different temporary folder, add -B /path/to/your/folder:/tmp
+# TMPDIR inside the container MUST point to /tmp at all times. DO NOT CHANGE THIS
+# Also make sure that the TEMPORARY_DIRECTORY variable point to the same folder
+# Q2Pipe can also use the TMPDIR environment variable if set
 APPTAINER_COMMAND=
 
 # Metadata must be in TSV format
@@ -26,8 +29,9 @@ APPTAINER_COMMAND=
 METADATA_FILE_PATH=
 MANIFEST_FILE_PATH=
 
-# Leave empty to use system's default  (/tmp)
-# DO NOT SPECIFY IF YOU ARE USING APPTAINER COMMAND
+# Leave empty to use system's TMPDIR variable (fallback on /tmp if not set)
+# If you are using apptainer and want to define a different temp folder
+# you must also add '-B /path/to/temp:/tmp' to the apptainer command definition
 TEMPORARY_DIRECTORY=
 
 ########################## 

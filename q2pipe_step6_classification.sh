@@ -37,6 +37,28 @@ then
     fi
     export TMPDIR=$TEMPORARY_DIRECTORY
 fi
+
+if [ ! $TMPDIR ]
+then
+    export TMPDIR=/tmp
+fi
+
+if [ "$APPTAINER_COMMAND" != "" ]
+then
+    echo "DEBUG: Checking temporary folder"
+    temp_check=$( $APPTAINER_COMMAND mktemp -t Q2PIPE_TEMPFOLDER_CHECK.XXXXXX.temp  )
+    bname=$( basename $temp_check )
+    if [ ! -e $TMPDIR/$bname ]
+    then
+        echo "ERROR: Disparity between Apptainer temporary folder and system temporary folder"
+        echo "Please make sure both are pointing to the same folder"
+        exit 5
+    else
+        echo "DEBUG: Temporary file check status: OK"
+        rm $TMPDIR/Q2PIPE_TEMPFOLDER_CHECK.??????.temp
+    fi
+fi
+
 if [ $CLASSIFIER_DATABASE_PATH ] && [ $CLASSIFIER_OUTPUT_NAME ]
 then
     if [ "$(stat -L -c %d:%i $CLASSIFIER_DATABASE_PATH)" = "$(stat -L -c %d:%i $CLASSIFIER_OUTPUT_NAME)" ] 

@@ -1,11 +1,14 @@
 ############################
 #                          #
-#   Q2Pipe Version 0.95.5  #
-#     November 28, 2023    #
+#   Q2Pipe Version 0.95.6  #
+#      January 30, 2024    #
 #                          #
 ############################
 
 # Latest Qiime2 Version tested : qiime2-2023.9 (Apptainer)
+
+# Changelog since version 0.95.5 (0.95.6)
+# BUGFIX: Temporary folder definition changed to prevent disparity with Apptainer + temp checkup at each step to prevent crash
 
 # Changelog since version 0.95.4 (0.95.5)
 # MINOR ENHANCEMENT: Number of threads for the classifier now a seperated option
