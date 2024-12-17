@@ -9,7 +9,6 @@
 
 # Changelog since version 0.95.6 (0.95.7)
 # Qiime2 Recipe updated to new Qiime2 version (2024.5)
-# ( IF NEEDED ) All scripts updated to work with Qiime2 new multithreading paradigm
 # Link to Apptainer documentation updated in User Documentation
 # Citation added to README (article published)
 # Q2Pipe repo cloning now included in apptainer recipe

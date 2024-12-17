@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: quay.io/qiime2/amplicon:2024.10
+From: quay.io/qiime2/amplicon:2024.5
 
 %files
     /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt
@@ -97,9 +97,13 @@ From: quay.io/qiime2/amplicon:2024.10
     cd /opt
     git clone https://github.com/NRCan/Q2Pipe.git
 
+    # Cache refresh to correctly initialize Qiime2
+    qiime dev refresh-cache
+    qiime info
+
     # NRCan Certificate Cleanup 
     rm /usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt
     update-ca-certificates
 
 %runscript
-    qiime --info
+    qiime info
