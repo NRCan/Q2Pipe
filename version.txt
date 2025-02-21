@@ -5,13 +5,14 @@
 #                          #
 ############################
 
-# Latest Qiime2 Version tested : qiime2-2024.10 (Apptainer)
+# Latest Qiime2 Version tested : qiime2-2024.5 (Apptainer)
 
 # Changelog since version 0.95.6 (0.95.7)
 # Qiime2 Recipe updated to new Qiime2 version (2024.5)
 # Link to Apptainer documentation updated in User Documentation
 # Citation added to README (article published)
 # Q2Pipe repo cloning now included in apptainer recipe
+# BUGFIX: changes in mean frequency extraction method break function in Q2Pipe
 
 # Changelog since version 0.95.5 (0.95.6)
 # BUGFIX: Temporary folder definition changed to prevent disparity with Apptainer + temp checkup at each step to prevent crash
