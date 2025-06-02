@@ -1,11 +1,23 @@
 ############################
 #                          #
-#   Q2Pipe Version 0.95.6  #
-#      January 30, 2024    #
+#   Q2Pipe Version 0.95.8  #
+#       june 02, 2025      #
 #                          #
 ############################
 
-# Latest Qiime2 Version tested : qiime2-2023.9 (Apptainer)
+# Latest Qiime2 Version tested : qiime2-2025.4 (Apptainer)
+
+# Changelog since version 0.95.7 (0.95.8)
+# Qiime2 Recipe updated to new Qiime2 version (2025.4)
+# Modifications to Figaro call to inclure legacy mode for filename inference mecanism (modified in patg13 fork of Figaro)
+# New indication to use p_min_frequency=2 to remove only singletons
+
+# Changelog since version 0.95.6 (0.95.7)
+# Qiime2 Recipe updated to new Qiime2 version (2024.5)
+# Link to Apptainer documentation updated in User Documentation
+# Citation added to README (article published)
+# Q2Pipe repo cloning now included in apptainer recipe
+# BUGFIX: changes in mean frequency extraction method break function in Q2Pipe
 
 # Changelog since version 0.95.5 (0.95.6)
 # BUGFIX: Temporary folder definition changed to prevent disparity with Apptainer + temp checkup at each step to prevent crash

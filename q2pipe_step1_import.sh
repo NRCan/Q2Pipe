@@ -239,6 +239,7 @@ do
             --forwardPrimerLength $f_forward_primer_len \
             --reversePrimerLength $f_reverse_primer_len \
             --minimumOverlap $f_min_overlap \
+            --fileNamingStandard nononsenselegacy \
             --cores $threads_per_job > $WORK_DIR/$manifest_name/figaro_results/AmpliconSize_$amp.txt
             #let $[ figaro_running_job += 1 ]
             #if [ $figaro_running_job -eq $threads_per_job ] # Not very efficient, but must not conflict with manifest parallelism
@@ -255,7 +256,7 @@ do
         then
             echo "Cleaning Figaro temporary files"
             rm -Rf $WORK_DIR
-            #rm -Rf $manifest_name/figaro_export
+            rm -Rf $manifest_name/figaro_export
         else
             mv $WORK_DIR/$manifest_name/figaro_export $manifest_name/figaro_results
             rm -Rf $WORK_DIR
@@ -319,7 +320,7 @@ do
         then
             echo "Cleaning Falco temporary files"
             rm -Rf $WORK_DIR
-            #rm -Rf $manifest_name/figaro_export
+            rm -Rf $manifest_name/figaro_export
         else
             mv $WORK_DIR/$manifest_name/falco_export $manifest_name/falco_results
             rm -Rf $WORK_DIR

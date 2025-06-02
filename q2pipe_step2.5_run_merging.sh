@@ -140,9 +140,8 @@ $APPTAINER_COMMAND qiime tools export --input-path $ANALYSIS_NAME.table-dada2.qz
 
 
 mean_line=$( grep -n "Mean frequency" $ANALYSIS_NAME.temporary_export_dada2table/index.html | head -n 1 | cut -f1 -d: )
-let $[ mean_line += 1 ]
 
-freq=$( head -n $mean_line $ANALYSIS_NAME.temporary_export_dada2table/index.html | tail -n 1 | sed 's/ //g' | sed 's/<td>//g' | sed 's;</td>;;g' )
+freq=$( head -n $mean_line $ANALYSIS_NAME.temporary_export_dada2table/index.html | tail -n 1 | awk -F',' '{ print $6}' | sed 's/\"Mean frequency\"://g' | sed 's/}//g' | sed 's/{//g' )
 
 echo ""
 echo "Mean frequency: $freq"
@@ -151,5 +150,6 @@ freq_n=$( $APPTAINER_COMMAND python -c "exec(\"import math\nprint($freq*0.0005)\
 freq_f=$( $APPTAINER_COMMAND python -c "exec(\"import math\nprint(math.floor($freq*0.0005))\")" )
 freq_c=$( $APPTAINER_COMMAND python -c "exec(\"import math\nprint(math.ceil($freq*0.0005))\")" )
 echo "Recommended filtration setting (0.05%): $freq_n = $freq_f (floor) or $freq_c (ceiling)"
+echo "You can also use p_min_frequency=2 to only remove singletons"
 rm -rf $ANALYSIS_NAME.temporary_export_dada2table
 

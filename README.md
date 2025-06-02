@@ -60,11 +60,11 @@ You are now set to run Q2Pipe
 
 # USAGE
 
-To correctly execute Q2Pipe, you can refer to the **[User Guide](https://github.com/NRCan/Q2Pipe/blob/main/Q2Pipe_User_Guide_V0.95.4_Public.pdf)**.
+To correctly execute Q2Pipe, you can refer to the **[User Guide](https://github.com/NRCan/Q2Pipe/blob/main/Q2Pipe_User_Guide_V0.95.7_Public.pdf)**.
 
 # Citation
 
-AVAILABLE SOON
+Nagati, M., Bergeron, MJ., Gagné, P. et al. Exploring winter diet, gut microbiota and parasitism in caribou using multi-marker metabarcoding of fecal DNA. Sci Rep 14, 27960 (2024). https://doi.org/10.1038/s41598-024-76594-5
 
 # License
 

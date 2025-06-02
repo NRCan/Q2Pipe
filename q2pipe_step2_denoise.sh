@@ -222,9 +222,8 @@ do
 
 
         mean_line=$( grep -n "Mean frequency" $manifest_name/$manifest_name.temporary_export_dada2table/index.html | head -n 1 | cut -f1 -d: )
-        let $[ mean_line += 1 ]
 
-        freq=$( head -n $mean_line $manifest_name/$manifest_name.temporary_export_dada2table/index.html | tail -n 1 | sed 's/ //g' | sed 's/<td>//g' | sed 's;</td>;;g' )
+        freq=$( head -n $mean_line $manifest_name/$manifest_name.temporary_export_dada2table/index.html | tail -n 1 | awk -F',' '{ print $6}' | sed 's/\"Mean frequency\"://g' | sed 's/}//g' | sed 's/{//g' )
 
         echo ""
         echo "Mean frequency: $freq"
@@ -233,6 +232,7 @@ do
         freq_f=$( $APPTAINER_COMMAND python -c "exec(\"import math\nprint(math.floor($freq*0.0005))\")" )
         freq_c=$( $APPTAINER_COMMAND python -c "exec(\"import math\nprint(math.ceil($freq*0.0005))\")" )
         echo "Recommended filtration setting (0.05%): $freq_n = $freq_f (floor) or $freq_c (ceiling)"
+        echo "You can also use p_min_frequency=2 to only remove singletons"
         rm -rf $manifest_name/$manifest_name.temporary_export_dada2table
     fi
     echo "$manifest_name DONE"
@@ -247,6 +247,7 @@ do
 done
 
 wait # DEBUGLINE
+
 
 if [ $( cat $tempcheck | wc -l ) -ne  $( echo $manifest_list | wc -w ) ]
 then
