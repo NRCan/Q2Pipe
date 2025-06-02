@@ -1,11 +1,16 @@
 ############################
 #                          #
-#   Q2Pipe Version 0.95.7  #
-#     november 26, 2024    #
+#   Q2Pipe Version 0.95.8  #
+#       june 02, 2025      #
 #                          #
 ############################
 
-# Latest Qiime2 Version tested : qiime2-2024.5 (Apptainer)
+# Latest Qiime2 Version tested : qiime2-2025.4 (Apptainer)
+
+# Changelog since version 0.95.7 (0.95.8)
+# Qiime2 Recipe updated to new Qiime2 version (2025.4)
+# Modifications to Figaro call to inclure legacy mode for filename inference mecanism (modified in patg13 fork of Figaro)
+# New indication to use p_min_frequency=2 to remove only singletons
 
 # Changelog since version 0.95.6 (0.95.7)
 # Qiime2 Recipe updated to new Qiime2 version (2024.5)
