@@ -116,6 +116,9 @@ CA_FORCE_INTERRUPTION=false
 #  Step 1.5 : Dada2 Denoising Parameters Evaluation  #
 ######################################################
 
+# WARNING : STEP DEPRECATED - WILL BE REMOVE IN VERSION 0.96 #
+
+
 # This step is design to work with a single manifest file
 # Manifest must be in CSV format
 EVAL_MANIFEST_FILE_PATH=
@@ -203,6 +206,8 @@ p_perc_identity=NA
 # Step 5 : Classifier Training   #
 ##################################
 
+# WARNING : STEP DEPRECATED - WILL BE REMOVE IN VERSION 0.96 #
+
 # Only Specify these if you want to train the classifier with your database
 # It's recommended to use the same name (different extension) for the fasta and the tax file
 # The classifier output name must have the .qza extension
@@ -252,6 +257,7 @@ GENERATE_PHYLOGENY=false
 # if you activate this option, you can ignore the next sections, skip step 8 and 9
 # Use "both" without the quotes to run both with and without rarefaction in a single run
 SKIP_RAREFACTION=both
+
 ##########################################
 #   Step 8 : Alpha rarefaction plotting  #
 ##########################################

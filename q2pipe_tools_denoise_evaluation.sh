@@ -9,6 +9,8 @@
 #                               #
 #################################
 
+# WARNING : SCRIPT DEPRECATED - WILL BE REMOVED IN VERSION 0.96 #
+
 exit_on_error(){
    echo "Qiime2 command error detected"
    echo "Exiting program"
