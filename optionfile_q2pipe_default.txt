@@ -112,30 +112,6 @@ p_error_rate=0.1
 # Useful for debugging and accessing CutAdapt qzv files
 CA_FORCE_INTERRUPTION=false
 
-######################################################
-#  Step 1.5 : Dada2 Denoising Parameters Evaluation  #
-######################################################
-
-# WARNING : STEP DEPRECATED - WILL BE REMOVE IN VERSION 0.96 #
-
-
-# This step is design to work with a single manifest file
-# Manifest must be in CSV format
-EVAL_MANIFEST_FILE_PATH=
-
-# if your data is single-end, only p_trim_left_f, p_trunc_len_f and p_max_ee_f will be used in trimming
-
-# Use 0 to bypass evaluation (will just denoise all samples)
-DENOISE_EVALUATION_SAMPLE_SIZE=5
-TESTFILE_PATH=
-# if true, will generate a new random manifest. even if one already exists
-# if false, will use the $ANALYSIS_NAME.eval_manifest.temp as subset
-FORCE_RESAMPLING=false
-
-# If true, will stop the step after generating $ANALYSIS_NAME.eval_manifest.temp
-# Nothing else will be generated until DRY_RUN is switched to false again
-DRY_RUN=false
-
 ################################
 #   Step 2 : Dada2 Denoising   #
 ################################
@@ -202,24 +178,9 @@ p_min_samples=0
 # Use NA to skip denovo clustering (you must still launch step 4)
 p_perc_identity=NA
  
-##################################
-# Step 5 : Classifier Training   #
-##################################
-
-# WARNING : STEP DEPRECATED - WILL BE REMOVE IN VERSION 0.96 #
-
-# Only Specify these if you want to train the classifier with your database
-# It's recommended to use the same name (different extension) for the fasta and the tax file
-# The classifier output name must have the .qza extension
-
-#FASTA_DATABASE_PATH=
-#TAXO_DATABASE_PATH=
-SEQS_QZA_PATH=
-TAXO_QZA_PATH=
-CLASSIFIER_OUTPUT_NAME=
 
 #################################
-# Step 6 : Taxonomy Assignment  #
+# Step 5 : Taxonomy Assignment  #
 #################################
 
 # Only specify this if you skipped step 5
@@ -229,7 +190,7 @@ CLASSIFIER_DATABASE_PATH=
 p_confidence=0.7
 
 ############################
-# Step 7 : Taxa Filtering  #
+# Step 6 : Taxa Filtering  #
 ############################
 
 # Filter samples according to specific metadata
@@ -258,8 +219,11 @@ GENERATE_PHYLOGENY=false
 # Use "both" without the quotes to run both with and without rarefaction in a single run
 SKIP_RAREFACTION=both
 
+# rarefaction or normalization
+RAREFACTION_METHOD=rarefaction
+
 ##########################################
-#   Step 8 : Alpha rarefaction plotting  #
+#   Step 7 : Alpha rarefaction plotting  #
 ##########################################
 
 p_max_depth=8000
@@ -271,13 +235,13 @@ p_iterations=10
 p_metrics=observed_features,shannon
 
 #############################
-# Step 9 : Data Rarefaction #
+# Step 8 : Data Rarefaction #
 #############################
 
 p_sampling_depth=10000
 
 ########################
-#   Step 10 : Metrics  #
+#   Step 9 : Metrics   #
 ########################
 
 alpha_metrics=shannon,simpson,observed_features,chao1,pielou_e
@@ -288,7 +252,7 @@ alpha_metrics_phylo=faith_pd
 beta_metrics_phylo=weighted_unifrac,weighted_normalized_unifrac,generalized_unifrac,unweighted_unifrac
 
 ######################
-#   Step 11 : Export #
+#   Step 10 : Export #
 ######################
 
 

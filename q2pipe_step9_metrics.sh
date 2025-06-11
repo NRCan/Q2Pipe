@@ -4,7 +4,7 @@
 #                              #
 #      Qiime 2 Pipeline        #
 #   By: Patrick Gagne (NRCan)  #
-# Step 10 - Metrics Generation #
+# Step 9 - Metrics Generation  #
 #       Complete Version       #
 #       september 8, 2023      #
 #                              #

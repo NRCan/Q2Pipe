@@ -1,11 +1,15 @@
 ############################
 #                          #
-#   Q2Pipe Version 0.95.8  #
+#   Q2Pipe Version 0.96.0  #
 #       june 02, 2025      #
 #                          #
 ############################
 
 # Latest Qiime2 Version tested : qiime2-2025.4 (Apptainer)
+
+# Changelog since version 0.95.8 (0.96)
+# Deprecated Step 1.5 and step 5 removed from Q2Pipe
+# New rarefaction feature - normalization
 
 # Changelog since version 0.95.7 (0.95.8)
 # Qiime2 Recipe updated to new Qiime2 version (2025.4)

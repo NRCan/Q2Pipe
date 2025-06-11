@@ -153,7 +153,7 @@ then
         echo "Invalid checkpoint detected. Deleting..."
         rm $ANALYSIS_NAME.q2pipe_step5.DONE
     fi
-    $Q2P/q2pipe_step5_classifier_training.sh $optionfile || exit_on_error
+    $Q2P/q2pipe_step5_classification.sh $optionfile || exit_on_error
     touch $ANALYSIS_NAME.q2pipe_step5.DONE
     invalid_next=1
 else
@@ -168,7 +168,7 @@ then
         echo "Invalid checkpoint detected. Deleting..."
         rm $ANALYSIS_NAME.q2pipe_step6.DONE
     fi
-    $Q2P/q2pipe_step6_classification.sh $optionfile || exit_on_error
+    $Q2P/q2pipe_step6_taxa_filtering.sh $optionfile || exit_on_error
     touch $ANALYSIS_NAME.q2pipe_step6.DONE
     invalid_next=1
 else
@@ -183,7 +183,7 @@ then
         echo "Invalid checkpoint detected. Deleting..."
         rm $ANALYSIS_NAME.q2pipe_step7.DONE
     fi
-    $Q2P/q2pipe_step7_taxa_filtering.sh $optionfile || exit_on_error
+    $Q2P/q2pipe_step7_rarefaction_curve.sh $optionfile || exit_on_error
     touch $ANALYSIS_NAME.q2pipe_step7.DONE
     invalid_next=1
 else
@@ -198,7 +198,7 @@ then
         echo "Invalid checkpoint detected. Deleting..."
         rm $ANALYSIS_NAME.q2pipe_step8.DONE
     fi
-    $Q2P/q2pipe_step8_rarefaction_curve.sh $optionfile || exit_on_error
+    $Q2P/q2pipe_step8_rarefy.sh $optionfile || exit_on_error
     touch $ANALYSIS_NAME.q2pipe_step8.DONE
     invalid_next=1
 else
@@ -213,7 +213,18 @@ then
         echo "Invalid checkpoint detected. Deleting..."
         rm $ANALYSIS_NAME.q2pipe_step9.DONE
     fi
-    $Q2P/q2pipe_step9_rarefy.sh $optionfile || exit_on_error
+
+    if [ -d "$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity" ] && [ "$SKIP_RAREFACTION" == "true" ] || [ "$SKIP_RAREFACTION" == "both" ]
+    then
+        rm "$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity" -rf
+    fi
+
+    if [ -d "$ANALYSIS_NAME.metrics_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"" ] && [ "$SKIP_RAREFACTION" == "false" ] || [ "$SKIP_RAREFACTION" == "both" ]
+    then
+        rm "$ANALYSIS_NAME.metrics_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"" -rf
+    fi
+
+    $Q2P/q2pipe_step9_metrics.sh $optionfile || exit_on_error
     touch $ANALYSIS_NAME.q2pipe_step9.DONE
     invalid_next=1
 else
@@ -228,37 +239,11 @@ then
         echo "Invalid checkpoint detected. Deleting..."
         rm $ANALYSIS_NAME.q2pipe_step10.DONE
     fi
-
-    if [ -d "$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity" ] && [ "$SKIP_RAREFACTION" == "true" ] || [ "$SKIP_RAREFACTION" == "both" ]
-    then
-        rm "$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity" -rf
-    fi
-
-    if [ -d "$ANALYSIS_NAME.metrics_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"" ] && [ "$SKIP_RAREFACTION" == "false" ] || [ "$SKIP_RAREFACTION" == "both" ]
-    then
-        rm "$ANALYSIS_NAME.metrics_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"" -rf
-    fi
-
-    $Q2P/q2pipe_step10_metrics.sh $optionfile || exit_on_error
+    $Q2P/q2pipe_step10_export.sh $optionfile || exit_on_error
     touch $ANALYSIS_NAME.q2pipe_step10.DONE
     invalid_next=1
 else
     echo "Step 10 checkpoint detected...skipping"
-fi
-
-if [ ! -e $ANALYSIS_NAME.q2pipe_step11.DONE ] || [ $invalid_next -eq 1 ] && [ $override_value -le 11 ]
-then
-    echo "Launching Step 11"
-    if [ -e $ANALYSIS_NAME.q2pipe_step11.DONE ]
-    then
-        echo "Invalid checkpoint detected. Deleting..."
-        rm $ANALYSIS_NAME.q2pipe_step11.DONE
-    fi
-    $Q2P/q2pipe_step11_export.sh $optionfile || exit_on_error
-    touch $ANALYSIS_NAME.q2pipe_step11.DONE
-    invalid_next=1
-else
-    echo "Step 11 checkpoint detected...skipping"
 fi
 
 echo "PROGRAM DONE"
