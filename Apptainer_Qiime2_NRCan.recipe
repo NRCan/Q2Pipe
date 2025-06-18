@@ -48,7 +48,9 @@ From: quay.io/qiime2/amplicon:2025.4
     git clone https://github.com/NRCan/Q2Pipe.git
     cd Q2Pipe/Dependencies
     cp ASV_Table_DNA_Merger.py /usr/bin
+    cp Convert_Biom_to_TSV.py /usr/bin
     chmod 755 /usr/bin/ASV_Table_DNA_Merger.py 
+    chmod 755 /usr/bin/Convert_Biom_to_TSV.py
     cd /
 #    rm -rf /download
     
@@ -100,7 +102,7 @@ From: quay.io/qiime2/amplicon:2025.4
     # Normalization module + R packages
     # Using https://muug.ca/mirror/cran/ as CRAN mirror (canadian)
     cd /download
-    
+
     #pip install git+https://github.com/vitorheidrich/q2-srs.git
     pip install git+https://github.com/Patg13/q2-srs.git
     Rscript -e 'Sys.setenv(CURL_CA_BUNDLE = "/usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt") ; install.packages("SRS", repos = "https://muug.ca/mirror/cran/")'
