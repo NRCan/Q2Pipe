@@ -97,6 +97,16 @@ From: quay.io/qiime2/amplicon:2025.4
     cd /opt
     git clone https://github.com/NRCan/Q2Pipe.git
 
+    # Normalization module + R packages
+    # Using https://muug.ca/mirror/cran/ as CRAN mirror (canadian)
+    cd /download
+    
+    #pip install git+https://github.com/vitorheidrich/q2-srs.git
+    pip install git+https://github.com/Patg13/q2-srs.git
+    Rscript -e 'Sys.setenv(CURL_CA_BUNDLE = "/usr/local/share/ca-certificates/NRCAN-Root-2019-B64.crt") ; install.packages("SRS", repos = "https://muug.ca/mirror/cran/")'
+    wget https://github.com/Patg13/SRS/archive/refs/tags/SRS_V11.tar.gz
+    Rscript -e 'install.packages("/download/SRS_V11.tar.gz", type = "source" )'
+
     # Cache refresh to correctly initialize Qiime2
     qiime dev refresh-cache
     qiime info
