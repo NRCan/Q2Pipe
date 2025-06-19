@@ -4,7 +4,7 @@
 #      Qiime 2 Pipeline        #
 #   By: Patrick Gagne (NRCan)  #
 #      Step 8 - Rarefy         #
-#      October 5, 2021         #
+#       June 19, 2025          #
 #                              #
 ################################
 
@@ -63,20 +63,43 @@ then
     exit 0
 fi
 
-$APPTAINER_COMMAND qiime feature-table rarefy \
---i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
---p-sampling-depth $p_sampling_depth \
---o-rarefied-table $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza --verbose || exit_on_error
+# Add rarefaction/normalization tag here (rarefied or normalized)
+# This tag must follow in all scripts.
+
+if [ "$RAREFACTION_METHOD" == "rarefaction" ]
+then
+    rarefy_tag="rarefied" 
+
+    $APPTAINER_COMMAND qiime feature-table rarefy \
+    --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
+    --p-sampling-depth $p_sampling_depth \
+    --p-random-seed $p_random_seed \
+    --o-rarefied-table $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza --verbose || exit_on_error
+
+elif [ "$RAREFACTION_METHOD" == "normalization" ]
+then
+    rarefy_tag="normalized"
+
+    $APPTAINER_COMMAND qiime srs SRS \
+    --i-table MISA_ITS_mai2024.filtered_table_dnNA.qza \
+    --p-seed $p_random_seed \
+    --p-c-min $p_sampling_depth \
+    --o-normalized-table $ANALYSIS_NAME.normalized_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza --verbose || exit_on_error
+
+else
+    echo "ERROR: RAREFACTION_METHOD is not set to a valid value (rarefaction or normalization)"
+    exit 1
+fi
 
 $APPTAINER_COMMAND qiime feature-table summarize \
---i-table $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
---o-visualization $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qzv --verbose
+--i-table $ANALYSIS_NAME."$rarefy_tag"_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
+--o-visualization $ANALYSIS_NAME."$rarefy_tag"_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qzv --verbose
 
 $APPTAINER_COMMAND qiime taxa barplot \
---i-table $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
+--i-table $ANALYSIS_NAME."$rarefy_tag"_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
 --i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
 --m-metadata-file $METADATA_FILE_PATH \
---o-visualization $ANALYSIS_NAME.barplots_rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qzv --verbose || exit_on_error
+--o-visualization $ANALYSIS_NAME.barplots_"$rarefy_tag"_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qzv --verbose || exit_on_error
 
 
 

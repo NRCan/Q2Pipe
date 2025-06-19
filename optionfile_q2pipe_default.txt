@@ -226,19 +226,32 @@ RAREFACTION_METHOD=rarefaction
 #   Step 7 : Alpha rarefaction plotting  #
 ##########################################
 
+# Common options between Normalization and Rarefaction
 p_max_depth=8000
 p_steps=10
 p_iterations=10
+
+# Rarefaction metrics
 # Use this format: observed_features,shannon
-# You can also leave this blank to use Qiime2 default metrics (observed_features,shannon)
+# Qiime2 default metrics (observed_features,shannon)
 # IMPORTANT: This is NOT the metrics for step 10, this is only for the rarefaction curve
 p_metrics=observed_features,shannon
+
+# Normalization metric (choice: richness shannon simpson invsimpson)
+# WARNING: Normalization does NOT support multiple metrics
+p_normalization_metric=richness
 
 #############################
 # Step 8 : Data Rarefaction #
 #############################
 
+# If rarefaction method is normalization, use p_sampling_depth as Cmin
 p_sampling_depth=10000
+
+# Random integer seed to use for rarefaction/normalization step
+# Use $RANDOM for random seed at each execution
+# Using the same seed will lead to the same result.
+p_random_seed=$RANDOM
 
 ########################
 #   Step 9 : Metrics   #

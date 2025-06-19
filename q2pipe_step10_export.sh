@@ -5,7 +5,7 @@
 #      Qiime 2 Pipeline        #
 #   By: Patrick Gagne (NRCan)  #
 #    Step 10 - Exportation     #
-#      December 16, 2022       #
+#        June 19, 2025         #
 #                              #
 ################################
 
@@ -63,6 +63,17 @@ then
     echo "ERROR: m_metadata_column not set in the option file"
     echo "This parameter is mandatory for ANCOM analysis"
     exit 3
+fi
+
+if [ "$RAREFACTION_METHOD" == "rarefaction" ]
+then
+    rarefy_tag="rarefied"
+elif [ "$RAREFACTION_METHOD" == "normalization" ]
+then
+    rarefy_tag="normalized"
+else
+    echo "ERROR: RAREFACTION_METHOD must be set to either 'rarefaction' or 'normalization'"
+    exit 1
 fi
 
 
@@ -123,43 +134,43 @@ fi
 if [ "$SKIP_RAREFACTION" == "false" ] || [ "$SKIP_RAREFACTION" == "both" ]
 then
     $APPTAINER_COMMAND qiime tools export \
-    --input-path $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
-    --output-path $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"
+    --input-path $ANALYSIS_NAME."$rarefy_tag"_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
+    --output-path $ANALYSIS_NAME."$rarefy_tag"_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"
 
     $APPTAINER_COMMAND biom convert \
-    -i $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"/feature-table.biom \
-    -o $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"/$ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".tsv --to-tsv
+    -i $ANALYSIS_NAME."$rarefy_tag"_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"/feature-table.biom \
+    -o $ANALYSIS_NAME."$rarefy_tag"_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"/$ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".tsv --to-tsv
 
     $APPTAINER_COMMAND qiime tools export \
     --input-path $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
-    --output-path $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"
+    --output-path $ANALYSIS_NAME.asv_tax_dir_"$rarefy_tag"_"$p_sampling_depth"_dn"$p_perc_identity"
    
-    sed -i 's/Feature ID/#OTUID/g' $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/taxonomy.tsv
-    sed -i 's/Taxon/taxonomy/g' $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/taxonomy.tsv
-    sed -i 's/Confidence/confidence/g' $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/taxonomy.tsv
+    sed -i 's/Feature ID/#OTUID/g' $ANALYSIS_NAME.asv_tax_dir_"$rarefy_tag"_"$p_sampling_depth"_dn"$p_perc_identity"/taxonomy.tsv
+    sed -i 's/Taxon/taxonomy/g' $ANALYSIS_NAME.asv_tax_dir_"$rarefy_tag"_"$p_sampling_depth"_dn"$p_perc_identity"/taxonomy.tsv
+    sed -i 's/Confidence/confidence/g' $ANALYSIS_NAME.asv_tax_dir_"$rarefy_tag"_"$p_sampling_depth"_dn"$p_perc_identity"/taxonomy.tsv
    
     $APPTAINER_COMMAND biom add-metadata \
-    -i $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"/feature-table.biom \
-    --observation-metadata-fp $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/taxonomy.tsv \
+    -i $ANALYSIS_NAME."$rarefy_tag"_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity"/feature-table.biom \
+    --observation-metadata-fp $ANALYSIS_NAME.asv_tax_dir_"$rarefy_tag"_"$p_sampling_depth"_dn"$p_perc_identity"/taxonomy.tsv \
     --sc-separated taxonomy \
-    -o $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/feature_taxonomy_merged.biom
+    -o $ANALYSIS_NAME.asv_tax_dir_"$rarefy_tag"_"$p_sampling_depth"_dn"$p_perc_identity"/feature_taxonomy_merged.biom
 
     $APPTAINER_COMMAND biom convert \
-    -i $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/feature_taxonomy_merged.biom \
-    -o $ANALYSIS_NAME.ASV_table_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv --to-tsv --header-key taxonomy
+    -i $ANALYSIS_NAME.asv_tax_dir_"$rarefy_tag"_"$p_sampling_depth"_dn"$p_perc_identity"/feature_taxonomy_merged.biom \
+    -o $ANALYSIS_NAME.ASV_table_"$rarefy_tag"_"$p_sampling_depth"_dn"$p_perc_identity".tsv --to-tsv --header-key taxonomy
 
-    sed -i '1d' $ANALYSIS_NAME.ASV_table_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv
+    sed -i '1d' $ANALYSIS_NAME.ASV_table_"$rarefy_tag"_"$p_sampling_depth"_dn"$p_perc_identity".tsv
 
     $APPTAINER_COMMAND qiime tools export \
     --input-path $ANALYSIS_NAME.filtered_rep-seqs-dada2_dn"$p_perc_identity".qza \
-    --output-path $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"
+    --output-path $ANALYSIS_NAME.asv_tax_dir_"$rarefy_tag"_"$p_sampling_depth"_dn"$p_perc_identity"
 
     if [ "$( $APPTAINER_COMMAND which ASV_Table_DNA_Merger.py )" != "" ]
     then
         $APPTAINER_COMMAND ASV_Table_DNA_Merger.py \
-        --fasta $ANALYSIS_NAME.asv_tax_dir_rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/dna-sequences.fasta \
-        --asv-table $ANALYSIS_NAME.ASV_table_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv \
-        --out $ANALYSIS_NAME.ASV_tableSeqs_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv || echo "WARNING: ASV_Table_DNA_Merger not installed"
+        --fasta $ANALYSIS_NAME.asv_tax_dir_"$rarefy_tag"_"$p_sampling_depth"_dn"$p_perc_identity"/dna-sequences.fasta \
+        --asv-table $ANALYSIS_NAME.ASV_table_"$rarefy_tag"_"$p_sampling_depth"_dn"$p_perc_identity".tsv \
+        --out $ANALYSIS_NAME.ASV_tableSeqs_"$rarefy_tag"_"$p_sampling_depth"_dn"$p_perc_identity".tsv || echo "WARNING: ASV_Table_DNA_Merger not installed"
     else
        echo "WARNING: ASV_Table_DNA_Merger.py not available in PATH"
        echo "ASV table merge with DNA sequences cannot be done"
@@ -169,7 +180,7 @@ then
     then
         echo "Running FUNGuild analysis..."
         $APPTAINER_COMMAND Guilds_v1.1.py \
-        -otu $ANALYSIS_NAME.ASV_table_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".tsv \
+        -otu $ANALYSIS_NAME.ASV_table_"$rarefy_tag"_"$p_sampling_depth"_dn"$p_perc_identity".tsv \
         -m -u -db $FUNGUILD_DATABASE_PATH
     fi
 fi

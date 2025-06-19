@@ -6,7 +6,7 @@
 #   By: Patrick Gagne (NRCan)  #
 # Step 9 - Metrics Generation  #
 #       Complete Version       #
-#       september 8, 2023      #
+#        June 19, 2025         #
 #                              #
 ################################
 
@@ -64,6 +64,17 @@ detected_error=0
 alpha_metrics=$( echo $alpha_metrics | sed 's/,/ /g' )
 beta_metrics=$( echo $beta_metrics | sed 's/,/ /g' )
 
+if [ "$RAREFACTION_METHOD" == "rarefaction" ]
+then
+    rarefy_tag="rarefied"
+elif [ "$RAREFACTION_METHOD" == "normalization" ]
+then
+    rarefy_tag="normalized"
+else
+    echo "ERROR: RAREFACTION_METHOD must be set to either 'rarefaction' or 'normalization'"
+    exit 1
+fi  
+
 if [ "$SKIP_RAREFACTION" == "both" ]
 then
     SKIP_RAREFACTION="false true"
@@ -72,7 +83,7 @@ then
         echo "ERROR: Previous metrics folder detected from previous run"
         echo "Please delete the following folders if they exist:"
         echo "$ANALYSIS_NAME.metrics_norarefaction_dn$p_perc_identity"
-        echo "$ANALYSIS_NAME.metrics_rarefied_"$p_sampling_depth"_dn"$p_perc_identity""
+        echo "$ANALYSIS_NAME.metrics_"$rarefy_tag"_"$p_sampling_depth"_dn"$p_perc_identity""
         exit 3
     fi
 fi
@@ -94,9 +105,9 @@ do
         mkdir $output_f
     else
         echo "Rarefaction parameter detected"
-        echo "$ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza will be used"
-        input_table="$ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza"
-        output_f="$ANALYSIS_NAME.metrics_rarefied_"$p_sampling_depth"_dn"$p_perc_identity""
+        echo "$ANALYSIS_NAME."$rarefy_tag"_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza will be used"
+        input_table="$ANALYSIS_NAME."$rarefy_tag"_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza"
+        output_f="$ANALYSIS_NAME.metrics_"$rarefy_tag"_"$p_sampling_depth"_dn"$p_perc_identity""
         if [ -d $output_f ]
         then
             echo "ERROR: Folder $output_f already exist"
@@ -250,84 +261,4 @@ if [ $detected_error -eq 1 ]
 then
     echo "WARNING: an alpha-group-significance step for one or more metrics returned an error"
 fi
-
-# Alpha Diversity $APPTAINER_COMMAND qiime diversity alpha \ --i-table 
-#$ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \ --p-metric shannon \ --o-alpha-diversity 
-#$output_f/alpha_shannon.qza
-
-#qiime diversity alpha-group-significance \
-#--i-alpha-diversity $output_f/alpha_shannon.qza \
-#--m-metadata-file $METADATA_FILE_PATH \
-#--o-visualization $output_f/alpha_shannon.qzv
-
-#$APPTAINER_COMMAND qiime tools export \
-#--input-path  $output_f/alpha_shannon.qza \
-#--output-path $output_f/alpha_shannon.txt
-
-#$APPTAINER_COMMAND qiime diversity alpha \
-#--i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
-#--p-metric pielou_e \
-#--o-alpha-diversity $output_f/alpha_pielou.qza
-
-#$APPTAINER_COMMAND qiime tools export \
-#--input-path $output_f/alpha_pielou.qza \
-#--output-path $output_f/alpha_pielou.txt
-
-#$APPTAINER_COMMAND qiime diversity alpha \
-#--i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
-#--p-metric observed_features \
-#--o-alpha-diversity $output_f/alpha_observedFeatures.qza
-
-#$APPTAINER_COMMAND qiime tools export \
-#--input-path $output_f/alpha_observedFeatures.qza \
-#--output-path $output_f/alpha_observedFeatures.txt
-
-# Beta Diversity
-#$APPTAINER_COMMAND qiime diversity beta \
-#--i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
-#--p-metric jaccard \
-#--p-n-jobs $NB_THREADS \
-#--o-distance-matrix $output_f/distance-matrix_jaccard.qza
-
-#$APPTAINER_COMMAND qiime diversity pcoa \
-#--i-distance-matrix $output_f/distance-matrix_jaccard.qza \
-#--o-pcoa $output_f/pcoa_jaccard.qza
-
-#$APPTAINER_COMMAND qiime emperor plot \
-#--i-pcoa $output_f/pcoa_jaccard.qza \
-#--m-metadata-file $METADATA_FILE_PATH \
-#--o-visualization $output_f/pcoa_jaccard.qzv
-
-#$APPTAINER_COMMAND qiime diversity core-metrics \
-#--i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
-#--p-sampling-depth $p_sampling_depth \
-#--m-metadata-file $METADATA_FILE_PATH \
-#--output-dir $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity" --verbose || exit_on_error
-
-#$APPTAINER_COMMAND qiime diversity alpha-group-significance \
-#--i-alpha-diversity $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/evenness_vector.qza \
-#--m-metadata-file $METADATA_FILE_PATH \
-#--o-visualization $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/evenness-group-significance_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".qzv --verbose || exit_on_error
-
-#$APPTAINER_COMMAND qiime diversity alpha-group-significance \
-#--i-alpha-diversity $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/shannon_vector.qza \
-#--m-metadata-file $METADATA_FILE_PATH \
-#--o-visualization $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/shannon-group-significance_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".qzv --verbose || exit_on_error
-
-#$APPTAINER_COMMAND qiime diversity alpha-group-significance \
-#--i-alpha-diversity $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/observed_features_vector.qza \
-#--m-metadata-file $METADATA_FILE_PATH \
-#--o-visualization $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/observed_features-group-significance_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".qzv --verbose || exit_on_error
-
-#$APPTAINER_COMMAND qiime diversity alpha \
-#--i-table  $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
-#--p-metric simpson \
-#--o-alpha-diversity $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/simpson_index_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".qza --verbose || exit_on_error
-
-#$APPTAINER_COMMAND qiime diversity alpha-group-significance \
-#--i-alpha-diversity $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/simpson_index_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".qza \
-#--m-metadata-file $METADATA_FILE_PATH \
-#--o-visualization $ANALYSIS_NAME.core-metrics-results-rarefied_"$p_sampling_depth"_dn"$p_perc_identity"/simpson_index-group-significance_rarefied_"$p_sampling_depth"_dn"$p_perc_identity".qzv --verbose || exit_on_error
-
-
 

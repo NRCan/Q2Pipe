@@ -5,7 +5,7 @@
 #      Qiime 2 Pipeline        #
 #   By: Patrick Gagne (NRCan)  #
 #  Step 7 - Rarefaction Curve  #
-#       October 5, 2021        #
+#        June 19, 2025         #
 #                              #
 ################################
 
@@ -76,18 +76,32 @@ then
     #metric_str="$metric_str \\"
 fi
 
+if [ "$RAREFACTION_METHOD" == "rarefaction" ]
+then
+    $APPTAINER_COMMAND qiime diversity alpha-rarefaction \
+    --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
+    --p-max-depth $p_max_depth \
+    --p-steps $p_steps \
+    --p-iterations $p_iterations $metric_str \
+    --m-metadata-file $METADATA_FILE_PATH \
+    --o-visualization $ANALYSIS_NAME.rarefaction_curves_filtered.qzv --verbose || exit_on_error
 
-$APPTAINER_COMMAND qiime diversity alpha-rarefaction \
---i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
---p-max-depth $p_max_depth \
---p-steps $p_steps \
---p-iterations $p_iterations $metric_str \
---m-metadata-file $METADATA_FILE_PATH \
---o-visualization $ANALYSIS_NAME.rarefaction_curves_filtered.qzv --verbose || exit_on_error
+fi
+
+if [ "$RAREFACTION_METHOD" == "normalization" ]
+then
+    $APPTAINER_COMMAND qiime srs SRScurve --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
+    --p-step $p_steps \
+    --p-iterations $p_iterations \
+    --p-metric $p_normalization_metric \
+    --p-max-sample-size $p_max_depth \
+    --o-visualization $ANALYSIS_NAME.normalization_curves_filtered.qzv --verbose || exit_on_error
+fi
 
 if [ "$GENERATE_PHYLOGENY" == "true" ]
 then
-    $APPTAINER_COMMAND qiime diversity alpha-rarefaction \
+
+$APPTAINER_COMMAND qiime diversity alpha-rarefaction \
     --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
     --i-phylogeny $ANALYSIS_NAME.rooted_tree.qza \
     --p-max-depth $p_max_depth \
