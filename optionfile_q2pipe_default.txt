@@ -245,7 +245,7 @@ p_normalization_metric=richness
 # Step 8 : Data Rarefaction #
 #############################
 
-# If rarefaction method is normalization, use p_sampling_depth as Cmin
+# If rarefaction method is normalization, p_sampling_depth will be converter to Cmin during runtime.
 p_sampling_depth=10000
 
 # Random integer seed to use for rarefaction/normalization step

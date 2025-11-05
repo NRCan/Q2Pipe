@@ -81,7 +81,7 @@ then
     rarefy_tag="normalized"
 
     $APPTAINER_COMMAND qiime srs SRS \
-    --i-table MISA_ITS_mai2024.filtered_table_dnNA.qza \
+    --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
     --p-seed $p_random_seed \
     --p-c-min $p_sampling_depth \
     --o-normalized-table $ANALYSIS_NAME.normalized_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza --verbose || exit_on_error
