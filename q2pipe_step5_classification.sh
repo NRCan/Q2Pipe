@@ -4,7 +4,7 @@
 #                              #
 #      Qiime 2 Pipeline        #
 #   By: Patrick Gagne (NRCan)  #
-#   Step 6 - Classification    #
+#   Step 5 - Classification    #
 #      November 28, 2023       #
 #                              #
 ################################

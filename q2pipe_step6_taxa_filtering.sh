@@ -4,7 +4,7 @@
 #                              #
 #      Qiime 2 Pipeline        #
 #   By: Patrick Gagne (NRCan)  #
-#   Step 8 - Taxa Filtering    #
+#   Step 6 - Taxa Filtering    #
 #       October 5, 2021        #
 #                              #
 ################################

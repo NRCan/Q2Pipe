@@ -4,7 +4,7 @@
 #                              #
 #      Qiime 2 Pipeline        #
 #   By: Patrick Gagne (NRCan)  #
-#    Step 11 - Exportation     #
+#    Step 10 - Exportation     #
 #      December 16, 2022       #
 #                              #
 ################################

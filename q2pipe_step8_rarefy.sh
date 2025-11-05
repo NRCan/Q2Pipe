@@ -1,11 +1,10 @@
 #!/bin/bash
-
 ################################
 #                              #
 #      Qiime 2 Pipeline        #
 #   By: Patrick Gagne (NRCan)  #
-#  Step 8 - Rarefaction Curve  #
-#       October 5, 2021        #
+#      Step 8 - Rarefy         #
+#      October 5, 2021         #
 #                              #
 ################################
 
@@ -64,39 +63,20 @@ then
     exit 0
 fi
 
-metric_str=''
-
-if [ $p_metrics ]
-then
-    metric_str=""
-    for i in $( echo $p_metrics | sed 's/,/ /g' ) 
-    do  
-        metric_str="$metric_str --p-metrics $i"
-    done
-    #metric_str="$metric_str \\"
-fi
-
-
-$APPTAINER_COMMAND qiime diversity alpha-rarefaction \
+$APPTAINER_COMMAND qiime feature-table rarefy \
 --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
---p-max-depth $p_max_depth \
---p-steps $p_steps \
---p-iterations $p_iterations $metric_str \
+--p-sampling-depth $p_sampling_depth \
+--o-rarefied-table $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza --verbose || exit_on_error
+
+$APPTAINER_COMMAND qiime feature-table summarize \
+--i-table $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
+--o-visualization $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qzv --verbose
+
+$APPTAINER_COMMAND qiime taxa barplot \
+--i-table $ANALYSIS_NAME.rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qza \
+--i-taxonomy $ANALYSIS_NAME.taxo_dn"$p_perc_identity".qza \
 --m-metadata-file $METADATA_FILE_PATH \
---o-visualization $ANALYSIS_NAME.rarefaction_curves_filtered.qzv --verbose || exit_on_error
+--o-visualization $ANALYSIS_NAME.barplots_rarefied_"$p_sampling_depth"_filtered_table_dn"$p_perc_identity".qzv --verbose || exit_on_error
 
-if [ "$GENERATE_PHYLOGENY" == "true" ]
-then
-    $APPTAINER_COMMAND qiime diversity alpha-rarefaction \
-    --i-table $ANALYSIS_NAME.filtered_table_dn"$p_perc_identity".qza \
-    --i-phylogeny $ANALYSIS_NAME.rooted_tree.qza \
-    --p-max-depth $p_max_depth \
-    --p-steps $p_steps \
-    --p-iterations $p_iterations $metric_str \
-    --m-metadata-file $METADATA_FILE_PATH \
-    --o-visualization $ANALYSIS_NAME.rarefaction_curves_filtered_phylo.qzv --verbose || exit_on_error
-fi
-
-# Do some things to prepare the curve (maybe show it inside the terminal)
 
 
