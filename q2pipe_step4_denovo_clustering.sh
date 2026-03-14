@@ -63,6 +63,9 @@ then
     echo "NA parameter detected, creating necessary files to skip clustering"
     cp -v $ANALYSIS_NAME.table-dada2_minfreq"$p_min_frequency"_minsamp"$p_min_samples".qza $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza
     cp -v $ANALYSIS_NAME.rep-seqs-dada2_minfreq"$p_min_frequency"_minsamp"$p_min_samples".qza $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza
+    $APPTAINER_COMMAND qiime feature-table tabulate-seqs \
+    --i-data $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza \
+    --o-visualization $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qzv --verbose
     exit 0
 fi
 
@@ -77,3 +80,7 @@ $APPTAINER_COMMAND qiime vsearch cluster-features-de-novo \
 $APPTAINER_COMMAND qiime feature-table summarize \
 --i-table $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qza \
 --o-visualization $ANALYSIS_NAME.table-dada2_dn"$p_perc_identity".qzv --verbose
+
+$APPTAINER_COMMAND qiime feature-table tabulate-seqs \
+--i-data $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qza \
+--o-visualization $ANALYSIS_NAME.rep-seqs-dada2_dn"$p_perc_identity".qzv --verbose
